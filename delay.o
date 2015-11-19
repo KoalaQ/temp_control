@@ -1,0 +1,58 @@
+XL
+H 1 areas 3 global symbols
+M delay.c
+A text size 54 flags 0
+dbfile delay.c
+dbfile E:\ICCDemo\Temp_Control\temp_control\delay.c
+dbfunc e delay_us 0 fV
+dbsym r n 10 i
+dbline FFFFFFFF 0
+dbline 6 0
+dbline 7 0
+dbline 8 4
+dbline 8 4
+dbline 9 8
+dbline 9 8
+dbline FFFFFFFE 12
+dbline 0 12
+dbfunc e delay_ms 14 fV
+dbsym r j 14 i
+dbline FFFFFFFF 1A
+dbline C 1A
+dbline D 1A
+dbline D 1A
+dbline E 1E
+dbline F 24
+dbline F 24
+dbline FFFFFFFE 2E
+dbline 0 2E
+dbfunc e delay_s 34 fV
+dbsym r i 14 i
+dbline FFFFFFFF 3A
+dbline 12 3A
+dbline 13 3A
+dbline 14 3A
+dbline 15 3E
+dbline 16 44
+dbline 16 44
+dbline FFFFFFFE 4E
+dbline 0 4E
+S _delay_s Def0034
+S _delay_ms Def0014
+S _delay_us Def0000
+T 00 00 00 0F 11 1F 01 50 10 40 81 E0 90 E0 80 17
+R 00 00 00 00
+T 0E 00 91 07 C8 F3 08 95
+R 00 00 00 00
+T 14 00 4A 93 5A 93 A8 01 41 50 50 40 05 E7 14 E0
+R 00 00 00 00
+T 22 00 EE DF 81 E0 90 E0 84 17 95 07 B0 F3 59 91
+R 00 00 00 00
+T 30 00 49 91 08 95
+R 00 00 00 00
+T 34 00 4A 93 5A 93 A8 01 41 50 50 40 08 EE 13 E0
+R 00 00 00 00
+T 42 00 E8 DF 81 E0 90 E0 84 17 95 07 B0 F3 59 91
+R 00 00 00 00
+T 50 00 49 91 08 95
+R 00 00 00 00

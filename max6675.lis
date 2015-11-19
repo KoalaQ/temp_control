@@ -1,0 +1,688 @@
+                        .module max6675.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile max6675.c
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\max6675.c
+ 0000                   .dbfunc e readTemp_1 _readTemp_1 fV
+ 0000           ;              i -> R20,R21
+                        .even
+ 0000           _readTemp_1::
+ 0000 4A93              st -y,R20
+ 0002 5A93              st -y,R21
+ 0004                   .dbline -1
+ 0004                   .dbline 28
+ 0004           ; #include<iom128v.h>
+ 0004           ; #include "max6675.h"
+ 0004           ; #include "main.h"
+ 0004           ; #include "delay.h"
+ 0004           ; #define sck_h_1 PORTE|=(1<<PE3) 
+ 0004           ; #define sck_l_1 PORTE&=~(1<<PE3) 
+ 0004           ; #define cs_h_1 PORTE|=1<<PE4 
+ 0004           ; #define cs_l_1 PORTE&=~(1<<PE4) 
+ 0004           ; 
+ 0004           ; #define sck_h_2 PORTE|=(1<<PE6) 
+ 0004           ; #define sck_l_2 PORTE&=~(1<<PE6) 
+ 0004           ; #define cs_h_2 PORTE|=1<<PE7 
+ 0004           ; #define cs_l_2 PORTE&=~(1<<PE7) 
+ 0004           ; 
+ 0004           ; #define sck_h_3 PORTF|=(1<<PF0) 
+ 0004           ; #define sck_l_3 PORTF&=~(1<<PF0) 
+ 0004           ; #define cs_h_3 PORTF|=1<<PF2 
+ 0004           ; #define cs_l_3 PORTF&=~(1<<PF2) 
+ 0004           ; 
+ 0004           ; #define sck_h_4 PORTF|=(1<<PF4) 
+ 0004           ; #define sck_l_4 PORTF&=~(1<<PF4) 
+ 0004           ; #define cs_h_4 PORTF|=1<<PF5 
+ 0004           ; #define cs_l_4 PORTF&=~(1<<PF5) 
+ 0004           ; /*
+ 0004           ; 仿真中没有读出数据，也没有实物
+ 0004           ; 
+ 0004           ; */
+ 0004           ; void readTemp_1(void){
+ 0004                   .dbline 30
+ 0004           ;          uint i;
+ 0004           ;          DDRE&=0xFB;
+ 0004 82B1              in R24,0x2
+ 0006 8B7F              andi R24,251
+ 0008 82B9              out 0x2,R24
+ 000A                   .dbline 31
+ 000A           ;          sck_l_1;
+ 000A 1B98              cbi 0x3,3
+ 000C                   .dbline 32
+ 000C           ;          cs_l_1;
+ 000C 1C98              cbi 0x3,4
+ 000E                   .dbline 33
+ 000E           ;          delay_us(1);
+ 000E 01E0              ldi R16,1
+ 0010 10E0              ldi R17,0
+ 0012 0E940000          xcall _delay_us
+ 0016                   .dbline 34
+ 0016           ;          for(i=0;i<8;i++){
+ 0016 4427              clr R20
+ 0018 5527              clr R21
+ 001A 20C0              xjmp L5
+ 001C           L2:
+ 001C                   .dbline 34
+ 001C                   .dbline 35
+ 001C           ;                       sck_h_1;
+ 001C 1B9A              sbi 0x3,3
+ 001E                   .dbline 36
+ 001E           ;                       delay_us(10);
+ 001E 0AE0              ldi R16,10
+ 0020 10E0              ldi R17,0
+ 0022 0E940000          xcall _delay_us
+ 0026                   .dbline 37
+ 0026           ;               temp_h=temp_h|(PINE&0x04);
+ 0026 81B1              in R24,0x1
+ 0028 9927              clr R25
+ 002A 8470              andi R24,4
+ 002C 9070              andi R25,0
+ 002E 20900000          lds R2,_temp_h
+ 0032 30900100          lds R3,_temp_h+1
+ 0036 282A              or R2,R24
+ 0038 392A              or R3,R25
+ 003A 30920100          sts _temp_h+1,R3
+ 003E 20920000          sts _temp_h,R2
+ 0042                   .dbline 38
+ 0042           ;                       temp_h<<=1;
+ 0042 220C              lsl R2
+ 0044 331C              rol R3
+ 0046 30920100          sts _temp_h+1,R3
+ 004A 20920000          sts _temp_h,R2
+ 004E                   .dbline 39
+ 004E           ;                       sck_l_1;
+ 004E 1B98              cbi 0x3,3
+ 0050                   .dbline 40
+ 0050           ;                       delay_us(1);
+ 0050 01E0              ldi R16,1
+ 0052 10E0              ldi R17,0
+ 0054 0E940000          xcall _delay_us
+ 0058                   .dbline 42
+ 0058           ;                       
+ 0058           ;          }
+ 0058           L3:
+ 0058                   .dbline 34
+ 0058 4F5F              subi R20,255  ; offset = 1
+ 005A 5F4F              sbci R21,255
+ 005C           L5:
+ 005C                   .dbline 34
+ 005C 4830              cpi R20,8
+ 005E E0E0              ldi R30,0
+ 0060 5E07              cpc R21,R30
+ 0062 E0F2              brlo L2
+ 0064           X0:
+ 0064                   .dbline 43
+ 0064           ;          for(i=0;i<8;i++){
+ 0064 4427              clr R20
+ 0066 5527              clr R21
+ 0068 22C0              xjmp L9
+ 006A           L6:
+ 006A                   .dbline 43
+ 006A                   .dbline 44
+ 006A           ;                       sck_h_1;
+ 006A 1B9A              sbi 0x3,3
+ 006C                   .dbline 45
+ 006C           ;                       delay_us(10);
+ 006C 0AE0              ldi R16,10
+ 006E 10E0              ldi R17,0
+ 0070 0E940000          xcall _delay_us
+ 0074                   .dbline 46
+ 0074           ;               temp_l=temp_l|(PINE&0x04);
+ 0074 81B1              in R24,0x1
+ 0076 9927              clr R25
+ 0078 8470              andi R24,4
+ 007A 9070              andi R25,0
+ 007C 20900000          lds R2,_temp_l
+ 0080 30900100          lds R3,_temp_l+1
+ 0084 282A              or R2,R24
+ 0086 392A              or R3,R25
+ 0088 30920100          sts _temp_l+1,R3
+ 008C 20920000          sts _temp_l,R2
+ 0090                   .dbline 47
+ 0090           ;                       temp_l<<=temp_l;
+ 0090 9101              movw R18,R2
+ 0092 8101              movw R16,R2
+ 0094 0E940000          xcall lsl16
+ 0098 10930100          sts _temp_l+1,R17
+ 009C 00930000          sts _temp_l,R16
+ 00A0                   .dbline 48
+ 00A0           ;                       sck_l_1;
+ 00A0 1B98              cbi 0x3,3
+ 00A2                   .dbline 49
+ 00A2           ;                       delay_us(1);
+ 00A2 01E0              ldi R16,1
+ 00A4 10E0              ldi R17,0
+ 00A6 0E940000          xcall _delay_us
+ 00AA                   .dbline 50
+ 00AA           ;          }
+ 00AA           L7:
+ 00AA                   .dbline 43
+ 00AA 4F5F              subi R20,255  ; offset = 1
+ 00AC 5F4F              sbci R21,255
+ 00AE           L9:
+ 00AE                   .dbline 43
+ 00AE 4830              cpi R20,8
+ 00B0 E0E0              ldi R30,0
+ 00B2 5E07              cpc R21,R30
+ 00B4 D0F2              brlo L6
+ 00B6           X1:
+ 00B6                   .dbline 51
+ 00B6           ;          delay_us(1);
+ 00B6 01E0              ldi R16,1
+ 00B8 10E0              ldi R17,0
+ 00BA 0E940000          xcall _delay_us
+ 00BE                   .dbline 53
+ 00BE           ;         // temp_l=0x55;
+ 00BE           ;          return ;
+ 00BE                   .dbline -2
+ 00BE           L1:
+ 00BE                   .dbline 0 ; func end
+ 00BE 5991              ld R21,y+
+ 00C0 4991              ld R20,y+
+ 00C2 0895              ret
+ 00C4                   .dbsym r i 20 i
+ 00C4                   .dbend
+ 00C4                   .dbfunc e readTemp_2 _readTemp_2 fV
+ 00C4           ;              i -> R20,R21
+                        .even
+ 00C4           _readTemp_2::
+ 00C4 4A93              st -y,R20
+ 00C6 5A93              st -y,R21
+ 00C8                   .dbline -1
+ 00C8                   .dbline 55
+ 00C8           ; }
+ 00C8           ; void readTemp_2(void){
+ 00C8                   .dbline 57
+ 00C8           ;          uint i;
+ 00C8           ;          DDRE&=0xDF;
+ 00C8 82B1              in R24,0x2
+ 00CA 8F7D              andi R24,223
+ 00CC 82B9              out 0x2,R24
+ 00CE                   .dbline 58
+ 00CE           ;          sck_l_2;
+ 00CE 1E98              cbi 0x3,6
+ 00D0                   .dbline 59
+ 00D0           ;          cs_l_2;
+ 00D0 1F98              cbi 0x3,7
+ 00D2                   .dbline 60
+ 00D2           ;          delay_us(1);
+ 00D2 01E0              ldi R16,1
+ 00D4 10E0              ldi R17,0
+ 00D6 0E940000          xcall _delay_us
+ 00DA                   .dbline 61
+ 00DA           ;          for(i=0;i<8;i++){
+ 00DA 4427              clr R20
+ 00DC 5527              clr R21
+ 00DE 20C0              xjmp L14
+ 00E0           L11:
+ 00E0                   .dbline 61
+ 00E0                   .dbline 62
+ 00E0           ;                       sck_h_2;
+ 00E0 1E9A              sbi 0x3,6
+ 00E2                   .dbline 63
+ 00E2           ;                       delay_us(10);
+ 00E2 0AE0              ldi R16,10
+ 00E4 10E0              ldi R17,0
+ 00E6 0E940000          xcall _delay_us
+ 00EA                   .dbline 64
+ 00EA           ;               temp_h=temp_h|(PINE&0x20);
+ 00EA 81B1              in R24,0x1
+ 00EC 9927              clr R25
+ 00EE 8072              andi R24,32
+ 00F0 9070              andi R25,0
+ 00F2 20900000          lds R2,_temp_h
+ 00F6 30900100          lds R3,_temp_h+1
+ 00FA 282A              or R2,R24
+ 00FC 392A              or R3,R25
+ 00FE 30920100          sts _temp_h+1,R3
+ 0102 20920000          sts _temp_h,R2
+ 0106                   .dbline 65
+ 0106           ;                       temp_h<<=1;
+ 0106 220C              lsl R2
+ 0108 331C              rol R3
+ 010A 30920100          sts _temp_h+1,R3
+ 010E 20920000          sts _temp_h,R2
+ 0112                   .dbline 66
+ 0112           ;                       sck_l_2;
+ 0112 1E98              cbi 0x3,6
+ 0114                   .dbline 67
+ 0114           ;                       delay_us(1);
+ 0114 01E0              ldi R16,1
+ 0116 10E0              ldi R17,0
+ 0118 0E940000          xcall _delay_us
+ 011C                   .dbline 69
+ 011C           ;                       
+ 011C           ;          }
+ 011C           L12:
+ 011C                   .dbline 61
+ 011C 4F5F              subi R20,255  ; offset = 1
+ 011E 5F4F              sbci R21,255
+ 0120           L14:
+ 0120                   .dbline 61
+ 0120 4830              cpi R20,8
+ 0122 E0E0              ldi R30,0
+ 0124 5E07              cpc R21,R30
+ 0126 E0F2              brlo L11
+ 0128           X2:
+ 0128                   .dbline 70
+ 0128           ;          for(i=0;i<8;i++){
+ 0128 4427              clr R20
+ 012A 5527              clr R21
+ 012C 22C0              xjmp L18
+ 012E           L15:
+ 012E                   .dbline 70
+ 012E                   .dbline 71
+ 012E           ;                       sck_h_2;
+ 012E 1E9A              sbi 0x3,6
+ 0130                   .dbline 72
+ 0130           ;                       delay_us(10);
+ 0130 0AE0              ldi R16,10
+ 0132 10E0              ldi R17,0
+ 0134 0E940000          xcall _delay_us
+ 0138                   .dbline 73
+ 0138           ;               temp_l=temp_l|(PINE&0x20);
+ 0138 81B1              in R24,0x1
+ 013A 9927              clr R25
+ 013C 8072              andi R24,32
+ 013E 9070              andi R25,0
+ 0140 20900000          lds R2,_temp_l
+ 0144 30900100          lds R3,_temp_l+1
+ 0148 282A              or R2,R24
+ 014A 392A              or R3,R25
+ 014C 30920100          sts _temp_l+1,R3
+ 0150 20920000          sts _temp_l,R2
+ 0154                   .dbline 74
+ 0154           ;                       temp_l<<=temp_l;
+ 0154 9101              movw R18,R2
+ 0156 8101              movw R16,R2
+ 0158 0E940000          xcall lsl16
+ 015C 10930100          sts _temp_l+1,R17
+ 0160 00930000          sts _temp_l,R16
+ 0164                   .dbline 75
+ 0164           ;                       sck_l_2;
+ 0164 1E98              cbi 0x3,6
+ 0166                   .dbline 76
+ 0166           ;                       delay_us(1);
+ 0166 01E0              ldi R16,1
+ 0168 10E0              ldi R17,0
+ 016A 0E940000          xcall _delay_us
+ 016E                   .dbline 77
+ 016E           ;          }
+ 016E           L16:
+ 016E                   .dbline 70
+ 016E 4F5F              subi R20,255  ; offset = 1
+ 0170 5F4F              sbci R21,255
+ 0172           L18:
+ 0172                   .dbline 70
+ 0172 4830              cpi R20,8
+ 0174 E0E0              ldi R30,0
+ 0176 5E07              cpc R21,R30
+ 0178 D0F2              brlo L15
+ 017A           X3:
+ 017A                   .dbline 78
+ 017A           ;          delay_us(1);
+ 017A 01E0              ldi R16,1
+ 017C 10E0              ldi R17,0
+ 017E 0E940000          xcall _delay_us
+ 0182                   .dbline 80
+ 0182           ;         // temp_l=0x55;
+ 0182           ;          return ;
+ 0182                   .dbline -2
+ 0182           L10:
+ 0182                   .dbline 0 ; func end
+ 0182 5991              ld R21,y+
+ 0184 4991              ld R20,y+
+ 0186 0895              ret
+ 0188                   .dbsym r i 20 i
+ 0188                   .dbend
+ 0188                   .dbfunc e readTemp_3 _readTemp_3 fV
+ 0188           ;              i -> R20,R21
+                        .even
+ 0188           _readTemp_3::
+ 0188 4A93              st -y,R20
+ 018A 5A93              st -y,R21
+ 018C                   .dbline -1
+ 018C                   .dbline 82
+ 018C           ; }
+ 018C           ; void readTemp_3(void){
+ 018C                   .dbline 84
+ 018C           ;          uint i;
+ 018C           ;          DDRF&=0xFE;
+ 018C 80916100          lds R24,97
+ 0190 8E7F              andi R24,254
+ 0192 80936100          sts 97,R24
+ 0196                   .dbline 85
+ 0196           ;          sck_l_3;
+ 0196 80916200          lds R24,98
+ 019A 8E7F              andi R24,254
+ 019C 80936200          sts 98,R24
+ 01A0                   .dbline 86
+ 01A0           ;          cs_l_3;
+ 01A0 80916200          lds R24,98
+ 01A4 8B7F              andi R24,251
+ 01A6 80936200          sts 98,R24
+ 01AA                   .dbline 87
+ 01AA           ;          delay_us(1);
+ 01AA 01E0              ldi R16,1
+ 01AC 10E0              ldi R17,0
+ 01AE 0E940000          xcall _delay_us
+ 01B2                   .dbline 88
+ 01B2           ;          for(i=0;i<8;i++){
+ 01B2 4427              clr R20
+ 01B4 5527              clr R21
+ 01B6 28C0              xjmp L23
+ 01B8           L20:
+ 01B8                   .dbline 88
+ 01B8                   .dbline 89
+ 01B8           ;                       sck_h_3;
+ 01B8 80916200          lds R24,98
+ 01BC 8160              ori R24,1
+ 01BE 80936200          sts 98,R24
+ 01C2                   .dbline 90
+ 01C2           ;                       delay_us(10);
+ 01C2 0AE0              ldi R16,10
+ 01C4 10E0              ldi R17,0
+ 01C6 0E940000          xcall _delay_us
+ 01CA                   .dbline 91
+ 01CA           ;               temp_h=temp_h|(PINF&0x01);
+ 01CA 80B1              in R24,0x0
+ 01CC 9927              clr R25
+ 01CE 8170              andi R24,1
+ 01D0 9070              andi R25,0
+ 01D2 20900000          lds R2,_temp_h
+ 01D6 30900100          lds R3,_temp_h+1
+ 01DA 282A              or R2,R24
+ 01DC 392A              or R3,R25
+ 01DE 30920100          sts _temp_h+1,R3
+ 01E2 20920000          sts _temp_h,R2
+ 01E6                   .dbline 92
+ 01E6           ;                       temp_h<<=1;
+ 01E6 220C              lsl R2
+ 01E8 331C              rol R3
+ 01EA 30920100          sts _temp_h+1,R3
+ 01EE 20920000          sts _temp_h,R2
+ 01F2                   .dbline 93
+ 01F2           ;                       sck_l_3;
+ 01F2 80916200          lds R24,98
+ 01F6 8E7F              andi R24,254
+ 01F8 80936200          sts 98,R24
+ 01FC                   .dbline 94
+ 01FC           ;                       delay_us(1);
+ 01FC 01E0              ldi R16,1
+ 01FE 10E0              ldi R17,0
+ 0200 0E940000          xcall _delay_us
+ 0204                   .dbline 96
+ 0204           ;                       
+ 0204           ;          }
+ 0204           L21:
+ 0204                   .dbline 88
+ 0204 4F5F              subi R20,255  ; offset = 1
+ 0206 5F4F              sbci R21,255
+ 0208           L23:
+ 0208                   .dbline 88
+ 0208 4830              cpi R20,8
+ 020A E0E0              ldi R30,0
+ 020C 5E07              cpc R21,R30
+ 020E A0F2              brlo L20
+ 0210           X4:
+ 0210                   .dbline 97
+ 0210           ;          for(i=0;i<8;i++){
+ 0210 4427              clr R20
+ 0212 5527              clr R21
+ 0214 2AC0              xjmp L27
+ 0216           L24:
+ 0216                   .dbline 97
+ 0216                   .dbline 98
+ 0216           ;                       sck_h_3;
+ 0216 80916200          lds R24,98
+ 021A 8160              ori R24,1
+ 021C 80936200          sts 98,R24
+ 0220                   .dbline 99
+ 0220           ;                       delay_us(10);
+ 0220 0AE0              ldi R16,10
+ 0222 10E0              ldi R17,0
+ 0224 0E940000          xcall _delay_us
+ 0228                   .dbline 100
+ 0228           ;               temp_l=temp_l|(PINF&0x01);
+ 0228 80B1              in R24,0x0
+ 022A 9927              clr R25
+ 022C 8170              andi R24,1
+ 022E 9070              andi R25,0
+ 0230 20900000          lds R2,_temp_l
+ 0234 30900100          lds R3,_temp_l+1
+ 0238 282A              or R2,R24
+ 023A 392A              or R3,R25
+ 023C 30920100          sts _temp_l+1,R3
+ 0240 20920000          sts _temp_l,R2
+ 0244                   .dbline 101
+ 0244           ;                       temp_l<<=temp_l;
+ 0244 9101              movw R18,R2
+ 0246 8101              movw R16,R2
+ 0248 0E940000          xcall lsl16
+ 024C 10930100          sts _temp_l+1,R17
+ 0250 00930000          sts _temp_l,R16
+ 0254                   .dbline 102
+ 0254           ;                       sck_l_3;
+ 0254 80916200          lds R24,98
+ 0258 8E7F              andi R24,254
+ 025A 80936200          sts 98,R24
+ 025E                   .dbline 103
+ 025E           ;                       delay_us(1);
+ 025E 01E0              ldi R16,1
+ 0260 10E0              ldi R17,0
+ 0262 0E940000          xcall _delay_us
+ 0266                   .dbline 104
+ 0266           ;          }
+ 0266           L25:
+ 0266                   .dbline 97
+ 0266 4F5F              subi R20,255  ; offset = 1
+ 0268 5F4F              sbci R21,255
+ 026A           L27:
+ 026A                   .dbline 97
+ 026A 4830              cpi R20,8
+ 026C E0E0              ldi R30,0
+ 026E 5E07              cpc R21,R30
+ 0270 90F2              brlo L24
+ 0272           X5:
+ 0272                   .dbline 105
+ 0272           ;          delay_us(1);
+ 0272 01E0              ldi R16,1
+ 0274 10E0              ldi R17,0
+ 0276 0E940000          xcall _delay_us
+ 027A                   .dbline 107
+ 027A           ;         // temp_l=0x55;
+ 027A           ;          return ;
+ 027A                   .dbline -2
+ 027A           L19:
+ 027A                   .dbline 0 ; func end
+ 027A 5991              ld R21,y+
+ 027C 4991              ld R20,y+
+ 027E 0895              ret
+ 0280                   .dbsym r i 20 i
+ 0280                   .dbend
+ 0280                   .dbfunc e readTemp_4 _readTemp_4 fV
+ 0280           ;              i -> R20,R21
+                        .even
+ 0280           _readTemp_4::
+ 0280 4A93              st -y,R20
+ 0282 5A93              st -y,R21
+ 0284                   .dbline -1
+ 0284                   .dbline 109
+ 0284           ; }
+ 0284           ; void readTemp_4(void){
+ 0284                   .dbline 111
+ 0284           ;          uint i;
+ 0284           ;          DDRF&=0xF7;
+ 0284 80916100          lds R24,97
+ 0288 877F              andi R24,247
+ 028A 80936100          sts 97,R24
+ 028E                   .dbline 112
+ 028E           ;          sck_l_4;
+ 028E 80916200          lds R24,98
+ 0292 8F7E              andi R24,239
+ 0294 80936200          sts 98,R24
+ 0298                   .dbline 113
+ 0298           ;          cs_l_4;
+ 0298 80916200          lds R24,98
+ 029C 8F7D              andi R24,223
+ 029E 80936200          sts 98,R24
+ 02A2                   .dbline 114
+ 02A2           ;          delay_us(1);
+ 02A2 01E0              ldi R16,1
+ 02A4 10E0              ldi R17,0
+ 02A6 0E940000          xcall _delay_us
+ 02AA                   .dbline 115
+ 02AA           ;          for(i=0;i<8;i++){
+ 02AA 4427              clr R20
+ 02AC 5527              clr R21
+ 02AE 28C0              xjmp L32
+ 02B0           L29:
+ 02B0                   .dbline 115
+ 02B0                   .dbline 116
+ 02B0           ;                       sck_h_4;
+ 02B0 80916200          lds R24,98
+ 02B4 8061              ori R24,16
+ 02B6 80936200          sts 98,R24
+ 02BA                   .dbline 117
+ 02BA           ;                       delay_us(10);
+ 02BA 0AE0              ldi R16,10
+ 02BC 10E0              ldi R17,0
+ 02BE 0E940000          xcall _delay_us
+ 02C2                   .dbline 118
+ 02C2           ;               temp_h=temp_h|(PINF&0x80);
+ 02C2 80B1              in R24,0x0
+ 02C4 9927              clr R25
+ 02C6 8078              andi R24,128
+ 02C8 9070              andi R25,0
+ 02CA 20900000          lds R2,_temp_h
+ 02CE 30900100          lds R3,_temp_h+1
+ 02D2 282A              or R2,R24
+ 02D4 392A              or R3,R25
+ 02D6 30920100          sts _temp_h+1,R3
+ 02DA 20920000          sts _temp_h,R2
+ 02DE                   .dbline 119
+ 02DE           ;                       temp_h<<=1;
+ 02DE 220C              lsl R2
+ 02E0 331C              rol R3
+ 02E2 30920100          sts _temp_h+1,R3
+ 02E6 20920000          sts _temp_h,R2
+ 02EA                   .dbline 120
+ 02EA           ;                       sck_l_4;
+ 02EA 80916200          lds R24,98
+ 02EE 8F7E              andi R24,239
+ 02F0 80936200          sts 98,R24
+ 02F4                   .dbline 121
+ 02F4           ;                       delay_us(1);
+ 02F4 01E0              ldi R16,1
+ 02F6 10E0              ldi R17,0
+ 02F8 0E940000          xcall _delay_us
+ 02FC                   .dbline 123
+ 02FC           ;                       
+ 02FC           ;          }
+ 02FC           L30:
+ 02FC                   .dbline 115
+ 02FC 4F5F              subi R20,255  ; offset = 1
+ 02FE 5F4F              sbci R21,255
+ 0300           L32:
+ 0300                   .dbline 115
+ 0300 4830              cpi R20,8
+ 0302 E0E0              ldi R30,0
+ 0304 5E07              cpc R21,R30
+ 0306 A0F2              brlo L29
+ 0308           X6:
+ 0308                   .dbline 124
+ 0308           ;          for(i=0;i<8;i++){
+ 0308 4427              clr R20
+ 030A 5527              clr R21
+ 030C 2AC0              xjmp L36
+ 030E           L33:
+ 030E                   .dbline 124
+ 030E                   .dbline 125
+ 030E           ;                       sck_h_4;
+ 030E 80916200          lds R24,98
+ 0312 8061              ori R24,16
+ 0314 80936200          sts 98,R24
+ 0318                   .dbline 126
+ 0318           ;                       delay_us(10);
+ 0318 0AE0              ldi R16,10
+ 031A 10E0              ldi R17,0
+ 031C 0E940000          xcall _delay_us
+ 0320                   .dbline 127
+ 0320           ;               temp_l=temp_l|(PINF&0x80);
+ 0320 80B1              in R24,0x0
+ 0322 9927              clr R25
+ 0324 8078              andi R24,128
+ 0326 9070              andi R25,0
+ 0328 20900000          lds R2,_temp_l
+ 032C 30900100          lds R3,_temp_l+1
+ 0330 282A              or R2,R24
+ 0332 392A              or R3,R25
+ 0334 30920100          sts _temp_l+1,R3
+ 0338 20920000          sts _temp_l,R2
+ 033C                   .dbline 128
+ 033C           ;                       temp_l<<=temp_l;
+ 033C 9101              movw R18,R2
+ 033E 8101              movw R16,R2
+ 0340 0E940000          xcall lsl16
+ 0344 10930100          sts _temp_l+1,R17
+ 0348 00930000          sts _temp_l,R16
+ 034C                   .dbline 129
+ 034C           ;                       sck_l_4;
+ 034C 80916200          lds R24,98
+ 0350 8F7E              andi R24,239
+ 0352 80936200          sts 98,R24
+ 0356                   .dbline 130
+ 0356           ;                       delay_us(1);
+ 0356 01E0              ldi R16,1
+ 0358 10E0              ldi R17,0
+ 035A 0E940000          xcall _delay_us
+ 035E                   .dbline 131
+ 035E           ;          }
+ 035E           L34:
+ 035E                   .dbline 124
+ 035E 4F5F              subi R20,255  ; offset = 1
+ 0360 5F4F              sbci R21,255
+ 0362           L36:
+ 0362                   .dbline 124
+ 0362 4830              cpi R20,8
+ 0364 E0E0              ldi R30,0
+ 0366 5E07              cpc R21,R30
+ 0368 90F2              brlo L33
+ 036A           X7:
+ 036A                   .dbline 132
+ 036A           ;          delay_us(1);
+ 036A 01E0              ldi R16,1
+ 036C 10E0              ldi R17,0
+ 036E 0E940000          xcall _delay_us
+ 0372                   .dbline 134
+ 0372           ;         // temp_l=0x55;
+ 0372           ;          return ;
+ 0372                   .dbline -2
+ 0372           L28:
+ 0372                   .dbline 0 ; func end
+ 0372 5991              ld R21,y+
+ 0374 4991              ld R20,y+
+ 0376 0895              ret
+ 0378                   .dbsym r i 20 i
+ 0378                   .dbend
+ 0378                   .dbfunc e readOC _readOC fc
+                        .even
+ 0378           _readOC::
+ 0378                   .dbline -1
+ 0378                   .dbline 136
+ 0378           ; }
+ 0378           ; uchar readOC(void){
+ 0378                   .dbline 137
+ 0378           ;         DDRD&=0x07;
+ 0378 81B3              in R24,0x11
+ 037A 8770              andi R24,7
+ 037C 81BB              out 0x11,R24
+ 037E                   .dbline 138
+ 037E           ;         return PIND&(0xF8);
+ 037E 00B3              in R16,0x10
+ 0380 087F              andi R16,248
+ 0382                   .dbline -2
+ 0382           L37:
+ 0382                   .dbline 0 ; func end
+ 0382 0895              ret
+ 0384                   .dbend
+ 0384           ; }

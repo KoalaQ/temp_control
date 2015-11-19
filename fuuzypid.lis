@@ -1,0 +1,5 @@
+                        .module fuuzypid.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile fuuzypid.c
+ 0000           ; #include<iom128v.h>
+ 0000           ; #include "fuuzypid.h"

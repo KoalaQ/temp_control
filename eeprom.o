@@ -1,0 +1,66 @@
+XL
+H 1 areas 5 global symbols
+M eeprom.c
+S push_xgset00FC Ref0000
+S _delay_us Ref0000
+S pop_xgset00FC Ref0000
+A text size 5A flags 0
+dbfile eeprom.c
+dbfile E:\ICCDemo\Temp_Control\temp_control\eeprom.c
+dbfunc e EEPROM_write 0 fV
+dbsym r data A i
+dbsym r addr_l E i
+dbsym r addr_h C i
+dbline FFFFFFFF C
+dbline 4 C
+dbline 5 C
+dbline 6 12
+dbline 8 12
+dbline 6 12
+dbline 9 16
+dbline A 18
+dbline C 1A
+dbline D 1C
+dbline E 1E
+dbline F 20
+dbline 10 28
+dbline 11 2A
+dbline FFFFFFFE 2A
+dbline 0 2A
+dbfunc e EEPROM_read 2E fc
+dbsym r data A c
+dbsym r addr_l C i
+dbsym r addr_h A i
+dbline FFFFFFFF 36
+dbline 13 36
+dbline 15 36
+dbline 16 3C
+dbline 17 3C
+dbline 16 3C
+dbline 18 40
+dbline 19 42
+dbline 1B 44
+dbline 1C 46
+dbline 1D 4E
+dbline 1E 50
+dbline 1F 52
+dbline FFFFFFFE 54
+dbline 0 54
+S _EEPROM_read Def002E
+S _EEPROM_write Def0000
+T 00 00 0E 94 00 00 79 01 68 01 AE 80 BF 80 8F B7
+R 00 00 00 00 12 04 00 00
+T 0E 00 8F 77 8F BF E1 99 FE CF EE BA CF BA AD BA
+R 00 00 00 00
+T 1C 00 E2 9A E1 9A 01 E0 10 E0 0E 94 00 00 78 94
+R 00 00 00 00 12 0C 01 00
+T 2A 00 0C 94 00 00
+R 00 00 00 00 12 04 02 00
+T 2E 00 AA 92 CA 92 69 01 58 01 8F B7 8F 77 8F BF
+R 00 00 00 00
+T 3C 00 E1 99 FE CF CE BA AF BA E0 9A 01 E0 10 E0
+R 00 00 00 00
+T 4A 00 0E 94 00 00 AD B2 78 94 0A 2D C9 90 A9 90
+R 00 00 00 00 12 04 01 00
+T 58 00 08 95
+R 00 00 00 00

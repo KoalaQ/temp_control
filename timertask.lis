@@ -1,0 +1,670 @@
+                        .module timertask.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile timertask.c
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 0000                   .dbfunc e Timerinit_1 _Timerinit_1 fV
+ 0000           ;         time_l -> R18
+ 0000           ;         time_h -> R16
+                        .even
+ 0000           _Timerinit_1::
+ 0000                   .dbline -1
+ 0000                   .dbline 14
+ 0000           ; #include<iom128v.h>
+ 0000           ; #include "timertask.h"
+ 0000           ; #include "time.h"
+ 0000           ; #include "lcd.h"
+ 0000           ; #include "delay.h"
+ 0000           ; unsigned char time_h_1, time_l_1,time_h_3, time_l_3,time_0, time_2,i;
+ 0000           ; //************************************************
+ 0000           ; //16位定时器，定时器1
+ 0000           ; //*************************************************
+ 0000           ; /*
+ 0000           ;   计数器1，16位的。普通计时，1024分频。在16M下约0.061ms计数一次。共4s钟,
+ 0000           ;   自行计算时间传入。传入高低八位
+ 0000           ; */
+ 0000           ; void Timerinit_1(uchar time_h,uchar time_l){
+ 0000                   .dbline 15
+ 0000           ;     time_h_1=time_h;
+ 0000 00930600          sts _time_h_1,R16
+ 0004                   .dbline 16
+ 0004           ;       time_l_1=time_l;
+ 0004 20930500          sts _time_l_1,R18
+ 0008                   .dbline 17
+ 0008           ;        TCCR1B=0x00;
+ 0008 2224              clr R2
+ 000A 2EBC              out 0x2e,R2
+ 000C                   .dbline 19
+ 000C           ;       //写入初值
+ 000C           ;     TCNT1H=time_h;
+ 000C 0DBD              out 0x2d,R16
+ 000E                   .dbline 20
+ 000E           ;     TCNT1L=time_l;
+ 000E 2CBD              out 0x2c,R18
+ 0010                   .dbline 22
+ 0010           ;       //普通计数，1024分频
+ 0010           ;     TCCR1A=0x00;
+ 0010 2FBC              out 0x2f,R2
+ 0012                   .dbline 23
+ 0012           ;     TCCR1B=0x05;
+ 0012 85E0              ldi R24,5
+ 0014 8EBD              out 0x2e,R24
+ 0016                   .dbline 24
+ 0016           ;        TIMSK|=0x04;//开定时器1溢出中断,16位的
+ 0016 87B7              in R24,0x37
+ 0018 8460              ori R24,4
+ 001A 87BF              out 0x37,R24
+ 001C                   .dbline -2
+ 001C           L1:
+ 001C                   .dbline 0 ; func end
+ 001C 0895              ret
+ 001E                   .dbsym r time_l 18 c
+ 001E                   .dbsym r time_h 16 c
+ 001E                   .dbend
+ 001E                   .dbfunc e Timerinit_3 _Timerinit_3 fV
+ 001E           ;         time_l -> R18
+ 001E           ;         time_h -> R16
+                        .even
+ 001E           _Timerinit_3::
+ 001E                   .dbline -1
+ 001E                   .dbline 33
+ 001E           ; }
+ 001E           ; //************************************************
+ 001E           ; //16位定时器，定时器3
+ 001E           ; //*************************************************
+ 001E           ; /*
+ 001E           ;   计数器1，16位的。普通计时，1024分频。在16M下约0.061ms计数一次。共4s钟,
+ 001E           ;   自行计算时间传入。传入高低八位
+ 001E           ; */
+ 001E           ; void Timerinit_3(uchar time_h,uchar time_l){
+ 001E                   .dbline 34
+ 001E           ;       time_h_3=time_h;
+ 001E 00930400          sts _time_h_3,R16
+ 0022                   .dbline 35
+ 0022           ;       time_l_3=time_l;
+ 0022 20930300          sts _time_l_3,R18
+ 0026                   .dbline 37
+ 0026           ;       //写入初值
+ 0026           ;        TCCR3B=0x00;
+ 0026 2224              clr R2
+ 0028 20928A00          sts 138,R2
+ 002C                   .dbline 38
+ 002C           ;     TCNT3H=time_h;
+ 002C 00938900          sts 137,R16
+ 0030                   .dbline 39
+ 0030           ;     TCNT3L=time_l;
+ 0030 20938800          sts 136,R18
+ 0034                   .dbline 41
+ 0034           ;       //普通计数，1024分频
+ 0034           ;     TCCR3A=0x00;
+ 0034 20928B00          sts 139,R2
+ 0038                   .dbline 42
+ 0038           ;     TCCR3B=0x05;
+ 0038 85E0              ldi R24,5
+ 003A 80938A00          sts 138,R24
+ 003E                   .dbline 43
+ 003E           ;       ETIMSK |=0x04;//开外部中断1
+ 003E 80917D00          lds R24,125
+ 0042 8460              ori R24,4
+ 0044 80937D00          sts 125,R24
+ 0048                   .dbline -2
+ 0048           L2:
+ 0048                   .dbline 0 ; func end
+ 0048 0895              ret
+ 004A                   .dbsym r time_l 18 c
+ 004A                   .dbsym r time_h 16 c
+ 004A                   .dbend
+ 004A                   .dbfunc e Timerinit_0 _Timerinit_0 fV
+ 004A           ;           time -> R16
+                        .even
+ 004A           _Timerinit_0::
+ 004A                   .dbline -1
+ 004A                   .dbline 53
+ 004A           ; }
+ 004A           ; //************************************************
+ 004A           ; //8位定时器，定时器0
+ 004A           ; //*************************************************
+ 004A           ; 
+ 004A           ; /*
+ 004A           ;   计数器0，8位的。普通计时，1024分频。
+ 004A           ;   自行计算时间传入。
+ 004A           ; */
+ 004A           ; void Timerinit_0(uchar time){
+ 004A                   .dbline 54
+ 004A           ;     time_0=time;
+ 004A 00930200          sts _time_0,R16
+ 004E                   .dbline 56
+ 004E           ;       //写入初值
+ 004E           ;     TCNT0=time;
+ 004E 02BF              out 0x32,R16
+ 0050                   .dbline 57
+ 0050           ;       TIMSK|=0x01;//开定时器0溢出中断,8位的
+ 0050 87B7              in R24,0x37
+ 0052 8160              ori R24,1
+ 0054 87BF              out 0x37,R24
+ 0056                   .dbline 58
+ 0056           ;        TCCR0=0x07;//普通计数，1024分频
+ 0056 87E0              ldi R24,7
+ 0058 83BF              out 0x33,R24
+ 005A                   .dbline -2
+ 005A           L3:
+ 005A                   .dbline 0 ; func end
+ 005A 0895              ret
+ 005C                   .dbsym r time 16 c
+ 005C                   .dbend
+ 005C                   .dbfunc e Timerinit_2 _Timerinit_2 fV
+ 005C           ;           time -> R16
+                        .even
+ 005C           _Timerinit_2::
+ 005C                   .dbline -1
+ 005C                   .dbline 67
+ 005C           ; }
+ 005C           ; //************************************************
+ 005C           ; //8位定时器，定时器2
+ 005C           ; //*************************************************
+ 005C           ; /*
+ 005C           ;   计数器0，8位的。普通计时，1024分频。
+ 005C           ;   自行计算时间传入。
+ 005C           ; */
+ 005C           ; void Timerinit_2(uchar time){
+ 005C                   .dbline 68
+ 005C           ;     time_2=time;
+ 005C 00930100          sts _time_2,R16
+ 0060                   .dbline 70
+ 0060           ;       //写入初值
+ 0060           ;     TCNT2=time;
+ 0060 04BD              out 0x24,R16
+ 0062                   .dbline 71
+ 0062           ;       TIMSK|=0x40;//开定时器0溢出中断,8位的
+ 0062 87B7              in R24,0x37
+ 0064 8064              ori R24,64
+ 0066 87BF              out 0x37,R24
+ 0068                   .dbline 73
+ 0068           ;       //普通计数，1024分频
+ 0068           ;     TCCR2=0x05;
+ 0068 85E0              ldi R24,5
+ 006A 85BD              out 0x25,R24
+ 006C                   .dbline -2
+ 006C           L4:
+ 006C                   .dbline 0 ; func end
+ 006C 0895              ret
+ 006E                   .dbsym r time 16 c
+ 006E                   .dbend
+                        .area vector(rom, abs)
+                        .org 64
+ 0040 0C943700          jmp _int_timer0
+                        .area text(rom, con, rel)
+ 006E                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 006E                   .dbfunc e int_timer0 _int_timer0 fV
+                        .even
+ 006E           _int_timer0::
+ 006E 0A92              st -y,R0
+ 0070 1A92              st -y,R1
+ 0072 2A92              st -y,R2
+ 0074 3A92              st -y,R3
+ 0076 4A92              st -y,R4
+ 0078 5A92              st -y,R5
+ 007A 6A92              st -y,R6
+ 007C 7A92              st -y,R7
+ 007E 8A92              st -y,R8
+ 0080 9A92              st -y,R9
+ 0082 0A93              st -y,R16
+ 0084 1A93              st -y,R17
+ 0086 2A93              st -y,R18
+ 0088 3A93              st -y,R19
+ 008A 8A93              st -y,R24
+ 008C 9A93              st -y,R25
+ 008E AA93              st -y,R26
+ 0090 BA93              st -y,R27
+ 0092 EA93              st -y,R30
+ 0094 FA93              st -y,R31
+ 0096 0FB6              IN R0,63
+ 0098 0A92              st -y,R0
+ 009A 2197              sbiw R28,1
+ 009C                   .dbline -1
+ 009C                   .dbline 76
+ 009C           ; }
+ 009C           ; #pragma interrupt_handler int_timer0:17
+ 009C           ; void int_timer0(void){ 
+ 009C                   .dbline 77
+ 009C           ;               TCCR0=0x00;
+ 009C 2224              clr R2
+ 009E 23BE              out 0x33,R2
+ 00A0                   .dbline 79
+ 00A0           ;               //adc_init_once();
+ 00A0           ;               for(i=0;i<5;i++){
+ 00A0 20920000          sts _i,R2
+ 00A4 11C0              xjmp L9
+ 00A6           L6:
+ 00A6                   .dbline 79
+ 00A6                   .dbline 80
+ 00A6           ;                lcd_write_char(0x01,3,0x30+i); 
+ 00A6 80910000          lds R24,_i
+ 00AA 805D              subi R24,208    ; addi 48
+ 00AC 8883              std y+0,R24
+ 00AE 23E0              ldi R18,3
+ 00B0 01E0              ldi R16,1
+ 00B2 0E940000          xcall _lcd_write_char
+ 00B6                   .dbline 81
+ 00B6           ;                delay_ms(100);         
+ 00B6 04E6              ldi R16,100
+ 00B8 10E0              ldi R17,0
+ 00BA 0E940000          xcall _delay_ms
+ 00BE                   .dbline 82
+ 00BE           ;         }
+ 00BE           L7:
+ 00BE                   .dbline 79
+ 00BE 80910000          lds R24,_i
+ 00C2 8F5F              subi R24,255    ; addi 1
+ 00C4 80930000          sts _i,R24
+ 00C8           L9:
+ 00C8                   .dbline 79
+ 00C8 80910000          lds R24,_i
+ 00CC 8530              cpi R24,5
+ 00CE 58F3              brlo L6
+ 00D0           X0:
+ 00D0                   .dbline 83
+ 00D0           ;               TCNT0=time_0;
+ 00D0 20900200          lds R2,_time_0
+ 00D4 22BE              out 0x32,R2
+ 00D6                   .dbline 84
+ 00D6           ;               TCCR0=0x07;
+ 00D6 87E0              ldi R24,7
+ 00D8 83BF              out 0x33,R24
+ 00DA                   .dbline 85
+ 00DA           ;               return;
+ 00DA                   .dbline -2
+ 00DA           L5:
+ 00DA                   .dbline 0 ; func end
+ 00DA 2196              adiw R28,1
+ 00DC 0990              ld R0,y+
+ 00DE 0FBE              OUT 63,R0
+ 00E0 F991              ld R31,y+
+ 00E2 E991              ld R30,y+
+ 00E4 B991              ld R27,y+
+ 00E6 A991              ld R26,y+
+ 00E8 9991              ld R25,y+
+ 00EA 8991              ld R24,y+
+ 00EC 3991              ld R19,y+
+ 00EE 2991              ld R18,y+
+ 00F0 1991              ld R17,y+
+ 00F2 0991              ld R16,y+
+ 00F4 9990              ld R9,y+
+ 00F6 8990              ld R8,y+
+ 00F8 7990              ld R7,y+
+ 00FA 6990              ld R6,y+
+ 00FC 5990              ld R5,y+
+ 00FE 4990              ld R4,y+
+ 0100 3990              ld R3,y+
+ 0102 2990              ld R2,y+
+ 0104 1990              ld R1,y+
+ 0106 0990              ld R0,y+
+ 0108 1895              reti
+ 010A                   .dbend
+                        .area vector(rom, abs)
+                        .org 56
+ 0038 0C948500          jmp _int_timer1
+                        .area text(rom, con, rel)
+ 010A                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 010A                   .dbfunc e int_timer1 _int_timer1 fV
+                        .even
+ 010A           _int_timer1::
+ 010A 0A92              st -y,R0
+ 010C 1A92              st -y,R1
+ 010E 2A92              st -y,R2
+ 0110 3A92              st -y,R3
+ 0112 4A92              st -y,R4
+ 0114 5A92              st -y,R5
+ 0116 6A92              st -y,R6
+ 0118 7A92              st -y,R7
+ 011A 8A92              st -y,R8
+ 011C 9A92              st -y,R9
+ 011E 0A93              st -y,R16
+ 0120 1A93              st -y,R17
+ 0122 2A93              st -y,R18
+ 0124 3A93              st -y,R19
+ 0126 8A93              st -y,R24
+ 0128 9A93              st -y,R25
+ 012A AA93              st -y,R26
+ 012C BA93              st -y,R27
+ 012E EA93              st -y,R30
+ 0130 FA93              st -y,R31
+ 0132 0FB6              IN R0,63
+ 0134 0A92              st -y,R0
+ 0136 2197              sbiw R28,1
+ 0138                   .dbline -1
+ 0138                   .dbline 89
+ 0138           ; }
+ 0138           ; //溢出中断。
+ 0138           ; #pragma interrupt_handler int_timer1:15
+ 0138           ; void int_timer1(void){
+ 0138                   .dbline 90
+ 0138           ;                TCCR1B=0x00;
+ 0138 2224              clr R2
+ 013A 2EBC              out 0x2e,R2
+ 013C                   .dbline 92
+ 013C           ;               //adc_init_once();
+ 013C           ;               for(i=0;i<5;i++){
+ 013C 20920000          sts _i,R2
+ 0140 11C0              xjmp L14
+ 0142           L11:
+ 0142                   .dbline 92
+ 0142                   .dbline 93
+ 0142           ;                lcd_write_char(0x03,3,0x30+i); 
+ 0142 80910000          lds R24,_i
+ 0146 805D              subi R24,208    ; addi 48
+ 0148 8883              std y+0,R24
+ 014A 23E0              ldi R18,3
+ 014C 03E0              ldi R16,3
+ 014E 0E940000          xcall _lcd_write_char
+ 0152                   .dbline 94
+ 0152           ;                delay_ms(100);         
+ 0152 04E6              ldi R16,100
+ 0154 10E0              ldi R17,0
+ 0156 0E940000          xcall _delay_ms
+ 015A                   .dbline 95
+ 015A           ;         }
+ 015A           L12:
+ 015A                   .dbline 92
+ 015A 80910000          lds R24,_i
+ 015E 8F5F              subi R24,255    ; addi 1
+ 0160 80930000          sts _i,R24
+ 0164           L14:
+ 0164                   .dbline 92
+ 0164 80910000          lds R24,_i
+ 0168 8530              cpi R24,5
+ 016A 58F3              brlo L11
+ 016C           X1:
+ 016C                   .dbline 96
+ 016C           ;               TCNT1H=time_h_1;
+ 016C 20900600          lds R2,_time_h_1
+ 0170 2DBC              out 0x2d,R2
+ 0172                   .dbline 97
+ 0172           ;          TCNT1L=time_l_1;
+ 0172 20900500          lds R2,_time_l_1
+ 0176 2CBC              out 0x2c,R2
+ 0178                   .dbline 98
+ 0178           ;                TCCR1B=0x05;
+ 0178 85E0              ldi R24,5
+ 017A 8EBD              out 0x2e,R24
+ 017C                   .dbline 99
+ 017C           ;               return;
+ 017C                   .dbline -2
+ 017C           L10:
+ 017C                   .dbline 0 ; func end
+ 017C 2196              adiw R28,1
+ 017E 0990              ld R0,y+
+ 0180 0FBE              OUT 63,R0
+ 0182 F991              ld R31,y+
+ 0184 E991              ld R30,y+
+ 0186 B991              ld R27,y+
+ 0188 A991              ld R26,y+
+ 018A 9991              ld R25,y+
+ 018C 8991              ld R24,y+
+ 018E 3991              ld R19,y+
+ 0190 2991              ld R18,y+
+ 0192 1991              ld R17,y+
+ 0194 0991              ld R16,y+
+ 0196 9990              ld R9,y+
+ 0198 8990              ld R8,y+
+ 019A 7990              ld R7,y+
+ 019C 6990              ld R6,y+
+ 019E 5990              ld R5,y+
+ 01A0 4990              ld R4,y+
+ 01A2 3990              ld R3,y+
+ 01A4 2990              ld R2,y+
+ 01A6 1990              ld R1,y+
+ 01A8 0990              ld R0,y+
+ 01AA 1895              reti
+ 01AC                   .dbend
+                        .area vector(rom, abs)
+                        .org 40
+ 0028 0C94D600          jmp _int_timer2
+                        .area text(rom, con, rel)
+ 01AC                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 01AC                   .dbfunc e int_timer2 _int_timer2 fV
+                        .even
+ 01AC           _int_timer2::
+ 01AC 0A92              st -y,R0
+ 01AE 1A92              st -y,R1
+ 01B0 2A92              st -y,R2
+ 01B2 3A92              st -y,R3
+ 01B4 4A92              st -y,R4
+ 01B6 5A92              st -y,R5
+ 01B8 6A92              st -y,R6
+ 01BA 7A92              st -y,R7
+ 01BC 8A92              st -y,R8
+ 01BE 9A92              st -y,R9
+ 01C0 0A93              st -y,R16
+ 01C2 1A93              st -y,R17
+ 01C4 2A93              st -y,R18
+ 01C6 3A93              st -y,R19
+ 01C8 8A93              st -y,R24
+ 01CA 9A93              st -y,R25
+ 01CC AA93              st -y,R26
+ 01CE BA93              st -y,R27
+ 01D0 EA93              st -y,R30
+ 01D2 FA93              st -y,R31
+ 01D4 0FB6              IN R0,63
+ 01D6 0A92              st -y,R0
+ 01D8 2197              sbiw R28,1
+ 01DA                   .dbline -1
+ 01DA                   .dbline 102
+ 01DA           ; }
+ 01DA           ; #pragma interrupt_handler int_timer2:11
+ 01DA           ; void int_timer2(void){
+ 01DA                   .dbline 103
+ 01DA           ;       PORTE=~PORTE;
+ 01DA 23B0              in R2,0x3
+ 01DC 2094              com R2
+ 01DE 23B8              out 0x3,R2
+ 01E0                   .dbline 104
+ 01E0           ;               TCCR2=0x00;
+ 01E0 2224              clr R2
+ 01E2 25BC              out 0x25,R2
+ 01E4                   .dbline 105
+ 01E4           ;               for(i=0;i<5;i++){
+ 01E4 20920000          sts _i,R2
+ 01E8 11C0              xjmp L19
+ 01EA           L16:
+ 01EA                   .dbline 105
+ 01EA                   .dbline 106
+ 01EA           ;                lcd_write_char(0x00,3,0x30+i); 
+ 01EA 80910000          lds R24,_i
+ 01EE 805D              subi R24,208    ; addi 48
+ 01F0 8883              std y+0,R24
+ 01F2 23E0              ldi R18,3
+ 01F4 0027              clr R16
+ 01F6 0E940000          xcall _lcd_write_char
+ 01FA                   .dbline 107
+ 01FA           ;                delay_ms(100);         
+ 01FA 04E6              ldi R16,100
+ 01FC 10E0              ldi R17,0
+ 01FE 0E940000          xcall _delay_ms
+ 0202                   .dbline 108
+ 0202           ;         }
+ 0202           L17:
+ 0202                   .dbline 105
+ 0202 80910000          lds R24,_i
+ 0206 8F5F              subi R24,255    ; addi 1
+ 0208 80930000          sts _i,R24
+ 020C           L19:
+ 020C                   .dbline 105
+ 020C 80910000          lds R24,_i
+ 0210 8530              cpi R24,5
+ 0212 58F3              brlo L16
+ 0214           X2:
+ 0214                   .dbline 109
+ 0214           ;               TCNT2=time_2;
+ 0214 20900100          lds R2,_time_2
+ 0218 24BC              out 0x24,R2
+ 021A                   .dbline 110
+ 021A           ;               TCCR2=0x05;
+ 021A 85E0              ldi R24,5
+ 021C 85BD              out 0x25,R24
+ 021E                   .dbline 111
+ 021E           ;               return;
+ 021E                   .dbline -2
+ 021E           L15:
+ 021E                   .dbline 0 ; func end
+ 021E 2196              adiw R28,1
+ 0220 0990              ld R0,y+
+ 0222 0FBE              OUT 63,R0
+ 0224 F991              ld R31,y+
+ 0226 E991              ld R30,y+
+ 0228 B991              ld R27,y+
+ 022A A991              ld R26,y+
+ 022C 9991              ld R25,y+
+ 022E 8991              ld R24,y+
+ 0230 3991              ld R19,y+
+ 0232 2991              ld R18,y+
+ 0234 1991              ld R17,y+
+ 0236 0991              ld R16,y+
+ 0238 9990              ld R9,y+
+ 023A 8990              ld R8,y+
+ 023C 7990              ld R7,y+
+ 023E 6990              ld R6,y+
+ 0240 5990              ld R5,y+
+ 0242 4990              ld R4,y+
+ 0244 3990              ld R3,y+
+ 0246 2990              ld R2,y+
+ 0248 1990              ld R1,y+
+ 024A 0990              ld R0,y+
+ 024C 1895              reti
+ 024E                   .dbend
+                        .area vector(rom, abs)
+                        .org 116
+ 0074 0C942701          jmp _int_timer3
+                        .area text(rom, con, rel)
+ 024E                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 024E                   .dbfunc e int_timer3 _int_timer3 fV
+                        .even
+ 024E           _int_timer3::
+ 024E 0A92              st -y,R0
+ 0250 1A92              st -y,R1
+ 0252 2A92              st -y,R2
+ 0254 3A92              st -y,R3
+ 0256 4A92              st -y,R4
+ 0258 5A92              st -y,R5
+ 025A 6A92              st -y,R6
+ 025C 7A92              st -y,R7
+ 025E 8A92              st -y,R8
+ 0260 9A92              st -y,R9
+ 0262 0A93              st -y,R16
+ 0264 1A93              st -y,R17
+ 0266 2A93              st -y,R18
+ 0268 3A93              st -y,R19
+ 026A 8A93              st -y,R24
+ 026C 9A93              st -y,R25
+ 026E AA93              st -y,R26
+ 0270 BA93              st -y,R27
+ 0272 EA93              st -y,R30
+ 0274 FA93              st -y,R31
+ 0276 0FB6              IN R0,63
+ 0278 0A92              st -y,R0
+ 027A 2197              sbiw R28,1
+ 027C                   .dbline -1
+ 027C                   .dbline 115
+ 027C           ; }
+ 027C           ; //16位定时器，定时器3溢出中断。
+ 027C           ; #pragma interrupt_handler int_timer3:30
+ 027C           ; void int_timer3(void){
+ 027C                   .dbline 116
+ 027C           ;     TCCR1B=0x00;
+ 027C 2224              clr R2
+ 027E 2EBC              out 0x2e,R2
+ 0280                   .dbline 117
+ 0280           ;      for(i=0;i<5;i++){
+ 0280 20920000          sts _i,R2
+ 0284 11C0              xjmp L24
+ 0286           L21:
+ 0286                   .dbline 117
+ 0286                   .dbline 118
+ 0286           ;                lcd_write_char(0x02,3,0x30+i); 
+ 0286 80910000          lds R24,_i
+ 028A 805D              subi R24,208    ; addi 48
+ 028C 8883              std y+0,R24
+ 028E 23E0              ldi R18,3
+ 0290 02E0              ldi R16,2
+ 0292 0E940000          xcall _lcd_write_char
+ 0296                   .dbline 119
+ 0296           ;                delay_ms(100);         
+ 0296 04E6              ldi R16,100
+ 0298 10E0              ldi R17,0
+ 029A 0E940000          xcall _delay_ms
+ 029E                   .dbline 120
+ 029E           ;         }
+ 029E           L22:
+ 029E                   .dbline 117
+ 029E 80910000          lds R24,_i
+ 02A2 8F5F              subi R24,255    ; addi 1
+ 02A4 80930000          sts _i,R24
+ 02A8           L24:
+ 02A8                   .dbline 117
+ 02A8 80910000          lds R24,_i
+ 02AC 8530              cpi R24,5
+ 02AE 58F3              brlo L21
+ 02B0           X3:
+ 02B0                   .dbline 121
+ 02B0           ;       TCNT3H=time_h_3;
+ 02B0 20900400          lds R2,_time_h_3
+ 02B4 20928900          sts 137,R2
+ 02B8                   .dbline 122
+ 02B8           ;     TCNT3L=time_l_3;
+ 02B8 20900300          lds R2,_time_l_3
+ 02BC 20928800          sts 136,R2
+ 02C0                   .dbline 123
+ 02C0           ;        TCCR1B=0x05;
+ 02C0 85E0              ldi R24,5
+ 02C2 8EBD              out 0x2e,R24
+ 02C4                   .dbline -2
+ 02C4           L20:
+ 02C4                   .dbline 0 ; func end
+ 02C4 2196              adiw R28,1
+ 02C6 0990              ld R0,y+
+ 02C8 0FBE              OUT 63,R0
+ 02CA F991              ld R31,y+
+ 02CC E991              ld R30,y+
+ 02CE B991              ld R27,y+
+ 02D0 A991              ld R26,y+
+ 02D2 9991              ld R25,y+
+ 02D4 8991              ld R24,y+
+ 02D6 3991              ld R19,y+
+ 02D8 2991              ld R18,y+
+ 02DA 1991              ld R17,y+
+ 02DC 0991              ld R16,y+
+ 02DE 9990              ld R9,y+
+ 02E0 8990              ld R8,y+
+ 02E2 7990              ld R7,y+
+ 02E4 6990              ld R6,y+
+ 02E6 5990              ld R5,y+
+ 02E8 4990              ld R4,y+
+ 02EA 3990              ld R3,y+
+ 02EC 2990              ld R2,y+
+ 02EE 1990              ld R1,y+
+ 02F0 0990              ld R0,y+
+ 02F2 1895              reti
+ 02F4                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 0000           _i::
+ 0000                   .blkb 1
+ 0001                   .dbsym e i _i c
+ 0001           _time_2::
+ 0001                   .blkb 1
+ 0002                   .dbsym e time_2 _time_2 c
+ 0002           _time_0::
+ 0002                   .blkb 1
+ 0003                   .dbsym e time_0 _time_0 c
+ 0003           _time_l_3::
+ 0003                   .blkb 1
+ 0004                   .dbsym e time_l_3 _time_l_3 c
+ 0004           _time_h_3::
+ 0004                   .blkb 1
+ 0005                   .dbsym e time_h_3 _time_h_3 c
+ 0005           _time_l_1::
+ 0005                   .blkb 1
+ 0006                   .dbsym e time_l_1 _time_l_1 c
+ 0006           _time_h_1::
+ 0006                   .blkb 1
+ 0007                   .dbsym e time_h_1 _time_h_1 c
+ 0007           ; }

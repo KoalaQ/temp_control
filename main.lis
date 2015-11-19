@@ -1,0 +1,199 @@
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile main.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile main.c
+ 0000           _temp_h::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 0000              .word 0
+                        .area data(ram, con, rel)
+ 0002                   .dbfile main.c
+ 0002                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0002                   .dbsym e temp_h _temp_h i
+ 0002           _temp_l::
+ 0002                   .blkb 2
+                        .area idata
+ 0002 0000              .word 0
+                        .area data(ram, con, rel)
+ 0004                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0004                   .dbsym e temp_l _temp_l i
+                        .area text(rom, con, rel)
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0000                   .dbfunc e main _main fV
+ 0000           ;           data -> R20
+                        .even
+ 0000           _main::
+ 0000 2297              sbiw R28,2
+ 0002                   .dbline -1
+ 0002                   .dbline 20
+ 0002           ; 
+ 0002           ; #include<iom128v.h>
+ 0002           ; #include "main.h"
+ 0002           ; #include "lcd.h"
+ 0002           ; #include "time.h"
+ 0002           ; #include "key.h"
+ 0002           ; #include "delay.h"
+ 0002           ; #include "timertask.h"
+ 0002           ; #include "eeprom.h"
+ 0002           ; unsigned int temp_h=0;
+ 0002           ; unsigned int temp_l=0;
+ 0002           ;  unsigned char send_buf[600];
+ 0002           ;  unsigned char receive_buf[600];
+ 0002           ;  unsigned int send_len;
+ 0002           ;  unsigned int receive_len;
+ 0002           ; //*************************************************************************
+ 0002           ; //                    主程序
+ 0002           ; //*************************************************************************
+ 0002           ; void main(void)
+ 0002           ; { 
+ 0002                   .dbline 22
+ 0002           ;   uchar data;
+ 0002           ;   DDRE=0xFF;
+ 0002 8FEF              ldi R24,255
+ 0004 82B9              out 0x2,R24
+ 0006                   .dbline 23
+ 0006           ;   SREG|=0x80;//开中断
+ 0006 7894              bset 7
+ 0008                   .dbline 24
+ 0008           ;   lcd_init();
+ 0008 0E940000          xcall _lcd_init
+ 000C                   .dbline 49
+ 000C           ;   /*Initial_time();
+ 000C           ;    lcd_Desk(); 
+ 000C           ;    delay_us(10);
+ 000C           ;     data=read_data_xy(0,0);
+ 000C           ;   data=read_data_xy(0,0);
+ 000C           ;   lcd_write_char(2,2,data);
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;   lcd_write_char_con(2,date_cmd_1());
+ 000C           ;    //Timerinit_1(0x00,0x00);
+ 000C           ;    Timerinit_3(0x88,0x88);
+ 000C           ;    //Timerinit_0(0x88);
+ 000C           ;   // Timerinit_2(0x01);*/
+ 000C           ;  // EEPROM_write(0x00,0x00,0x02);
+ 000C           ;   data=EEPROM_read(0x00,0x00);
+ 000C 2227              clr R18
+ 000E 3327              clr R19
+ 0010 0027              clr R16
+ 0012 1127              clr R17
+ 0014 0E940000          xcall _EEPROM_read
+ 0018 402F              mov R20,R16
+ 001A                   .dbline 50
+ 001A           ;    lcd_write_char(8,0,0x30|data);
+ 001A 842F              mov R24,R20
+ 001C 8063              ori R24,48
+ 001E 8883              std y+0,R24
+ 0020 2227              clr R18
+ 0022 08E0              ldi R16,8
+ 0024 0E940000          xcall _lcd_write_char
+ 0028                   .dbline 51
+ 0028           ;    EEPROM_write(0x00,0x00,data+1);
+ 0028 842F              mov R24,R20
+ 002A 9927              clr R25
+ 002C 0196              adiw R24,1
+ 002E 9983              std y+1,R25
+ 0030 8883              std y+0,R24
+ 0032 2227              clr R18
+ 0034 3327              clr R19
+ 0036 0027              clr R16
+ 0038 1127              clr R17
+ 003A 0E940000          xcall _EEPROM_write
+ 003E                   .dbline 52
+ 003E           ;   PORTE=~data;
+ 003E 242E              mov R2,R20
+ 0040 2094              com R2
+ 0042 23B8              out 0x3,R2
+ 0044 09C0              xjmp L3
+ 0046           L2:
+ 0046                   .dbline 53
+ 0046           ;   while(1){
+ 0046                   .dbline 57
+ 0046           ;    
+ 0046           ;    
+ 0046           ;    
+ 0046           ;    showTimeLcd();
+ 0046 0E940000          xcall _showTimeLcd
+ 004A                   .dbline 58
+ 004A           ;     lcd_write_char(0,2,KeyScan_once());
+ 004A 0E940000          xcall _KeyScan_once
+ 004E 0883              std y+0,R16
+ 0050 22E0              ldi R18,2
+ 0052 0027              clr R16
+ 0054 0E940000          xcall _lcd_write_char
+ 0058                   .dbline 75
+ 0058           ;       /*cur_set(0);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(1);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(2);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(3);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(4);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(5);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(6);
+ 0058           ;       delay_ms(3000);
+ 0058           ;       cur_set(7);
+ 0058           ;       delay_ms(3000);*/
+ 0058           ;   }
+ 0058           L3:
+ 0058                   .dbline 53
+ 0058 F6CF              xjmp L2
+ 005A           X0:
+ 005A                   .dbline -2
+ 005A           L1:
+ 005A                   .dbline 0 ; func end
+ 005A 2296              adiw R28,2
+ 005C 0895              ret
+ 005E                   .dbsym r data 20 c
+ 005E                   .dbend
+                        .area bss(ram, con, rel)
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0000           _receive_len::
+ 0000                   .blkb 2
+ 0002                   .dbsym e receive_len _receive_len i
+ 0002           _send_len::
+ 0002                   .blkb 2
+ 0004                   .dbsym e send_len _send_len i
+ 0004           _receive_buf::
+ 0004                   .blkb 600
+ 025C                   .dbsym e receive_buf _receive_buf A[600:600]c
+ 025C           _send_buf::
+ 025C                   .blkb 600
+ 04B4                   .dbsym e send_buf _send_buf A[600:600]c
+ 04B4           ;  
+ 04B4           ; 
+ 04B4           ;  /* SREG|=0x80;
+ 04B4           ;   //ADCSRA=0x8E;  
+ 04B4           ;   DDRE=0xFF;
+ 04B4           ;   PORTE=0xFF;
+ 04B4           ;   lcd_init();                                 //液晶参数初始化设置
+ 04B4           ;   lcd_clear();                                //清屏
+ 04B4           ;   lcd_Desk();//adc初始化配置
+ 04B4           ;   //adc_init();
+ 04B4           ;    // adc_init_once() ;                       
+ 04B4           ;                           //开启全局中断
+ 04B4           ;  //Timerinit_1(0xFF,0xF0);
+ 04B4           ;  Initial_time();
+ 04B4           ;  Timerinit_3( 0xCC, 0xC5);//16M,0.8s
+ 04B4           ;  //Timerinit_3( 0xE6, 0x62);//8M,0.8s
+ 04B4           ;  
+ 04B4           ;  //初始化按键
+ 04B4           ;  //KeyInit();*/
+ 04B4           ;  
+ 04B4           ; 
+ 04B4           ; }

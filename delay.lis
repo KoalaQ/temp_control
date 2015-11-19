@@ -1,0 +1,126 @@
+                        .module delay.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile delay.c
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\delay.c
+ 0000                   .dbfunc e delay_us _delay_us fV
+ 0000           ;              n -> R16,R17
+                        .even
+ 0000           _delay_us::
+ 0000                   .dbline -1
+ 0000                   .dbline 6
+ 0000           ; #include<iom128v.h>
+ 0000           ; #include "delay.h"
+ 0000           ; 
+ 0000           ; 
+ 0000           ; void delay_us(uint n)//ÑÓÊ±us
+ 0000           ; {
+ 0000                   .dbline 7
+ 0000           ;   n=2*n;
+ 0000 000F              lsl R16
+ 0002 111F              rol R17
+ 0004           L2:
+ 0004                   .dbline 8
+ 0004           ;   do{ n--;
+ 0004                   .dbline 8
+ 0004 0150              subi R16,1
+ 0006 1040              sbci R17,0
+ 0008                   .dbline 9
+ 0008           ;   }while(n>1);
+ 0008           L3:
+ 0008                   .dbline 9
+ 0008 81E0              ldi R24,1
+ 000A 90E0              ldi R25,0
+ 000C 8017              cp R24,R16
+ 000E 9107              cpc R25,R17
+ 0010 C8F3              brlo L2
+ 0012           X0:
+ 0012                   .dbline -2
+ 0012           L1:
+ 0012                   .dbline 0 ; func end
+ 0012 0895              ret
+ 0014                   .dbsym r n 16 i
+ 0014                   .dbend
+ 0014                   .dbfunc e delay_ms _delay_ms fV
+ 0014           ;              j -> R20,R21
+                        .even
+ 0014           _delay_ms::
+ 0014 4A93              st -y,R20
+ 0016 5A93              st -y,R21
+ 0018 A801              movw R20,R16
+ 001A                   .dbline -1
+ 001A                   .dbline 12
+ 001A           ; }
+ 001A           ; void delay_ms(uint j)//ÑÓÊ±ms
+ 001A           ; {
+ 001A           L6:
+ 001A                   .dbline 13
+ 001A           ;    do{j--;
+ 001A                   .dbline 13
+ 001A 4150              subi R20,1
+ 001C 5040              sbci R21,0
+ 001E                   .dbline 14
+ 001E           ;      delay_us(1141);
+ 001E 05E7              ldi R16,1141
+ 0020 14E0              ldi R17,4
+ 0022 EEDF              xcall _delay_us
+ 0024                   .dbline 15
+ 0024           ;    }while(j>1);
+ 0024           L7:
+ 0024                   .dbline 15
+ 0024 81E0              ldi R24,1
+ 0026 90E0              ldi R25,0
+ 0028 8417              cp R24,R20
+ 002A 9507              cpc R25,R21
+ 002C B0F3              brlo L6
+ 002E           X1:
+ 002E                   .dbline -2
+ 002E           L5:
+ 002E                   .dbline 0 ; func end
+ 002E 5991              ld R21,y+
+ 0030 4991              ld R20,y+
+ 0032 0895              ret
+ 0034                   .dbsym r j 20 i
+ 0034                   .dbend
+ 0034                   .dbfunc e delay_s _delay_s fV
+ 0034           ;              i -> R20,R21
+                        .even
+ 0034           _delay_s::
+ 0034 4A93              st -y,R20
+ 0036 5A93              st -y,R21
+ 0038 A801              movw R20,R16
+ 003A                   .dbline -1
+ 003A                   .dbline 18
+ 003A           ; }
+ 003A           ; void delay_s(uint i)
+ 003A           ; {
+ 003A           L10:
+ 003A                   .dbline 19
+ 003A           ;    do{
+ 003A                   .dbline 20
+ 003A           ;    i--;
+ 003A 4150              subi R20,1
+ 003C 5040              sbci R21,0
+ 003E                   .dbline 21
+ 003E           ;    delay_ms(1000);
+ 003E 08EE              ldi R16,1000
+ 0040 13E0              ldi R17,3
+ 0042 E8DF              xcall _delay_ms
+ 0044                   .dbline 22
+ 0044           ;    }while(i>1);
+ 0044           L11:
+ 0044                   .dbline 22
+ 0044 81E0              ldi R24,1
+ 0046 90E0              ldi R25,0
+ 0048 8417              cp R24,R20
+ 004A 9507              cpc R25,R21
+ 004C B0F3              brlo L10
+ 004E           X2:
+ 004E                   .dbline -2
+ 004E           L9:
+ 004E                   .dbline 0 ; func end
+ 004E 5991              ld R21,y+
+ 0050 4991              ld R20,y+
+ 0052 0895              ret
+ 0054                   .dbsym r i 20 i
+ 0054                   .dbend
+ 0054           ; }

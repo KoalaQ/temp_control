@@ -1,0 +1,136 @@
+                        .module eeprom.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile eeprom.c
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\eeprom.c
+ 0000                   .dbfunc e EEPROM_write _EEPROM_write fV
+ 0000           ;           data -> R10,R11
+ 0000           ;         addr_l -> R14,R15
+ 0000           ;         addr_h -> R12,R13
+                        .even
+ 0000           _EEPROM_write::
+ 0000 0E940000          xcall push_xgset00FC
+ 0004 7901              movw R14,R18
+ 0006 6801              movw R12,R16
+ 0008 AE80              ldd R10,y+6
+ 000A BF80              ldd R11,y+7
+ 000C                   .dbline -1
+ 000C                   .dbline 4
+ 000C           ; #include<iom128v.h>
+ 000C           ; #include "eeprom.h"
+ 000C           ; #include "delay.h"
+ 000C           ; void EEPROM_write(uint addr_h,uint addr_l,uint data){
+ 000C                   .dbline 5
+ 000C           ;    SREG&=0x7F;//关中断
+ 000C 8FB7              in R24,0x3f
+ 000E 8F77              andi R24,127
+ 0010 8FBF              out 0x3f,R24
+ 0012           L2:
+ 0012                   .dbline 6
+ 0012           ;     while(EECR & (1<<EEWE)){
+ 0012                   .dbline 8
+ 0012           ;                                
+ 0012           ;        }
+ 0012           L3:
+ 0012                   .dbline 6
+ 0012 E199              sbic 0x1c,1
+ 0014 FECF              rjmp L2
+ 0016           X0:
+ 0016                   .dbline 9
+ 0016           ;        EEARL=addr_l;
+ 0016 EEBA              out 0x1e,R14
+ 0018                   .dbline 10
+ 0018           ;        EEARH=addr_h;
+ 0018 CFBA              out 0x1f,R12
+ 001A                   .dbline 12
+ 001A           ;        
+ 001A           ;        EEDR=data;
+ 001A ADBA              out 0x1d,R10
+ 001C                   .dbline 13
+ 001C           ;        EECR|=(1<<EEMWE);
+ 001C E29A              sbi 0x1c,2
+ 001E                   .dbline 14
+ 001E           ;        EECR|=(1<<EEWE);
+ 001E E19A              sbi 0x1c,1
+ 0020                   .dbline 15
+ 0020           ;         delay_us(1);
+ 0020 01E0              ldi R16,1
+ 0022 10E0              ldi R17,0
+ 0024 0E940000          xcall _delay_us
+ 0028                   .dbline 16
+ 0028           ;        SREG|=0x80;//开中断
+ 0028 7894              bset 7
+ 002A                   .dbline 17
+ 002A           ;        return;
+ 002A                   .dbline -2
+ 002A           L1:
+ 002A                   .dbline 0 ; func end
+ 002A 0C940000          xjmp pop_xgset00FC
+ 002E                   .dbsym r data 10 i
+ 002E                   .dbsym r addr_l 14 i
+ 002E                   .dbsym r addr_h 12 i
+ 002E                   .dbend
+ 002E                   .dbfunc e EEPROM_read _EEPROM_read fc
+ 002E           ;           data -> R10
+ 002E           ;         addr_l -> R12,R13
+ 002E           ;         addr_h -> R10,R11
+                        .even
+ 002E           _EEPROM_read::
+ 002E AA92              st -y,R10
+ 0030 CA92              st -y,R12
+ 0032 6901              movw R12,R18
+ 0034 5801              movw R10,R16
+ 0036                   .dbline -1
+ 0036                   .dbline 19
+ 0036           ; }
+ 0036           ; uchar EEPROM_read(uint addr_h,uint addr_l){
+ 0036                   .dbline 21
+ 0036           ;    uchar data;
+ 0036           ;    SREG&=0x7F;//关中断
+ 0036 8FB7              in R24,0x3f
+ 0038 8F77              andi R24,127
+ 003A 8FBF              out 0x3f,R24
+ 003C           L6:
+ 003C                   .dbline 22
+ 003C           ;     while(EECR & (1<<EEWE)){                   
+ 003C                   .dbline 23
+ 003C           ;        }
+ 003C           L7:
+ 003C                   .dbline 22
+ 003C E199              sbic 0x1c,1
+ 003E FECF              rjmp L6
+ 0040           X1:
+ 0040                   .dbline 24
+ 0040           ;        EEARL=addr_l;
+ 0040 CEBA              out 0x1e,R12
+ 0042                   .dbline 25
+ 0042           ;        EEARH=addr_h;
+ 0042 AFBA              out 0x1f,R10
+ 0044                   .dbline 27
+ 0044           ;        
+ 0044           ;        EECR|=(1<<EERE);
+ 0044 E09A              sbi 0x1c,0
+ 0046                   .dbline 28
+ 0046           ;        delay_us(1);
+ 0046 01E0              ldi R16,1
+ 0048 10E0              ldi R17,0
+ 004A 0E940000          xcall _delay_us
+ 004E                   .dbline 29
+ 004E           ;        data=EEDR;
+ 004E ADB2              in R10,0x1d
+ 0050                   .dbline 30
+ 0050           ;        SREG|=0x80;//开中断
+ 0050 7894              bset 7
+ 0052                   .dbline 31
+ 0052           ;        return data;
+ 0052 0A2D              mov R16,R10
+ 0054                   .dbline -2
+ 0054           L5:
+ 0054                   .dbline 0 ; func end
+ 0054 C990              ld R12,y+
+ 0056 A990              ld R10,y+
+ 0058 0895              ret
+ 005A                   .dbsym r data 10 c
+ 005A                   .dbsym r addr_l 12 i
+ 005A                   .dbsym r addr_h 10 i
+ 005A                   .dbend
+ 005A           ; }

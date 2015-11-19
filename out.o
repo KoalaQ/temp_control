@@ -1,0 +1,63 @@
+XL
+H 1 areas 6 global symbols
+M out.c
+S push_xgset300C Ref0000
+S pop_xgset300C Ref0000
+S lsl16 Ref0000
+A text size 76 flags 0
+dbfile out.c
+dbfile E:\ICCDemo\Temp_Control\temp_control\out.c
+dbfunc e out_all 0 fV
+dbsym r out 10 c
+dbline FFFFFFFF 0
+dbline 4 0
+dbline 5 0
+dbline 6 4
+dbline FFFFFFFE 6
+dbline 0 6
+dbfunc e out_port 8 fV
+dbsym r port A i
+dbsym r out 14 i
+dbline FFFFFFFF 10
+dbline 9 10
+dbline A 10
+dbline B 14
+dbline B 1A
+dbline C 1A
+dbline D 34
+dbline D 36
+dbline D 3E
+dbline E 3E
+dbline F 52
+dbline FFFFFFFE 52
+dbline 0 52
+dbfunc e read_port 56 fi
+dbsym r port A i
+dbline FFFFFFFF 5C
+dbline 11 5C
+dbline 12 5C
+dbline FFFFFFFE 70
+dbline 0 70
+S _read_port Def0056
+S _out_all Def0000
+S _out_port Def0008
+T 00 00 8F EF 84 BB 05 BB 08 95
+R 00 00 00 00
+T 08 00 0E 94 00 00 59 01 A8 01 8F EF 84 BB 40 30
+R 00 00 00 00 12 04 00 00
+T 16 00 45 07 71 F4 01 E0 10 E0 95 01 0E 94 00 00
+R 00 00 00 00 12 0E 02 00
+T 24 00 18 01 20 94 30 94 45 B2 55 24 42 20 53 20
+R 00 00 00 00
+T 32 00 45 BA 0E C0 41 30 E0 E0 5E 07 51 F4 01 E0
+R 00 00 00 00
+T 40 00 10 E0 95 01 0E 94 00 00 25 B2 33 24 20 2A
+R 00 00 00 00 12 08 02 00
+T 4E 00 31 2A 25 BA 0C 94 00 00
+R 00 00 00 00 12 08 01 00
+T 56 00 AA 92 BA 92 58 01 01 E0 10 E0 95 01
+R 00 00 00 00
+T 62 00 0E 94 00 00 23 B2 33 24 20 22 31 22 81 01
+R 00 00 00 00 12 04 02 00
+T 70 00 B9 90 A9 90 08 95
+R 00 00 00 00
