@@ -13,7 +13,7 @@ delay.o:	delay.c
 time.o: D:\iccv7avr\include\iom128v.h .\time.h .\delay.h .\lcd.h
 time.o:	time.c
 	$(CC) -c $(CFLAGS) time.c
-key.o: D:\iccv7avr\include\iom128v.h .\delay.h
+key.o: D:\iccv7avr\include\iom128v.h .\delay.h .\lcd.h
 key.o:	key.c
 	$(CC) -c $(CFLAGS) key.c
 lcd.o: D:\iccv7avr\include\iom128v.h .\lcd.h .\delay.h

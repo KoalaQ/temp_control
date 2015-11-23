@@ -1,74 +1,86 @@
 XL
-H 1 areas 5 global symbols
+H 1 areas 7 global symbols
 M key.c
+S _Set_White_off Ref0000
 S _delay_ms Ref0000
 S _delay_us Ref0000
-A text size 1C0 flags 0
+S _Set_White Ref0000
+A text size 1FE flags 0
 dbfile key.c
 dbfile E:\ICCDemo\Temp_Control\temp_control\key.c
 dbfunc e KeyInit 0 fV
 dbline FFFFFFFF 0
-dbline 3 0
+dbline 4 0
 dbline FFFFFFFE 0
 dbline 0 0
 dbfunc e KeyScan 2 fc
 dbline FFFFFFFF 6
-dbline 7 6
-dbline 9 6
-dbline A A
-dbline D 14
-dbline E 18
-dbline F 22
-dbline 10 2A
-dbline 12 60
-dbline 13 64
-dbline 14 68
-dbline 15 6C
-dbline 16 70
-dbline 1A 74
-dbline 1B 78
-dbline 1C 82
-dbline 1D 8A
-dbline 1F C0
-dbline 20 C4
-dbline 21 C8
-dbline 22 CC
-dbline 23 D0
-dbline 27 D4
-dbline 28 D8
-dbline 29 E2
-dbline 2A EA
-dbline 2C 120
-dbline 2D 124
-dbline 2E 128
-dbline 2F 12C
-dbline 30 130
-dbline 34 134
-dbline 35 138
-dbline 36 142
-dbline 37 14A
-dbline 39 180
-dbline 3A 184
-dbline 3B 188
-dbline 3C 18C
-dbline 3D 190
-dbline 40 194
+dbline 8 6
+dbline A 6
+dbline B A
+dbline E 14
+dbline F 18
+dbline 10 22
+dbline 11 2A
+dbline 13 60
+dbline 14 64
+dbline 15 68
+dbline 16 6C
+dbline 17 70
+dbline 1B 74
+dbline 1C 78
+dbline 1D 82
+dbline 1E 8A
+dbline 20 C0
+dbline 21 C4
+dbline 22 C8
+dbline 23 CC
+dbline 24 D0
+dbline 28 D4
+dbline 29 D8
+dbline 2A E2
+dbline 2B EA
+dbline 2D 120
+dbline 2E 124
+dbline 2F 128
+dbline 30 12C
+dbline 31 130
+dbline 35 134
+dbline 36 138
+dbline 37 142
+dbline 38 14A
+dbline 3A 180
+dbline 3B 184
+dbline 3C 188
+dbline 3D 18C
+dbline 3E 190
+dbline 41 194
 dbline FFFFFFFE 196
 dbline 0 196
 dbfunc e KeyScan_once 19C fc
-dbsym r keyValue2 C c
-dbsym r keyValue A c
-dbline FFFFFFFF 1A0
-dbline 46 1A0
-dbline 48 1A0
-dbline 49 1A4
-dbline 4A 1AC
-dbline 4B 1B0
-dbline 4B 1B4
-dbline 4C 1B4
-dbline 4E 1B8
-dbline FFFFFFFE 1BA
-dbline 0 1BA
+dbsym r keyValue2 A c
+dbsym r keyValue 14 c
+dbline FFFFFFFF 1A2
+dbline 47 1A2
+dbline 49 1A2
+dbline 4A 1A6
+dbline 4B 1AE
+dbline 4C 1B2
+dbline 4C 1B6
+dbline 4D 1B6
+dbline 4D 1BA
+dbline 4E 1BA
+dbline 4F 1C6
+dbline 50 1D2
+dbline 50 1D4
+dbline 50 1D8
+dbline 51 1D8
+dbline 52 1E4
+dbline 53 1F0
+dbline 54 1F0
+dbline 56 1F4
+dbline FFFFFFFE 1F6
+dbline 0 1F6
 S _KeyScan Def0002
 S _KeyScan_once Def019C
 S _KeyInit Def0000
@@ -79,7 +91,7 @@ R 00 00 00 00
 T 10 00 80 93 64 00 8F ED 85 BB 80 91 65 00 80 61
 R 00 00 00 00
 T 1E 00 80 93 65 00 01 E0 10 E0 0E 94 00 00 43 B3
-R 00 00 00 00 12 0C 01 00
+R 00 00 00 00 12 0C 02 00
 T 2C 00 55 27 4F 3C E0 E0 5E 07 E9 F0 4F 3C E0 E0
 R 00 00 00 00
 T 3A 00 5E 07 DC F0 47 3D E0 E0 5E 07 99 F0 4B 3D
@@ -93,7 +105,7 @@ R 00 00 00 00
 T 72 00 91 C0 8F EB 85 BB 80 91 65 00 80 61 80 93
 R 00 00 00 00
 T 80 00 65 00 01 E0 10 E0 0E 94 00 00 43 B3 55 27
-R 00 00 00 00 12 0A 01 00
+R 00 00 00 00 12 0A 02 00
 T 8E 00 4F 3A E0 E0 5E 07 E9 F0 4F 3A E0 E0 5E 07
 R 00 00 00 00
 T 9C 00 DC F0 47 3B E0 E0 5E 07 99 F0 4B 3B E0 E0
@@ -107,7 +119,7 @@ R 00 00 00 00
 T D4 00 8F E7 85 BB 80 91 65 00 80 61 80 93 65 00
 R 00 00 00 00
 T E2 00 01 E0 10 E0 0E 94 00 00 43 B3 55 27 4F 36
-R 00 00 00 00 12 08 01 00
+R 00 00 00 00 12 08 02 00
 T F0 00 E0 E0 5E 07 E9 F0 4F 36 E0 E0 5E 07 DC F0
 R 00 00 00 00
 T FE 00 47 37 E0 E0 5E 07 99 F0 4B 37 E0 E0 5E 07
@@ -121,7 +133,7 @@ R 00 00 00 00
 T 36 01 85 BB 80 91 65 00 8F 70 80 93 65 00 01 E0
 R 00 00 00 00
 T 44 01 10 E0 0E 94 00 00 43 B3 55 27 4F 3E E0 E0
-R 00 00 00 00 12 06 01 00
+R 00 00 00 00 12 06 02 00
 T 52 01 5E 07 E9 F0 4F 3E E0 E0 5E 07 DC F0 47 3F
 R 00 00 00 00
 T 60 01 E0 E0 5E 07 99 F0 4B 3F E0 E0 5E 07 69 F0
@@ -134,9 +146,19 @@ T 8A 01 05 C0 04 E3 03 C0 05 E3 01 C0 0E E6 59 91
 R 00 00 00 00
 T 98 01 49 91 08 95
 R 00 00 00 00
-T 9C 01 AA 92 CA 92 30 DF A0 2E 02 E0 10 E0
+T 9C 01 AA 92 4A 93 21 97 2F DF 40 2F 02 E0 10 E0
 R 00 00 00 00
-T A8 01 0E 94 00 00 2A DF C0 2E A0 16 11 F4 0A 2D
+T AA 01 0E 94 00 00 29 DF A0 2E 40 17 F9 F4 42 37
+R 00 00 00 00 12 04 01 00
+T B8 01 69 F4 86 E0 88 83 21 E0 05 E0 0E 94 00 00
+R 00 00 00 00 12 0E 00 00
+T C6 01 82 E0 88 83 21 E0 01 E0 0E 94 00 00 0E C0
+R 00 00 00 00 12 0C 03 00
+T D4 01 4C 36 61 F4 82 E0 88 83 21 E0 01 E0
+R 00 00 00 00
+T E0 01 0E 94 00 00 86 E0 88 83 21 E0 05 E0
 R 00 00 00 00 12 04 00 00
-T B6 01 01 C0 0E E6 C9 90 A9 90 08 95
+T EC 01 0E 94 00 00 04 2F 01 C0 0E E6 21 96 49 91
+R 00 00 00 00 12 04 03 00
+T FA 01 A9 90 08 95
 R 00 00 00 00

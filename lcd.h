@@ -18,4 +18,8 @@ void lcd_init(void);
 void lcd_Desk(void);
 void cur_set(uint type);
 void lcd_write_pos(unsigned char x,unsigned char y);
+ void Set_Draw(void)  ;
+ void Set_UNDraw(void) ; 
+  void Set_White(uchar x,uchar y,uchar end_x)   ;
+   void Set_White_off(uchar x,uchar y,uchar end_x)   ;
 #endif

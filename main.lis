@@ -58,109 +58,116 @@
  0008                   .dbline 24
  0008           ;   lcd_init();
  0008 0E940000          xcall _lcd_init
- 000C                   .dbline 49
- 000C           ;   /*Initial_time();
- 000C           ;    lcd_Desk(); 
- 000C           ;    delay_us(10);
- 000C           ;     data=read_data_xy(0,0);
- 000C           ;   data=read_data_xy(0,0);
- 000C           ;   lcd_write_char(2,2,data);
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;   lcd_write_char_con(2,date_cmd_1());
- 000C           ;    //Timerinit_1(0x00,0x00);
- 000C           ;    Timerinit_3(0x88,0x88);
- 000C           ;    //Timerinit_0(0x88);
- 000C           ;   // Timerinit_2(0x01);*/
- 000C           ;  // EEPROM_write(0x00,0x00,0x02);
- 000C           ;   data=EEPROM_read(0x00,0x00);
- 000C 2227              clr R18
- 000E 3327              clr R19
- 0010 0027              clr R16
- 0012 1127              clr R17
- 0014 0E940000          xcall _EEPROM_read
- 0018 402F              mov R20,R16
- 001A                   .dbline 50
- 001A           ;    lcd_write_char(8,0,0x30|data);
- 001A 842F              mov R24,R20
- 001C 8063              ori R24,48
- 001E 8883              std y+0,R24
- 0020 2227              clr R18
- 0022 08E0              ldi R16,8
- 0024 0E940000          xcall _lcd_write_char
- 0028                   .dbline 51
- 0028           ;    EEPROM_write(0x00,0x00,data+1);
- 0028 842F              mov R24,R20
- 002A 9927              clr R25
- 002C 0196              adiw R24,1
- 002E 9983              std y+1,R25
- 0030 8883              std y+0,R24
- 0032 2227              clr R18
- 0034 3327              clr R19
- 0036 0027              clr R16
- 0038 1127              clr R17
- 003A 0E940000          xcall _EEPROM_write
- 003E                   .dbline 52
- 003E           ;   PORTE=~data;
- 003E 242E              mov R2,R20
- 0040 2094              com R2
- 0042 23B8              out 0x3,R2
- 0044 09C0              xjmp L3
- 0046           L2:
- 0046                   .dbline 53
- 0046           ;   while(1){
- 0046                   .dbline 57
- 0046           ;    
- 0046           ;    
- 0046           ;    
- 0046           ;    showTimeLcd();
- 0046 0E940000          xcall _showTimeLcd
- 004A                   .dbline 58
- 004A           ;     lcd_write_char(0,2,KeyScan_once());
- 004A 0E940000          xcall _KeyScan_once
- 004E 0883              std y+0,R16
- 0050 22E0              ldi R18,2
- 0052 0027              clr R16
- 0054 0E940000          xcall _lcd_write_char
- 0058                   .dbline 75
- 0058           ;       /*cur_set(0);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(1);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(2);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(3);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(4);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(5);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(6);
- 0058           ;       delay_ms(3000);
- 0058           ;       cur_set(7);
- 0058           ;       delay_ms(3000);*/
- 0058           ;   }
- 0058           L3:
- 0058                   .dbline 53
- 0058 F6CF              xjmp L2
- 005A           X0:
- 005A                   .dbline -2
- 005A           L1:
- 005A                   .dbline 0 ; func end
- 005A 2296              adiw R28,2
- 005C 0895              ret
- 005E                   .dbsym r data 20 c
- 005E                   .dbend
+ 000C                   .dbline 25
+ 000C           ;   lcd_clear(); 
+ 000C 0E940000          xcall _lcd_clear
+ 0010                   .dbline 50
+ 0010           ;   /*Initial_time();
+ 0010           ;    lcd_Desk(); 
+ 0010           ;    delay_us(10);
+ 0010           ;     data=read_data_xy(0,0);
+ 0010           ;   data=read_data_xy(0,0);
+ 0010           ;   lcd_write_char(2,2,data);
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;   lcd_write_char_con(2,date_cmd_1());
+ 0010           ;    //Timerinit_1(0x00,0x00);
+ 0010           ;    Timerinit_3(0x88,0x88);
+ 0010           ;    //Timerinit_0(0x88);
+ 0010           ;   // Timerinit_2(0x01);*/
+ 0010           ;  // EEPROM_write(0x00,0x00,0x02);
+ 0010           ;   data=EEPROM_read(0x00,0x00);
+ 0010 2227              clr R18
+ 0012 3327              clr R19
+ 0014 0027              clr R16
+ 0016 1127              clr R17
+ 0018 0E940000          xcall _EEPROM_read
+ 001C 402F              mov R20,R16
+ 001E                   .dbline 51
+ 001E           ;    lcd_write_char(8,0,0x30|data);
+ 001E 842F              mov R24,R20
+ 0020 8063              ori R24,48
+ 0022 8883              std y+0,R24
+ 0024 2227              clr R18
+ 0026 08E0              ldi R16,8
+ 0028 0E940000          xcall _lcd_write_char
+ 002C                   .dbline 52
+ 002C           ;    EEPROM_write(0x00,0x00,data+1);
+ 002C 842F              mov R24,R20
+ 002E 9927              clr R25
+ 0030 0196              adiw R24,1
+ 0032 9983              std y+1,R25
+ 0034 8883              std y+0,R24
+ 0036 2227              clr R18
+ 0038 3327              clr R19
+ 003A 0027              clr R16
+ 003C 1127              clr R17
+ 003E 0E940000          xcall _EEPROM_write
+ 0042                   .dbline 53
+ 0042           ;   PORTE=~data;
+ 0042 242E              mov R2,R20
+ 0044 2094              com R2
+ 0046 23B8              out 0x3,R2
+ 0048                   .dbline 54
+ 0048           ;    lcd_Desk(); 
+ 0048 0E940000          xcall _lcd_Desk
+ 004C 09C0              xjmp L3
+ 004E           L2:
+ 004E                   .dbline 56
+ 004E           ;  
+ 004E           ;   while(1){
+ 004E                   .dbline 60
+ 004E           ;    
+ 004E           ;    
+ 004E           ;    
+ 004E           ;    showTimeLcd();
+ 004E 0E940000          xcall _showTimeLcd
+ 0052                   .dbline 61
+ 0052           ;     lcd_write_char(0,2,KeyScan_once());
+ 0052 0E940000          xcall _KeyScan_once
+ 0056 0883              std y+0,R16
+ 0058 22E0              ldi R18,2
+ 005A 0027              clr R16
+ 005C 0E940000          xcall _lcd_write_char
+ 0060                   .dbline 78
+ 0060           ;       /*cur_set(0);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(1);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(2);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(3);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(4);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(5);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(6);
+ 0060           ;       delay_ms(3000);
+ 0060           ;       cur_set(7);
+ 0060           ;       delay_ms(3000);*/
+ 0060           ;   }
+ 0060           L3:
+ 0060                   .dbline 56
+ 0060 F6CF              xjmp L2
+ 0062           X0:
+ 0062                   .dbline -2
+ 0062           L1:
+ 0062                   .dbline 0 ; func end
+ 0062 2296              adiw R28,2
+ 0064 0895              ret
+ 0066                   .dbsym r data 20 c
+ 0066                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
  0000           _receive_len::

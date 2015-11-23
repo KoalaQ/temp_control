@@ -6,9 +6,10 @@
                         .even
  0000           _KeyInit::
  0000                   .dbline -1
- 0000                   .dbline 3
+ 0000                   .dbline 4
  0000           ; #include<iom128v.h>
  0000           ; #include "delay.h"
+ 0000           ; #include "lcd.h"
  0000           ; void KeyInit(void){
  0000                   .dbline -2
  0000           L1:
@@ -21,38 +22,38 @@
  0002 4A93              st -y,R20
  0004 5A93              st -y,R21
  0006                   .dbline -1
- 0006                   .dbline 7
+ 0006                   .dbline 8
  0006           ;    
  0006           ; 
  0006           ; }
  0006           ; uchar KeyScan(void){
- 0006                   .dbline 9
+ 0006                   .dbline 10
  0006           ;   //初始化端口
  0006           ;    DDRC=0xE0;
  0006 80EE              ldi R24,224
  0008 84BB              out 0x14,R24
- 000A                   .dbline 10
+ 000A                   .dbline 11
  000A           ;    DDRG|=0x10;
  000A 80916400          lds R24,100
  000E 8061              ori R24,16
  0010 80936400          sts 100,R24
- 0014                   .dbline 13
+ 0014                   .dbline 14
  0014           ;    
  0014           ;    //第一次扫描
  0014           ;    PORTC=0xDF;
  0014 8FED              ldi R24,223
  0016 85BB              out 0x15,R24
- 0018                   .dbline 14
+ 0018                   .dbline 15
  0018           ;    PORTG|=0x10;
  0018 80916500          lds R24,101
  001C 8061              ori R24,16
  001E 80936500          sts 101,R24
- 0022                   .dbline 15
+ 0022                   .dbline 16
  0022           ;    delay_us(1);
  0022 01E0              ldi R16,1
  0024 10E0              ldi R17,0
  0026 0E940000          xcall _delay_us
- 002A                   .dbline 16
+ 002A                   .dbline 17
  002A           ;    switch(PINC)
  002A 43B3              in R20,0x13
  002C 5527              clr R21
@@ -89,50 +90,50 @@
  005E           X5:
  005E 0AC0              xjmp L4
  0060           L6:
- 0060                   .dbline 18
+ 0060                   .dbline 19
  0060           ;    {
  0060           ;               case 0xDE:return  'e';//'esc';
  0060 05E6              ldi R16,101
  0062 99C0              xjmp L2
  0064           L7:
- 0064                   .dbline 19
+ 0064                   .dbline 20
  0064           ;               case 0xdd:return  'a';//'alm';
  0064 01E6              ldi R16,97
  0066 97C0              xjmp L2
  0068           L8:
- 0068                   .dbline 20
+ 0068                   .dbline 21
  0068           ;               case 0xdb:return  'd';//'down';  
  0068 04E6              ldi R16,100
  006A 95C0              xjmp L2
  006C           L9:
- 006C                   .dbline 21
+ 006C                   .dbline 22
  006C           ;               case 0xd7:return  'u';//'up';
  006C 05E7              ldi R16,117
  006E 93C0              xjmp L2
  0070           L10:
- 0070                   .dbline 22
+ 0070                   .dbline 23
  0070           ;               case 0xcf:return  'l';//'left';
  0070 0CE6              ldi R16,108
  0072 91C0              xjmp L2
  0074           L4:
- 0074                   .dbline 26
+ 0074                   .dbline 27
  0074           ;               default:break;     
  0074           ;    } 
  0074           ;     //第二次扫描
  0074           ;    PORTC=0xBF;
  0074 8FEB              ldi R24,191
  0076 85BB              out 0x15,R24
- 0078                   .dbline 27
+ 0078                   .dbline 28
  0078           ;    PORTG|=0x10;
  0078 80916500          lds R24,101
  007C 8061              ori R24,16
  007E 80936500          sts 101,R24
- 0082                   .dbline 28
+ 0082                   .dbline 29
  0082           ;    delay_us(1);
  0082 01E0              ldi R16,1
  0084 10E0              ldi R17,0
  0086 0E940000          xcall _delay_us
- 008A                   .dbline 29
+ 008A                   .dbline 30
  008A           ;    switch(PINC)
  008A 43B3              in R20,0x13
  008C 5527              clr R21
@@ -169,50 +170,50 @@
  00BE           X11:
  00BE 0AC0              xjmp L13
  00C0           L15:
- 00C0                   .dbline 31
+ 00C0                   .dbline 32
  00C0           ;    {
  00C0           ;               case 0xbE:return 's';//'set';
  00C0 03E7              ldi R16,115
  00C2 69C0              xjmp L2
  00C4           L16:
- 00C4                   .dbline 32
+ 00C4                   .dbline 33
  00C4           ;               case 0xbd:return 'r';//'right';
  00C4 02E7              ldi R16,114
  00C6 67C0              xjmp L2
  00C8           L17:
- 00C8                   .dbline 33
+ 00C8                   .dbline 34
  00C8           ;               case 0xbb:return 't';//'ent';  
  00C8 04E7              ldi R16,116
  00CA 65C0              xjmp L2
  00CC           L18:
- 00CC                   .dbline 34
+ 00CC                   .dbline 35
  00CC           ;               case 0xb7:return 'c';//'clr';
  00CC 03E6              ldi R16,99
  00CE 63C0              xjmp L2
  00D0           L19:
- 00D0                   .dbline 35
+ 00D0                   .dbline 36
  00D0           ;               case 0xaf:return '+';//'+/-';
  00D0 0BE2              ldi R16,43
  00D2 61C0              xjmp L2
  00D4           L13:
- 00D4                   .dbline 39
+ 00D4                   .dbline 40
  00D4           ;               default:break;     
  00D4           ;    } 
  00D4           ;     //第三次扫描
  00D4           ;    PORTC=0x7F;
  00D4 8FE7              ldi R24,127
  00D6 85BB              out 0x15,R24
- 00D8                   .dbline 40
+ 00D8                   .dbline 41
  00D8           ;    PORTG|=0x10;
  00D8 80916500          lds R24,101
  00DC 8061              ori R24,16
  00DE 80936500          sts 101,R24
- 00E2                   .dbline 41
+ 00E2                   .dbline 42
  00E2           ;    delay_us(1);
  00E2 01E0              ldi R16,1
  00E4 10E0              ldi R17,0
  00E6 0E940000          xcall _delay_us
- 00EA                   .dbline 42
+ 00EA                   .dbline 43
  00EA           ;    switch(PINC)
  00EA 43B3              in R20,0x13
  00EC 5527              clr R21
@@ -249,50 +250,50 @@
  011E           X17:
  011E 0AC0              xjmp L22
  0120           L24:
- 0120                   .dbline 44
+ 0120                   .dbline 45
  0120           ;    {
  0120           ;               case 0x7E:return '0';
  0120 00E3              ldi R16,48
  0122 39C0              xjmp L2
  0124           L25:
- 0124                   .dbline 45
+ 0124                   .dbline 46
  0124           ;               case 0x7d:return '3';
  0124 03E3              ldi R16,51
  0126 37C0              xjmp L2
  0128           L26:
- 0128                   .dbline 46
+ 0128                   .dbline 47
  0128           ;               case 0x7b:return '2';  
  0128 02E3              ldi R16,50
  012A 35C0              xjmp L2
  012C           L27:
- 012C                   .dbline 47
+ 012C                   .dbline 48
  012C           ;               case 0x77:return '1';
  012C 01E3              ldi R16,49
  012E 33C0              xjmp L2
  0130           L28:
- 0130                   .dbline 48
+ 0130                   .dbline 49
  0130           ;               case 0x6f:return '6';
  0130 06E3              ldi R16,54
  0132 31C0              xjmp L2
  0134           L22:
- 0134                   .dbline 52
+ 0134                   .dbline 53
  0134           ;               default:break;     
  0134           ;    } 
  0134           ;       //第四次扫描
  0134           ;    PORTC=0xFF;
  0134 8FEF              ldi R24,255
  0136 85BB              out 0x15,R24
- 0138                   .dbline 53
+ 0138                   .dbline 54
  0138           ;    PORTG&=0x0F;
  0138 80916500          lds R24,101
  013C 8F70              andi R24,15
  013E 80936500          sts 101,R24
- 0142                   .dbline 54
+ 0142                   .dbline 55
  0142           ;    delay_us(1);
  0142 01E0              ldi R16,1
  0144 10E0              ldi R17,0
  0146 0E940000          xcall _delay_us
- 014A                   .dbline 55
+ 014A                   .dbline 56
  014A           ;    switch(PINC)
  014A 43B3              in R20,0x13
  014C 5527              clr R21
@@ -329,33 +330,33 @@
  017E           X23:
  017E 0AC0              xjmp L31
  0180           L33:
- 0180                   .dbline 57
+ 0180                   .dbline 58
  0180           ;    {
  0180           ;               case 0xFE:return '7';
  0180 07E3              ldi R16,55
  0182 09C0              xjmp L2
  0184           L34:
- 0184                   .dbline 58
+ 0184                   .dbline 59
  0184           ;               case 0xFd:return '8';
  0184 08E3              ldi R16,56
  0186 07C0              xjmp L2
  0188           L35:
- 0188                   .dbline 59
+ 0188                   .dbline 60
  0188           ;               case 0xFb:return '9';  
  0188 09E3              ldi R16,57
  018A 05C0              xjmp L2
  018C           L36:
- 018C                   .dbline 60
+ 018C                   .dbline 61
  018C           ;               case 0xF7:return '4';
  018C 04E3              ldi R16,52
  018E 03C0              xjmp L2
  0190           L37:
- 0190                   .dbline 61
+ 0190                   .dbline 62
  0190           ;               case 0xEf:return '5';
  0190 05E3              ldi R16,53
  0192 01C0              xjmp L2
  0194           L31:
- 0194                   .dbline 64
+ 0194                   .dbline 65
  0194           ;               default:break;     
  0194           ;    }
  0194           ;  return 'n';
@@ -368,56 +369,105 @@
  019A 0895              ret
  019C                   .dbend
  019C                   .dbfunc e KeyScan_once _KeyScan_once fc
- 019C           ;      keyValue2 -> R12
- 019C           ;       keyValue -> R10
+ 019C           ;      keyValue2 -> R10
+ 019C           ;       keyValue -> R20
                         .even
  019C           _KeyScan_once::
  019C AA92              st -y,R10
- 019E CA92              st -y,R12
- 01A0                   .dbline -1
- 01A0                   .dbline 70
- 01A0           ;    
- 01A0           ; }
- 01A0           ; //********************************
- 01A0           ; //            加上延时抖动的读取，一次读取一个
- 01A0           ; //********************************
- 01A0           ; uchar KeyScan_once(void){
- 01A0                   .dbline 72
- 01A0           ;         uchar keyValue,keyValue2;
- 01A0           ;         keyValue=KeyScan();
- 01A0 30DF              xcall _KeyScan
- 01A2 A02E              mov R10,R16
- 01A4                   .dbline 73
- 01A4           ;         delay_ms(2);
- 01A4 02E0              ldi R16,2
- 01A6 10E0              ldi R17,0
- 01A8 0E940000          xcall _delay_ms
- 01AC                   .dbline 74
- 01AC           ;         keyValue2=KeyScan();
- 01AC 2ADF              xcall _KeyScan
- 01AE C02E              mov R12,R16
- 01B0                   .dbline 75
- 01B0           ;       if(keyValue==keyValue2){
- 01B0 A016              cp R10,R16
- 01B2 11F4              brne L40
- 01B4           X24:
- 01B4                   .dbline 75
- 01B4                   .dbline 76
- 01B4           ;        return keyValue;
- 01B4 0A2D              mov R16,R10
- 01B6 01C0              xjmp L39
- 01B8           L40:
- 01B8                   .dbline 78
- 01B8           ;       }
- 01B8           ;       return 'n';
- 01B8 0EE6              ldi R16,110
- 01BA                   .dbline -2
- 01BA           L39:
- 01BA                   .dbline 0 ; func end
- 01BA C990              ld R12,y+
- 01BC A990              ld R10,y+
- 01BE 0895              ret
- 01C0                   .dbsym r keyValue2 12 c
- 01C0                   .dbsym r keyValue 10 c
- 01C0                   .dbend
- 01C0           ; }
+ 019E 4A93              st -y,R20
+ 01A0 2197              sbiw R28,1
+ 01A2                   .dbline -1
+ 01A2                   .dbline 71
+ 01A2           ;    
+ 01A2           ; }
+ 01A2           ; //********************************
+ 01A2           ; //            加上延时抖动的读取，一次读取一个
+ 01A2           ; //********************************
+ 01A2           ; uchar KeyScan_once(void){
+ 01A2                   .dbline 73
+ 01A2           ;         uchar keyValue,keyValue2;
+ 01A2           ;         keyValue=KeyScan();
+ 01A2 2FDF              xcall _KeyScan
+ 01A4 402F              mov R20,R16
+ 01A6                   .dbline 74
+ 01A6           ;         delay_ms(2);
+ 01A6 02E0              ldi R16,2
+ 01A8 10E0              ldi R17,0
+ 01AA 0E940000          xcall _delay_ms
+ 01AE                   .dbline 75
+ 01AE           ;         keyValue2=KeyScan();
+ 01AE 29DF              xcall _KeyScan
+ 01B0 A02E              mov R10,R16
+ 01B2                   .dbline 76
+ 01B2           ;       if(keyValue==keyValue2){
+ 01B2 4017              cp R20,R16
+ 01B4 F9F4              brne L40
+ 01B6           X24:
+ 01B6                   .dbline 76
+ 01B6                   .dbline 77
+ 01B6           ;          if(keyValue=='r'){
+ 01B6 4237              cpi R20,114
+ 01B8 69F4              brne L42
+ 01BA           X25:
+ 01BA                   .dbline 77
+ 01BA                   .dbline 78
+ 01BA           ;          Set_White_off(5,1,6); 
+ 01BA 86E0              ldi R24,6
+ 01BC 8883              std y+0,R24
+ 01BE 21E0              ldi R18,1
+ 01C0 05E0              ldi R16,5
+ 01C2 0E940000          xcall _Set_White_off
+ 01C6                   .dbline 79
+ 01C6           ;           Set_White(1,1,2); 
+ 01C6 82E0              ldi R24,2
+ 01C8 8883              std y+0,R24
+ 01CA 21E0              ldi R18,1
+ 01CC 01E0              ldi R16,1
+ 01CE 0E940000          xcall _Set_White
+ 01D2                   .dbline 80
+ 01D2           ;          }else if(keyValue=='l'){
+ 01D2 0EC0              xjmp L43
+ 01D4           L42:
+ 01D4                   .dbline 80
+ 01D4 4C36              cpi R20,108
+ 01D6 61F4              brne L44
+ 01D8           X26:
+ 01D8                   .dbline 80
+ 01D8                   .dbline 81
+ 01D8           ;          Set_White_off(1,1,2); 
+ 01D8 82E0              ldi R24,2
+ 01DA 8883              std y+0,R24
+ 01DC 21E0              ldi R18,1
+ 01DE 01E0              ldi R16,1
+ 01E0 0E940000          xcall _Set_White_off
+ 01E4                   .dbline 82
+ 01E4           ;                       Set_White(5,1,6);  
+ 01E4 86E0              ldi R24,6
+ 01E6 8883              std y+0,R24
+ 01E8 21E0              ldi R18,1
+ 01EA 05E0              ldi R16,5
+ 01EC 0E940000          xcall _Set_White
+ 01F0                   .dbline 83
+ 01F0           ;          }
+ 01F0           L44:
+ 01F0           L43:
+ 01F0                   .dbline 84
+ 01F0           ;        return keyValue;
+ 01F0 042F              mov R16,R20
+ 01F2 01C0              xjmp L39
+ 01F4           L40:
+ 01F4                   .dbline 86
+ 01F4           ;       }
+ 01F4           ;       return 'n';
+ 01F4 0EE6              ldi R16,110
+ 01F6                   .dbline -2
+ 01F6           L39:
+ 01F6                   .dbline 0 ; func end
+ 01F6 2196              adiw R28,1
+ 01F8 4991              ld R20,y+
+ 01FA A990              ld R10,y+
+ 01FC 0895              ret
+ 01FE                   .dbsym r keyValue2 10 c
+ 01FE                   .dbsym r keyValue 20 c
+ 01FE                   .dbend
+ 01FE           ; }

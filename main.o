@@ -1,13 +1,15 @@
 XL
-H 4 areas D global symbols
+H 4 areas F global symbols
 M main.c
 S _KeyScan_once Ref0000
 S _lcd_write_char Ref0000
 S _EEPROM_read Ref0000
+S _lcd_Desk Ref0000
 S _lcd_init Ref0000
 S _EEPROM_write Ref0000
 S _showTimeLcd Ref0000
-A text size 5E flags 0
+S _lcd_clear Ref0000
+A text size 66 flags 0
 dbfile main.c
 dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
 dbfunc e main 0 fV
@@ -17,17 +19,19 @@ dbline 14 2
 dbline 16 2
 dbline 17 6
 dbline 18 8
-dbline 31 C
-dbline 32 1A
-dbline 33 28
-dbline 34 3E
-dbline 35 46
-dbline 39 46
-dbline 3A 4A
-dbline 4B 58
-dbline 35 58
-dbline FFFFFFFE 5A
-dbline 0 5A
+dbline 19 C
+dbline 32 10
+dbline 33 1E
+dbline 34 2C
+dbline 35 42
+dbline 36 48
+dbline 38 4E
+dbline 3C 4E
+dbline 3D 52
+dbline 4E 60
+dbline 38 60
+dbline FFFFFFFE 62
+dbline 0 62
 S _main Def0000
 A data size 4 flags 20
 dbfile main.c
@@ -51,17 +55,19 @@ T 00 00 00 00
 R 00 00 02 00
 T 02 00 00 00
 R 00 00 02 00
-T 00 00 22 97 8F EF 82 B9 78 94 0E 94 00 00 22 27
-R 00 00 00 00 12 0C 03 00
-T 0E 00 33 27 00 27 11 27 0E 94 00 00 40 2F 84 2F
-R 00 00 00 00 12 0A 02 00
-T 1C 00 80 63 88 83 22 27 08 E0 0E 94 00 00 84 2F
-R 00 00 00 00 12 0C 01 00
-T 2A 00 99 27 01 96 99 83 88 83 22 27 33 27 00 27
-R 00 00 00 00
-T 38 00 11 27 0E 94 00 00 24 2E 20 94 23 B8 09 C0
-R 00 00 00 00 12 06 04 00
-T 46 00 0E 94 00 00 0E 94 00 00 08 83 22 E0 00 27
-R 00 00 00 00 12 04 05 00 12 08 00 00
-T 54 00 0E 94 00 00 F6 CF 22 96 08 95
+T 00 00 22 97 8F EF 82 B9 78 94 0E 94 00 00
+R 00 00 00 00 12 0C 04 00
+T 0C 00 0E 94 00 00 22 27 33 27 00 27 11 27
+R 00 00 00 00 12 04 07 00
+T 18 00 0E 94 00 00 40 2F 84 2F 80 63 88 83 22 27
+R 00 00 00 00 12 04 02 00
+T 26 00 08 E0 0E 94 00 00 84 2F 99 27 01 96 99 83
+R 00 00 00 00 12 06 01 00
+T 34 00 88 83 22 27 33 27 00 27 11 27 0E 94 00 00
+R 00 00 00 00 12 0E 05 00
+T 42 00 24 2E 20 94 23 B8 0E 94 00 00 09 C0
+R 00 00 00 00 12 0A 03 00
+T 4E 00 0E 94 00 00 0E 94 00 00 08 83 22 E0 00 27
+R 00 00 00 00 12 04 06 00 12 08 00 00
+T 5C 00 0E 94 00 00 F6 CF 22 96 08 95
 R 00 00 00 00 12 04 01 00

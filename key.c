@@ -1,5 +1,6 @@
 #include<iom128v.h>
 #include "delay.h"
+#include "lcd.h"
 void KeyInit(void){
    
 
@@ -73,6 +74,13 @@ uchar KeyScan_once(void){
 	  delay_ms(2);
 	  keyValue2=KeyScan();
 	if(keyValue==keyValue2){
+	   if(keyValue=='r'){
+	   Set_White_off(5,1,6); 
+	    Set_White(1,1,2); 
+	   }else if(keyValue=='l'){
+	   Set_White_off(1,1,2); 
+	   		Set_White(5,1,6);  
+	   }
 	 return keyValue;
 	}
 	return 'n';

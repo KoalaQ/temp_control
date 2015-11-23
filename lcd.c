@@ -1,6 +1,6 @@
 #include<iom128v.h>
 #include "lcd.h"
-#include "delay.h"
+#include "delay.h" 
 #define rs_l PORTG&=~(1<<PG1)
 #define rs_h PORTG|=1<<PG1
 #define rw_l PORTG&=~(1<<PG0)
@@ -259,6 +259,11 @@ uchar read_ac_2(void){
 	ep2_l;
 	return result;
 }
+
+void lcd_clear(void){
+   lcd_clear_1();
+    lcd_clear_2();
+}
 /*
  读数据程序。命令后，读入。使用read_data函数会是设定的值，再吃调用本函数会使ac
  移动一次，8读取位的数据
@@ -377,16 +382,201 @@ void cur_set(uint type){
 	    lcd_wcmd_2(0x0f);
 	 }
 }
-
+//***************************************************
+//   反白相关
+//***************************************************
+/********************************************************************  
+    函 数 名：Set_Draw(  
+    入口参数：无  
+    出口参数：无  
+    修改日期：  
+    函数作用：  
+    说    明：  
+    ********************************************************************/   
+    void Set_Draw(void)   
+    {   
+        //W_1byte(0,0,0x01);            //清屏   
+        delay_ms(2);                  //延时   
+        //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
+        lcd_wcmd_1(0x36); 
+		//lcd_wcmd_2(0x36);   
+        delay_ms(2);                  //延时   
+    }
+	void Set_UNDraw(void)   
+    {   
+        //W_1byte(0,0,0x01);            //清屏   
+        delay_ms(2);                  //延时   
+        //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
+        lcd_wcmd_1(0x30); 
+		//lcd_wcmd_2(0x36);   
+        delay_ms(2);                  //延时   
+    }
+/**************************************************  
+    uchar x,起始位置
+	uchar y,对应y
+	uchar end_x, 反白结束位置
+	uchar clear 0：反白，1：不反白
+ **************************************************/   
+    void Set_White_off(uchar x,uchar y,uchar end_x)   
+    {   
+        uchar i, j, white_x, white_y,white_end_x,clr_x,clr_y;       //   
+        white_end_x = (end_x-x+1);   
+        white_end_x <<= 1;   //16*16，一次写8个，所以乘2
+		Set_Draw(); //开画图
+		delay_us(1); 
+        if(y==1)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==2)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        }   
+        else if(y==3)   
+        {   
+            white_x = (0x88+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x88;   
+            clr_y = 0x80;   
+        }   
+        else if(y==4)   
+        {   
+            white_x = (0x88+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x88;   
+            clr_y = 0x90;   
+        }   
+        delay_us(1);     
+        for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+        {   
+            lcd_wcmd_1(white_y++);     //设置绘图区的Y地址坐标0   
+            lcd_wcmd_1(white_x);       //设置绘图区的X地址坐标0   
+            for(j=0;j<white_end_x;j++)   //   
+            {     
+              lcd_wdat_1(0x00); //取消这一行的8个点的反白，液晶地址自动加   
+            }   
+        }
+		  Set_UNDraw();//关画图  
+		  delay_us(1);  
+    } 
+	void Set_White(uchar x,uchar y,uchar end_x)   
+    {   
+        uchar i, j, white_x, white_y,white_end_x,clr_x,clr_y;       //   
+        white_end_x = (end_x-x+1);   
+        white_end_x <<= 1;   //16*16，一次写8个，所以乘2
+		Set_Draw(); //开画图
+		delay_us(1); 
+        if(y==1)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==2)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        }   
+        else if(y==3)   
+        {   
+            white_x = (0x88+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x88;   
+            clr_y = 0x80;   
+        }   
+        else if(y==4)   
+        {   
+            white_x = (0x88+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x88;   
+            clr_y = 0x90;   
+        }       
+        for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+        {   
+            lcd_wcmd_1(white_y++);     //设置绘图区的Y地址坐标0   
+            lcd_wcmd_1(white_x);       //设置绘图区的X地址坐标0   
+            for(j=0;j<white_end_x;j++)   //   
+            {    
+                    lcd_wdat_1(0xff); //反白这一行的8个点，液晶地址自动加1     
+            }   
+        }
+		  Set_UNDraw();//关画图  
+		  delay_us(1);  
+    } 
+	/********************************************************************  
+    函 数 名：Draw_Pic  128*64  
+    入口参数：x,y,*Draw  
+    出口参数：无  
+    建立日期：2007年8月26日  
+    修改日期：  
+    函数作用：  
+    说    明：  
+    ********************************************************************/   
+    /*************************************************/   
+    /*   
+    void Draw_Pic(uchar x, uchar y, const uchar *Draw)   
+    {   
+        uchar i, j, temp_x, temp_y;     //   
+        temp_x = x;                     //   
+        temp_y = y;                     //   
+        temp_x |= 0x80;                 //   
+        temp_y |= 0x80;                 //   
+        for(i=0;i<32;i++ )               //上半屏32行   
+        {   
+            lcd_wcmd_1(0,0,temp_y++);      //设置绘图区的Y地址坐标0   
+            lcd_wcmd_1(0,0,temp_x);        //设置绘图区的X地址坐标0   
+            for(j=0;j<16;j++)            //   
+            {   
+                 lcd_wdat_2(0,1,*Draw++);  //   
+            }   
+        }   
+           
+        temp_x = 0x88;                  //   
+        temp_y = 0x80;                  //   
+        j = 0;                          //   
+        for(;i<64;i++ )   
+        {   
+            lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标   
+            lcd_wdat_2(temp_x);        //设置绘图区的X地址坐标   
+            for(j=0;j<16;j++)   
+            {   
+                 lcd_wdat_2(0,1,*Draw++);  //   
+            }   
+        }   
+            
+    } */    
+    /*************************************************/  
 //***********************************************************************
 //      液晶显示界面初始化
 //***********************************************************************
 void lcd_Desk(void)
 { 
-  uint i=0;   
+  //uint i=0;   
  // lcd_clear();
   //lcd_write_str(0,0,"ADC0:");
-  lcd_write_str(0,0,"Hello World!");
+  lcd_write_str(0,3,"反白测试第一次");
+  lcd_write_str(0,0,"反白测试第一次");
+  //delay_ms(100);
+     
+    Set_White(1,1,7); 
+	   
+	 
+    delay_ms(3000); 
+     Set_White_off(1,1,7);
+	Set_White(2,1,2); 
+	 delay_ms(300); 
+	 Set_White_off(2,2,7);
+	 Set_White(3,1,5);   
+  
    //lcd_write_str(0,1,"第二行测试");
   // lcd_write_str(0,2,"三行我测试");
    //lcd_write_str(0,3,"四行我测试");

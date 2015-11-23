@@ -22,6 +22,7 @@ void main(void)
   DDRE=0xFF;
   SREG|=0x80;//¿ªÖÐ¶Ï
   lcd_init();
+  lcd_clear(); 
   /*Initial_time();
    lcd_Desk(); 
    delay_us(10);
@@ -50,6 +51,8 @@ void main(void)
    lcd_write_char(8,0,0x30|data);
    EEPROM_write(0x00,0x00,data+1);
   PORTE=~data;
+   lcd_Desk(); 
+ 
   while(1){
    
    
