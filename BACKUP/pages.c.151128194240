@@ -1,0 +1,339 @@
+#include<iom128v.h>
+#include "main.h"
+#include "lcd.h"
+#include "time.h"
+#include "timertask.h"
+#include "key.h"
+//************************
+// 所有界面信息在这里,用到全局变量， 
+// unsigned int pageNum;//当前页面，如需跳转改变这个值就行
+// unsigned int pageParam[5];//传递参数。界面间参数暂存
+// unsigned int prePageNum;
+//************************
+
+//用于显第一行日期信息，其中Page1、Page3 、Page8使用，
+//由定时器触发该函数，进入这三个界面是启动定时器，退出时关闭
+void pageUtil(void){
+                //关定时器
+   lcd_write_str(0,0,"时间:");
+   showTime_page();
+                 //开定时器 
+}
+//page1,首页的界面
+void page1(void){
+   uint cur=0;
+   uchar keyV;
+   uint i;//用于循环
+   uint y;//确定是那个半屏幕
+   //初始化起始选择
+	 
+   
+   
+   lcd_write_str(1,1," T1:100");
+   lcd_write_char(5,1,0xA1);
+   lcd_write_char_con(1,0xE6);
+	
+   
+    lcd_write_str(6,1," T2:800");
+	lcd_write_char(10,1,0xA1);
+	lcd_write_char_con(1,0xE6);
+	
+    lcd_write_str(1,2," T3:停止");
+
+    lcd_write_str(6,2," T4:故障");
+
+	
+	lcd_write_str(1,3,"开始    ");
+    lcd_write_str_con(3,"停止    ");
+	lcd_write_str_con(3,"设置");
+	
+	
+	
+	 
+	cur=0;
+	Set_White(2,1,3);
+	while(1){
+	for(i=0;i<4;i++){
+	  if(i==0){
+	    y=1;
+	    lcd_write_pos(3,1);
+	  }else if(i==1){
+	    y=1;
+	    lcd_write_pos(8,1);
+	  }else if(i==2){
+	    y=2;
+	    lcd_write_pos(3,2);
+	  }else if(i==3){
+	    y=2;
+	    lcd_write_pos(8,2);
+	  }
+	   switch(temps[i].flag){
+	     case 0:
+		   lcd_write_str_con(y,"停止");
+		   break;
+		 case 1:
+		   lcd_write_str_con(y,"150");
+		   break;
+		 case 2:
+		   lcd_write_str_con(y,"故障");
+		   break;
+		 case 3:
+		   lcd_write_str_con(y,"暂停");
+		   break;
+		 case 4:
+		   lcd_write_str_con(y,"结束");
+		   break;
+		 case 5:
+		   lcd_write_str_con(y,"等待");
+		   break;
+		 case 6:
+		   lcd_write_str_con(y,"加载");
+		   break;
+		   break;
+		 default:
+		   break;
+	   }
+	}
+	 pageUtil();
+	 keyV=KeyScan_once();
+	 if(keyV=='a'){
+	      //pageNum=8;//跳转到设置时间的界面
+	}else if(keyV=='d'){
+	     switch(cur){
+		  case 0:
+		   Set_White_off(2,1,3);
+		   Set_White(2,2,3);
+		   cur=2;
+		   break;
+		  case 1:
+		   Set_White_off(7,1,8);
+		   Set_White(7,2,8);
+		   cur=3;
+		   break;
+		  case 2:
+		   Set_White_off(2,2,3);
+		   Set_White(2,3,3);
+		   cur=4;
+		   break;
+		  case 3:
+		   Set_White_off(7,2,8);
+		   Set_White(6,3,7);
+		   cur=5;
+		   break;
+		  default:
+		   break;
+		 }
+	}else if(keyV=='u'){switch(cur){
+		  case 2:
+		   Set_White_off(2,2,3);
+		   Set_White(2,1,3);
+		   cur=0;
+		   break;
+		  case 3:
+		   Set_White_off(7,2,8);
+		   Set_White(7,1,8);
+		   cur=1;
+		   break;
+		  case 4:
+		   Set_White_off(2,3,5);
+		   Set_White(2,2,3);
+		   cur=2;
+		   break;
+		  case 5:
+		   Set_White_off(6,3,7);
+		   Set_White(7,2,8);
+		   cur=3;
+		   break;
+		  case 6:
+		   Set_White_off(10,3,11);
+		   Set_White(7,2,8);
+		   cur=3;
+		   break;
+		  default:
+		   break;
+		 }
+	}else if(keyV=='l'){switch(cur){
+		  case 1:
+		   Set_White_off(7,1,8);
+		   Set_White(2,1,3);
+		   cur=0;
+		   break;
+		  case 3:
+		   Set_White_off(7,2,8);
+		   Set_White(2,2,3);
+		   cur=2;
+		   break;
+		  case 5:
+		   Set_White_off(7,3,8);
+		   Set_White(2,3,3);
+		   cur=4;
+		   break;
+		  case 6:
+		   Set_White_off(10,3,11);
+		   Set_White(6,3,7);
+		   cur=5;
+		   break;
+		  default:
+		   break;
+		 }
+	}else if(keyV=='r'){
+	switch(cur){
+		  case 0:
+		   Set_White_off(2,1,3);
+		   Set_White(7,1,8);
+		   cur=1;
+		   break;
+		  case 2:
+		   Set_White_off(2,2,3);
+		   Set_White(7,2,8);
+		   cur=3;
+		   break;
+		  case 4:
+		   Set_White_off(2,3,3);
+		   Set_White(6,3,7);
+		   cur=5;
+		   break;
+		  case 5:
+		   Set_White_off(6,3,7);
+		   Set_White(10,3,11);
+		   cur=6;
+		   break;
+		  default:
+		   break;
+		 }
+	}else if(keyV=='s'){
+	   pageNum=5;
+	   return ;
+	}else if(keyV=='t'){
+	   switch(cur){
+		 case 0: 
+		    prePageNum=1;
+		    pageParam[0]=0;//传递使用第一个，对应不同的温度
+		    pageNum=3;
+		    return;
+		 case 1:
+		    prePageNum=1;
+		   pageParam[0]=1;//传递使用第一个，对应不同的温度
+		    pageNum=3;
+		    return;
+		 case 2:
+		    prePageNum=1;
+		    pageParam[0]=2;//传递使用第一个，对应不同的温度
+		   pageNum=3;
+		   return;
+		 case 3:
+		     prePageNum=1;
+		    pageParam[0]=3;//传递使用第一个，对应不同的温度
+		    pageNum=3;
+		    return;
+		 case 4:
+		    //调用函数全部开始，参数正确的
+		   break;
+		 case 5:
+		    //全部停止
+		   break;
+		 case 6:
+		    prePageNum=1;
+		   pageNum=5;
+		    return;
+		  default:
+		   break;
+		 }
+	
+	}
+  }
+   return;
+}
+ void page3(void){
+   lcd_write_str(1,1,"Page3");
+ }
+ void page5(void){
+  uint cur=0;
+   uchar keyV;
+   lcd_write_str(4,0,"断电自动重置");
+   lcd_write_str(4,1,"设置时间");
+   lcd_write_str(4,2,"重置系统");
+   lcd_write_char(3,0,0xA1);
+   lcd_write_char_con(0,0xC1);
+   
+   /* lcd_write_char(1,0,0xA1);
+   lcd_write_char_con(0,0xCC);*/
+   cur=0;
+   Set_White(4,0,9);
+   while(1){
+      keyV=KeyScan_once();
+	  if(keyV=='u'){
+	    switch(cur){
+		  case 1:
+		   Set_White_off(4,1,7);
+		   Set_White(4,0,9);
+		   cur=0;
+		   break;
+		  case 2: 
+		   Set_White_off(4,2,7);
+		   Set_White(4,1,7);
+		   cur=1;
+		   break;
+		}
+	  }else if(keyV=='d'){
+	      switch(cur){
+		  case 0:
+		   Set_White_off(4,0,9);
+		   Set_White(4,1,7);
+		   cur=1;
+		   break;
+		  case 1: 
+		   Set_White_off(4,1,7);
+		   Set_White(4,2,7);
+		   cur=2;
+		   break;
+		}
+	  }else if(keyV=='e'){
+	    pageNum=1;
+		return;
+	  }else if(keyV=='t'){
+	    switch(cur){
+		  case 0:
+		     //执行EEPROM操作
+		    break;
+		  case 1:
+		   pageNum=8;
+		   return;
+		  
+		  case 2:
+		    //重置系统
+		    break;
+		}
+	    
+	  }
+   }
+   
+ }
+ void page8(void){
+   lcd_write_str(1,1,"Page8");
+   while(1){
+   
+   }
+ }
+//分发Pages
+void dispatchPages(void){
+      lcd_clear();//清屏幕
+      if(pageNum==1){
+	    page1();
+	  }else if(pageNum==2){
+	   // page2();
+	  }else if(pageNum==3){
+	    page3();
+	  }else if(pageNum==4){
+	   // page4();
+	  }else if(pageNum==5){
+	    page5();
+	  }else if(pageNum==6){
+	   // page6();
+	  }else if(pageNum==7){
+	    //page7();
+	  }else if(pageNum==8){
+	    page7();
+	  }
+	         
+}

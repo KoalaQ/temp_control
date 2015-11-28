@@ -150,7 +150,34 @@ void showTimeLcd(void){
 	lcd_write_char_con(1,0x30|(Read1302(0x81)&0x0F));
 }
 
-
+//显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
+void showTime_page(void){
+   //PORTE=~Read1302(0x81);
+   //年
+    lcd_write_str_con(1, "20");
+    lcd_write_char_con(1, 0x30|((Read1302(0x8D)>>4)&0x0F));
+    lcd_write_char_con(1,0x30|(Read1302(0x8D)&0x0F)); 
+	lcd_write_char_con(1,'-');
+	 //月
+	 lcd_write_char_con(1, 0x30|((Read1302(0x89)>>4)&0x01));
+     lcd_write_char_con(1,0x30|(Read1302(0x89)&0x0F)); 
+	 lcd_write_char_con(1,'-');
+	 //日
+	 lcd_write_char_con(1, 0x30|((Read1302(0x87)>>4)&0x03));
+     lcd_write_char_con(1,0x30|(Read1302(0x87)&0x0F)); 
+	 lcd_write_char_con(1,' ');
+	//时
+	 lcd_write_char_con(1, 0x30|((Read1302(0x85)>>4)&0x03));
+	 lcd_write_char_con(1,0x30|(Read1302(0x85)&0x0F)); 
+	 lcd_write_char_con(1,':');
+	//分
+	 lcd_write_char_con(1, 0x30|Read1302(0x83)>>4);
+	 lcd_write_char_con(1,0x30|(Read1302(0x83)&0x0F));
+	 lcd_write_char_con(1,':');
+	//秒
+	 lcd_write_char_con(1, 0x30|(Read1302(0x81)>>4));
+	 lcd_write_char_con(1,0x30|(Read1302(0x81)&0x0F));
+}
 
 
 

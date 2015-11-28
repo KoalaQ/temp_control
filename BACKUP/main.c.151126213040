@@ -1,0 +1,122 @@
+
+#include<iom128v.h>
+#include "main.h"
+#include "lcd.h"
+#include "time.h"
+#include "key.h"
+#include "delay.h"
+#include "timertask.h"
+#include "eeprom.h"
+//下面两个要删掉，现在为编译暂时不删
+ unsigned int temp_h=0;
+ unsigned int temp_l=0;
+ //uart需要参数
+ unsigned char send_buf[600];
+ unsigned char receive_buf[600];
+ unsigned int send_len;
+ unsigned int receive_len;
+ //界面需要参数
+ unsigned int pageNum;//当前页面，如需跳转改变这个值就行
+ unsigned int pageParam[5];//传递参数。界面间参数暂存
+ unsigned int prePageNum; //上一界面
+ //**************
+ //定义温度结构体，在此处，其他地方使用传递地址，然后解指
+ //温度1、2、3、4
+ //******************
+ struct temp{
+        //标志位。0：未初始化，1：正在运行，2：故障，
+		//        3：暂停，4：运行结束，5：等待断点运行（此状态会在扫描时候自动接着上个暂停时间继续运行）
+		//        6：保存重新运行（保存全新的参数，扫描后继续运行）
+        unsigned int flag;
+        //unsigned int ;  //阶段设置的参数
+		//当前运行的状态，0是阶段，1：温度，2、3、4 对应时分秒
+        unsigned int status[4];
+		//unsigned int pid[4];  //PID 算法需要的参数
+}
+temp temps[4];
+ //temp temps[4];
+//*************************************************************************
+//			主程序
+//*************************************************************************
+void main(void)
+{ 
+  uchar data;
+  DDRE=0xFF;
+  SREG|=0x80;//开中断
+  lcd_init();
+  lcd_clear(); 
+  /*Initial_time();
+   lcd_Desk(); 
+   delay_us(10);
+    data=read_data_xy(0,0);
+  data=read_data_xy(0,0);
+  lcd_write_char(2,2,data);
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+  lcd_write_char_con(2,date_cmd_1());
+   //Timerinit_1(0x00,0x00);
+   Timerinit_3(0x88,0x88);
+   //Timerinit_0(0x88);
+  // Timerinit_2(0x01);*/
+ // EEPROM_write(0x00,0x00,0x02);
+  data=EEPROM_read(0x00,0x00);
+   lcd_write_char(8,0,0x30|data);
+   EEPROM_write(0x00,0x00,data+1);
+  PORTE=~data;
+   lcd_Desk(); 
+ 
+  while(1){
+   
+   
+   
+   showTimeLcd();
+    lcd_write_char(0,2,KeyScan_once());
+	/*cur_set(0);
+	delay_ms(3000);
+	cur_set(1);
+	delay_ms(3000);
+	cur_set(2);
+	delay_ms(3000);
+	cur_set(3);
+	delay_ms(3000);
+	cur_set(4);
+	delay_ms(3000);
+	cur_set(5);
+	delay_ms(3000);
+	cur_set(6);
+	delay_ms(3000);
+	cur_set(7);
+	delay_ms(3000);*/
+  }
+ 
+
+ /* SREG|=0x80;
+  //ADCSRA=0x8E;  
+  DDRE=0xFF;
+  PORTE=0xFF;
+  lcd_init();                         	//液晶参数初始化设置
+  lcd_clear();                        	//清屏
+  lcd_Desk();//adc初始化配置
+  //adc_init();
+   // adc_init_once() ;                    	
+                          //开启全局中断
+ //Timerinit_1(0xFF,0xF0);
+ Initial_time();
+ Timerinit_3( 0xCC, 0xC5);//16M,0.8s
+ //Timerinit_3( 0xE6, 0x62);//8M,0.8s
+ 
+ //初始化按键
+ //KeyInit();*/
+ 
+
+}

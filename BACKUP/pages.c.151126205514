@@ -1,0 +1,8 @@
+#include<iom128v.h>
+#include "main.h"
+#include "lcd.h"
+#include "time.h"
+//************************
+// 所有界面信息在这里
+//************************
+void

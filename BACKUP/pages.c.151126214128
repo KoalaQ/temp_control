@@ -1,0 +1,27 @@
+#include<iom128v.h>
+#include "main.h"
+#include "lcd.h"
+#include "time.h"
+#include "timertask.h"
+//************************
+// 所有界面信息在这里,用到全局变量， 
+// unsigned int pageNum;//当前页面，如需跳转改变这个值就行
+// unsigned int pageParam[5];//传递参数。界面间参数暂存
+// unsigned int prePageNum;
+//************************
+void dispatchPages(void){
+                 //关定时器
+   lcd_write_str('时间: ');
+   lcd_write_str('2015-11-26 ');
+   lcd_write_str('21:41 ');
+   lcd_write_str('四');
+                 //开定时器 
+}
+//用于显第一行日期信息，其中Page1、Page3 、Page8使用，由定时器触发，进入这三个界面是启动定时器，退出时关闭
+void pageUtil(){
+   
+}
+//page1,首页的界面
+void page1(void){
+   
+}

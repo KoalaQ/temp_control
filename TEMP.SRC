@@ -9,6 +9,7 @@ max6675.c
 out.c
 uart.c
 eeprom.c
+pages.c
 [Headers]
 delay.h
 time.h
@@ -20,4 +21,5 @@ max6675.h
 out.h
 uart.h
 eeprom.h
+pages.h
 [Documents]

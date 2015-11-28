@@ -1,1 +1,1 @@
-delay.o time.o key.o lcd.o main.o timertask.o max6675.o out.o uart.o eeprom.o 
+delay.o time.o key.o lcd.o main.o timertask.o max6675.o out.o uart.o eeprom.o pages.o 

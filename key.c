@@ -1,9 +1,8 @@
 #include<iom128v.h>
 #include "delay.h"
 #include "lcd.h"
+uchar key_value='n';
 void KeyInit(void){
-   
-
 }
 uchar KeyScan(void){
   //初始化端口
@@ -73,15 +72,15 @@ uchar KeyScan_once(void){
 	  keyValue=KeyScan();
 	  delay_ms(2);
 	  keyValue2=KeyScan();
-	if(keyValue==keyValue2){
-	   if(keyValue=='r'){
-	   Set_White_off(5,1,6); 
-	    Set_White(1,1,2); 
-	   }else if(keyValue=='l'){
-	   Set_White_off(1,1,2); 
-	   		Set_White(5,1,6);  
-	   }
-	 return keyValue;
-	}
-	return 'n';
+	 if(keyValue==keyValue2 && keyValue!='n'){//两次扫描，消除抖动
+	 	if(key_value==keyValue){//如果还是上一次保存的值则代表一直按着，返回‘n’
+		    return 'n';  
+	    }else{                  //松开后第一次按下，返回该键的值
+		 key_value=keyValue;
+		  return keyValue;
+		}
+	 }else{                     //因为读取键盘的值会多次刷新，所以在松开按键时key_value重置
+	   key_value='n';
+	   return 'n';
+	 }
 }
