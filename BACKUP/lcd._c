@@ -425,7 +425,7 @@ void cur_set(uint type){
         delay_ms(2);                  //延时   
         //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
         lcd_wcmd_1(0x30); 
-		lcd_wcmd_2(0x36);   
+		lcd_wcmd_2(0x30);   
         delay_ms(2);                  //延时   
     }
 /**************************************************  
@@ -563,38 +563,47 @@ void cur_set(uint type){
     说    明：  
     ********************************************************************/   
     /*************************************************/   
-    /*   
+       
     void Draw_Pic(uchar x, uchar y, const uchar *Draw)   
     {   
         uchar i, j, temp_x, temp_y;     //   
+		lcd_wcmd_1(0x34);
+		lcd_wcmd_2(0x34);
         temp_x = x;                     //   
         temp_y = y;                     //   
         temp_x |= 0x80;                 //   
         temp_y |= 0x80;                 //   
         for(i=0;i<32;i++ )               //上半屏32行   
         {   
-            lcd_wcmd_1(0,0,temp_y++);      //设置绘图区的Y地址坐标0   
-            lcd_wcmd_1(0,0,temp_x);        //设置绘图区的X地址坐标0   
+            lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标0   
+            lcd_wcmd_1(temp_x);        //设置绘图区的X地址坐标0   
             for(j=0;j<16;j++)            //   
             {   
-                 lcd_wdat_2(0,1,*Draw++);  //   
+                 lcd_wdat_1(*Draw++);  //   
             }   
         }   
            
-        temp_x = 0x88;                  //   
-        temp_y = 0x80;                  //   
+        temp_x = x;                     //   
+        temp_y = y;                     //   
+        temp_x |= 0x80;                 //   
+        temp_y |= 0x80;                   //   
         j = 0;                          //   
         for(;i<64;i++ )   
         {   
-            lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标   
-            lcd_wdat_2(temp_x);        //设置绘图区的X地址坐标   
+            lcd_wcmd_2(temp_y++);      //设置绘图区的Y地址坐标   
+            lcd_wcmd_2(temp_x);        //设置绘图区的X地址坐标   
             for(j=0;j<16;j++)   
             {   
-                 lcd_wdat_2(0,1,*Draw++);  //   
+                 lcd_wdat_2(*Draw++);  //   
             }   
         }   
-            
-    } */    
+       lcd_wcmd_1(0x36);
+	   lcd_wcmd_2(0x36);
+	   delay_ms(1);
+	   lcd_wcmd_1(0x30);
+	   lcd_wcmd_2(0x30);
+	        
+    }  
     /*************************************************/  
 //***********************************************************************
 //      液晶显示界面初始化

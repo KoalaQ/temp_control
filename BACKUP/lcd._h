@@ -13,7 +13,7 @@ uchar read_data_2(unsigned char addr);
 uchar read_data_xy(unsigned char x,unsigned char y);
 uchar read_ac_1(void);
 uchar read_ac_2(void);
-uchar date_cmd_1(void);//读取ram的，自动改变
+uchar date_cmd_1(void);//读取ram的，自动改变.。写入AC(或者获取当前)，然后用此命名获取值
 uchar date_cmd_2(void);
 void lcd_clear(void) ;
 void lcd_init(void);

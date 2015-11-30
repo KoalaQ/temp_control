@@ -37,6 +37,6 @@ uart.o:	uart.c
 eeprom.o: D:\iccv7avr\include\iom128v.h .\eeprom.h .\delay.h
 eeprom.o:	eeprom.c
 	$(CC) -c $(CFLAGS) eeprom.c
-pages.o: D:\iccv7avr\include\iom128v.h .\main.h .\lcd.h .\time.h .\timertask.h .\key.h
+pages.o: D:\iccv7avr\include\iom128v.h .\main.h .\lcd.h .\time.h .\timertask.h .\key.h .\delay.h
 pages.o:	pages.c
 	$(CC) -c $(CFLAGS) pages.c

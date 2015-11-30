@@ -1,5 +1,5 @@
 XL
-H 3 areas 25 global symbols
+H 3 areas 26 global symbols
 M lcd.c
 S push_xgsetF000 Ref0000
 S push_xgsetF00C Ref0000
@@ -10,7 +10,7 @@ S pop_xgsetF000 Ref0000
 S _delay_us Ref0000
 S pop_xgsetF00C Ref0000
 S pop_xgsetF0FC Ref0000
-A text size 8DE flags 0
+A text size 980 flags 0
 dbfile lcd.c
 dbfile E:\ICCDemo\Temp_Control\temp_control\lcd.c
 dbfunc e lcd_bz_1 0 fi
@@ -620,20 +620,74 @@ dbline 229 866
 dbline 22A 868
 dbline FFFFFFFE 870
 dbline 0 870
-dbfunc e lcd_Desk 87A fV
-dbline FFFFFFFF 87C
-dbline 25B 87C
-dbline 25F 87C
-dbline 260 88A
-dbline 263 898
-dbline 266 8A2
-dbline 267 8AA
-dbline 268 8B4
-dbline 269 8BE
-dbline 26A 8C6
-dbline 26B 8D0
-dbline FFFFFFFE 8DA
-dbline 0 8DA
+dbfunc e Draw_Pic 87A fV
+dbsym r temp_y 14 c
+dbsym r temp_x 16 c
+dbsym r i A c
+dbsym r j E c
+dbsym l Draw C pc
+dbsym l y A c
+dbsym r x C c
+dbline FFFFFFFF 884
+dbline 238 884
+dbline 23A 884
+dbline 23B 888
+dbline 23C 88C
+dbline 23D 88E
+dbline 23E 890
+dbline 23F 892
+dbline 240 894
+dbline 241 898
+dbline 242 898
+dbline 243 8A0
+dbline 244 8A4
+dbline 245 8A8
+dbline 246 8A8
+dbline 247 8B4
+dbline 244 8B4
+dbline 244 8B6
+dbline 248 8BC
+dbline 240 8BC
+dbline 240 8BE
+dbline 24A 8C4
+dbline 24B 8C6
+dbline 24C 8C8
+dbline 24D 8CA
+dbline 24E 8CC
+dbline 24F 8CE
+dbline 250 8D0
+dbline 251 8D0
+dbline 252 8D8
+dbline 253 8DC
+dbline 254 8E0
+dbline 255 8E0
+dbline 256 8EC
+dbline 253 8EC
+dbline 253 8EE
+dbline 257 8F4
+dbline 24F 8F4
+dbline 24F 8F6
+dbline 258 8FC
+dbline 259 900
+dbline 25A 904
+dbline 25B 90C
+dbline 25C 910
+dbline FFFFFFFE 914
+dbline 0 914
+dbfunc e lcd_Desk 91C fV
+dbline FFFFFFFF 91E
+dbline 264 91E
+dbline 268 91E
+dbline 269 92C
+dbline 26C 93A
+dbline 26F 944
+dbline 270 94C
+dbline 271 956
+dbline 272 960
+dbline 273 968
+dbline 274 972
+dbline FFFFFFFE 97C
+dbline 0 97C
 S _lcd_write_char Def0274
 S _Set_UNDraw Def067A
 S _date_cmd_1 Def0432
@@ -646,8 +700,9 @@ S _read_data_xy Def04C2
 S _cur_set Def05EA
 S _lcd_bz_1 Def0000
 S _lcd_bz_2 Def0108
+S _Draw_Pic Def087A
 S _lcd_write_str_con Def0354
-S _lcd_Desk Def087A
+S _lcd_Desk Def091C
 S _Set_Draw Def0662
 S _read_data_1 Def052C
 S _Set_White_off Def0692
@@ -999,21 +1054,45 @@ T 6A 08 10 E0 0E 94 00 00 21 96 0E 94 00 00 24 96
 R 00 00 00 00 12 06 06 00 12 0C 08 00
 T 78 08 08 95
 R 00 00 00 00
-T 7A 08 22 97 80 E0 90 E0 99 83 88 83 23 E0 00 27
-R 00 00 00 00 20 04 01 00 00 00 40 06 01 00 00 00
-T 88 08 1B DD 80 E0 90 E0 99 83 88 83 22 27 00 27
-R 00 00 00 00 20 04 01 00 00 00 40 06 01 00 00 00
-T 96 08 14 DD 87 E0 88 83 21 E0 01 E0 74 DF 08 EB
+T 7A 08 3A 93 2A 93 0E 94 00 00 C0 2E 04 E3 E2 DB
+R 00 00 00 00 12 08 02 00
+T 88 08 04 E3 64 DC 6C 2D 4A 85 60 68 40 68 AA 24
 R 00 00 00 00
-T A4 08 1B E0 0E 94 00 00 87 E0 88 83 21 E0 01 E0
+T 96 08 13 C0 24 2E 4F 5F 02 2D D6 DB 06 2F D4 DB
+R 00 00 00 00
+T A4 08 EE 24 07 C0 EC 85 FD 85 01 91 FD 87 EC 87
+R 00 00 00 00
+T B2 08 FA DB E3 94 8E 2D 88 31 B0 F3 A3 94 8A 2D
+R 00 00 00 00
+T C0 08 80 32 50 F3 6C 2D 4A 85 60 68 40 68 EE 24
+R 00 00 00 00
+T CE 08 13 C0 24 2E 4F 5F 02 2D 3E DC 06 2F 3C DC
+R 00 00 00 00
+T DC 08 EE 24 07 C0 EC 85 FD 85 01 91 FD 87 EC 87
+R 00 00 00 00
+T EA 08 62 DC E3 94 8E 2D 88 31 B0 F3 A3 94 8A 2D
+R 00 00 00 00
+T F8 08 80 34 50 F3 06 E3 A6 DB 06 E3 28 DC 01 E0
+R 00 00 00 00
+T 06 09 10 E0 0E 94 00 00 00 E3 9E DB 00 E3 20 DC
 R 00 00 00 00 12 06 04 00
-T B2 08 EF DE 82 E0 88 83 21 E0 02 E0 66 DF 0C E2
+T 14 09 0E 94 00 00 22 96 08 95
+R 00 00 00 00 12 04 08 00
+T 1C 09 22 97 80 E0 90 E0 99 83 88 83 23 E0 00 27
+R 00 00 00 00 20 04 01 00 00 00 40 06 01 00 00 00
+T 2A 09 CA DC 80 E0 90 E0 99 83 88 83 22 27 00 27
+R 00 00 00 00 20 04 01 00 00 00 40 06 01 00 00 00
+T 38 09 C3 DC 87 E0 88 83 21 E0 01 E0 23 DF 08 EB
 R 00 00 00 00
-T C0 08 11 E0 0E 94 00 00 87 E0 88 83 22 E0 02 E0
+T 46 09 1B E0 0E 94 00 00 87 E0 88 83 21 E0 01 E0
 R 00 00 00 00 12 06 04 00
-T CE 08 E1 DE 85 E0 88 83 21 E0 03 E0 58 DF 22 96
+T 54 09 9E DE 82 E0 88 83 21 E0 02 E0 15 DF 0C E2
 R 00 00 00 00
-T DC 08 08 95
+T 62 09 11 E0 0E 94 00 00 87 E0 88 83 22 E0 02 E0
+R 00 00 00 00 12 06 04 00
+T 70 09 90 DE 85 E0 88 83 21 E0 03 E0 07 DF 22 96
+R 00 00 00 00
+T 7E 09 08 95
 R 00 00 00 00
 T 00 00 B7 B4 B0 D7 B2 E2 CA D4 B5 DA D2 BB B4 CE
 R 00 00 02 00

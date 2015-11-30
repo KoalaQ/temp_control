@@ -29,6 +29,8 @@
 #define  DIO_L  PORTD&=~(1<<PD1)  //
 #define  CE_H    PORTD|=1<<PD2
 #define  CE_L   PORTD&=~(1<<PD2) 
+
+
 //地址、数据发送子程序
 void Write1302  ( unsigned char  addr,unsigned char dat )
 { 
@@ -150,33 +152,57 @@ void showTimeLcd(void){
 	lcd_write_char_con(1,0x30|(Read1302(0x81)&0x0F));
 }
 
+uint getYear(void){
+ return 1;
+}
+uint getMonth(void){
+  return 1;
+}
+uint getDay(void){
+ return 1;
+}
+uint getWeek(void){
+ return 1;
+}
+uint getHour(void){
+ return 1;
+}
+uint getMinute(void){
+ return 1;
+}
+uint getSecond(void){
+ return 1;
+}
+void setTime(uint year,uint month,uint day,uint week,uint hour,uint minute,uint second){
+
+}
 //显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
-void showTime_page(void){
+void showTime_page(uint y){
    //PORTE=~Read1302(0x81);
    //年
-    lcd_write_str_con(1, "20");
-    lcd_write_char_con(1, 0x30|((Read1302(0x8D)>>4)&0x0F));
-    lcd_write_char_con(1,0x30|(Read1302(0x8D)&0x0F)); 
-	lcd_write_char_con(1,'-');
+    lcd_write_str_con(y, "20");
+    lcd_write_char_con(y, 0x30|((Read1302(0x8D)>>4)&0x0F));
+    lcd_write_char_con(y,0x30|(Read1302(0x8D)&0x0F)); 
+	lcd_write_char_con(y,'-');
 	 //月
-	 lcd_write_char_con(1, 0x30|((Read1302(0x89)>>4)&0x01));
-     lcd_write_char_con(1,0x30|(Read1302(0x89)&0x0F)); 
-	 lcd_write_char_con(1,'-');
+	 lcd_write_char_con(y, 0x30|((Read1302(0x89)>>4)&0x01));
+     lcd_write_char_con(y,0x30|(Read1302(0x89)&0x0F)); 
+	 lcd_write_char_con(y,'-');
 	 //日
-	 lcd_write_char_con(1, 0x30|((Read1302(0x87)>>4)&0x03));
-     lcd_write_char_con(1,0x30|(Read1302(0x87)&0x0F)); 
-	 lcd_write_char_con(1,' ');
+	 lcd_write_char_con(y, 0x30|((Read1302(0x87)>>4)&0x03));
+     lcd_write_char_con(y,0x30|(Read1302(0x87)&0x0F)); 
+	 lcd_write_char_con(y,' ');
 	//时
-	 lcd_write_char_con(1, 0x30|((Read1302(0x85)>>4)&0x03));
-	 lcd_write_char_con(1,0x30|(Read1302(0x85)&0x0F)); 
-	 lcd_write_char_con(1,':');
+	 lcd_write_char_con(y, 0x30|((Read1302(0x85)>>4)&0x03));
+	 lcd_write_char_con(y,0x30|(Read1302(0x85)&0x0F)); 
+	 lcd_write_char_con(y,':');
 	//分
-	 lcd_write_char_con(1, 0x30|Read1302(0x83)>>4);
-	 lcd_write_char_con(1,0x30|(Read1302(0x83)&0x0F));
-	 lcd_write_char_con(1,':');
+	 lcd_write_char_con(y, 0x30|Read1302(0x83)>>4);
+	 lcd_write_char_con(y,0x30|(Read1302(0x83)&0x0F));
+	 lcd_write_char_con(y,':');
 	//秒
-	 lcd_write_char_con(1, 0x30|(Read1302(0x81)>>4));
-	 lcd_write_char_con(1,0x30|(Read1302(0x81)&0x0F));
+	 lcd_write_char_con(y, 0x30|(Read1302(0x81)>>4));
+	 lcd_write_char_con(y,0x30|(Read1302(0x81)&0x0F));
 }
 
 

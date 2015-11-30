@@ -2427,140 +2427,308 @@
  087A                   .dbsym r y 22 c
  087A                   .dbsym l x 11 c
  087A                   .dbend
- 087A                   .dbfunc e lcd_Desk _lcd_Desk fV
+ 087A                   .dbfunc e Draw_Pic _Draw_Pic fV
+ 087A           ;         temp_y -> R20
+ 087A           ;         temp_x -> R22
+ 087A           ;              i -> R10
+ 087A           ;              j -> R14
+ 087A           ;           Draw -> y+12
+ 087A           ;              y -> y+10
+ 087A           ;              x -> R12
                         .even
- 087A           _lcd_Desk::
- 087A 2297              sbiw R28,2
- 087C                   .dbline -1
- 087C                   .dbline 603
- 087C           ;     } 
- 087C           ;       /********************************************************************  
- 087C           ;     函 数 名：Draw_Pic  128*64  
- 087C           ;     入口参数：x,y,*Draw  
- 087C           ;     出口参数：无  
- 087C           ;     建立日期：2007年8月26日  
- 087C           ;     修改日期：  
- 087C           ;     函数作用：  
- 087C           ;     说    明：  
- 087C           ;     ********************************************************************/   
- 087C           ;     /*************************************************/   
- 087C           ;     /*   
- 087C           ;     void Draw_Pic(uchar x, uchar y, const uchar *Draw)   
- 087C           ;     {   
- 087C           ;         uchar i, j, temp_x, temp_y;     //   
- 087C           ;         temp_x = x;                     //   
- 087C           ;         temp_y = y;                     //   
- 087C           ;         temp_x |= 0x80;                 //   
- 087C           ;         temp_y |= 0x80;                 //   
- 087C           ;         for(i=0;i<32;i++ )               //上半屏32行   
- 087C           ;         {   
- 087C           ;             lcd_wcmd_1(0,0,temp_y++);      //设置绘图区的Y地址坐标0   
- 087C           ;             lcd_wcmd_1(0,0,temp_x);        //设置绘图区的X地址坐标0   
- 087C           ;             for(j=0;j<16;j++)            //   
- 087C           ;             {   
- 087C           ;                  lcd_wdat_2(0,1,*Draw++);  //   
- 087C           ;             }   
- 087C           ;         }   
- 087C           ;            
- 087C           ;         temp_x = 0x88;                  //   
- 087C           ;         temp_y = 0x80;                  //   
- 087C           ;         j = 0;                          //   
- 087C           ;         for(;i<64;i++ )   
- 087C           ;         {   
- 087C           ;             lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标   
- 087C           ;             lcd_wdat_2(temp_x);        //设置绘图区的X地址坐标   
- 087C           ;             for(j=0;j<16;j++)   
- 087C           ;             {   
- 087C           ;                  lcd_wdat_2(0,1,*Draw++);  //   
- 087C           ;             }   
- 087C           ;         }   
- 087C           ;             
- 087C           ;     } */    
- 087C           ;     /*************************************************/  
- 087C           ; //***********************************************************************
- 087C           ; //      液晶显示界面初始化
- 087C           ; //***********************************************************************
- 087C           ; void lcd_Desk(void)
- 087C           ; { 
- 087C                   .dbline 607
- 087C           ;   //uint i=0;   
- 087C           ;  // lcd_clear();
- 087C           ;   //lcd_write_str(0,0,"ADC0:");
- 087C           ;   lcd_write_str(0,3,"反白测试第一次");
- 087C 80E0              ldi R24,<L179
- 087E 90E0              ldi R25,>L179
- 0880 9983              std y+1,R25
- 0882 8883              std y+0,R24
- 0884 23E0              ldi R18,3
- 0886 0027              clr R16
- 0888 1BDD              xcall _lcd_write_str
- 088A                   .dbline 608
- 088A           ;   lcd_write_str(0,0,"反白测试第一次");
- 088A 80E0              ldi R24,<L179
- 088C 90E0              ldi R25,>L179
- 088E 9983              std y+1,R25
- 0890 8883              std y+0,R24
- 0892 2227              clr R18
- 0894 0027              clr R16
- 0896 14DD              xcall _lcd_write_str
- 0898                   .dbline 611
- 0898           ;   //delay_ms(100);
- 0898           ;      
- 0898           ;     Set_White(1,1,7); 
- 0898 87E0              ldi R24,7
- 089A 8883              std y+0,R24
- 089C 21E0              ldi R18,1
- 089E 01E0              ldi R16,1
- 08A0 74DF              xcall _Set_White
- 08A2                   .dbline 614
- 08A2           ;          
- 08A2           ;        
- 08A2           ;     delay_ms(3000); 
- 08A2 08EB              ldi R16,3000
- 08A4 1BE0              ldi R17,11
- 08A6 0E940000          xcall _delay_ms
- 08AA                   .dbline 615
- 08AA           ;      Set_White_off(1,1,7);
- 08AA 87E0              ldi R24,7
- 08AC 8883              std y+0,R24
- 08AE 21E0              ldi R18,1
- 08B0 01E0              ldi R16,1
- 08B2 EFDE              xcall _Set_White_off
- 08B4                   .dbline 616
- 08B4           ;       Set_White(2,1,2); 
- 08B4 82E0              ldi R24,2
- 08B6 8883              std y+0,R24
- 08B8 21E0              ldi R18,1
- 08BA 02E0              ldi R16,2
- 08BC 66DF              xcall _Set_White
- 08BE                   .dbline 617
- 08BE           ;        delay_ms(300); 
- 08BE 0CE2              ldi R16,300
- 08C0 11E0              ldi R17,1
- 08C2 0E940000          xcall _delay_ms
- 08C6                   .dbline 618
- 08C6           ;        Set_White_off(2,2,7);
- 08C6 87E0              ldi R24,7
- 08C8 8883              std y+0,R24
- 08CA 22E0              ldi R18,2
- 08CC 02E0              ldi R16,2
- 08CE E1DE              xcall _Set_White_off
- 08D0                   .dbline 619
- 08D0           ;        Set_White(3,1,5);   
- 08D0 85E0              ldi R24,5
- 08D2 8883              std y+0,R24
- 08D4 21E0              ldi R18,1
- 08D6 03E0              ldi R16,3
- 08D8 58DF              xcall _Set_White
- 08DA                   .dbline -2
- 08DA           L178:
- 08DA                   .dbline 0 ; func end
- 08DA 2296              adiw R28,2
- 08DC 0895              ret
- 08DE                   .dbend
+ 087A           _Draw_Pic::
+ 087A 3A93              st -y,r19
+ 087C 2A93              st -y,r18
+ 087E 0E940000          xcall push_xgsetF0FC
+ 0882 C02E              mov R12,R16
+ 0884                   .dbline -1
+ 0884                   .dbline 568
+ 0884           ;     } 
+ 0884           ;       /********************************************************************  
+ 0884           ;     函 数 名：Draw_Pic  128*64  
+ 0884           ;     入口参数：x,y,*Draw  
+ 0884           ;     出口参数：无  
+ 0884           ;     建立日期：2007年8月26日  
+ 0884           ;     修改日期：  
+ 0884           ;     函数作用：  
+ 0884           ;     说    明：  
+ 0884           ;     ********************************************************************/   
+ 0884           ;     /*************************************************/   
+ 0884           ;        
+ 0884           ;     void Draw_Pic(uchar x, uchar y, const uchar *Draw)   
+ 0884           ;     {   
+ 0884                   .dbline 570
+ 0884           ;         uchar i, j, temp_x, temp_y;     //   
+ 0884           ;               lcd_wcmd_1(0x34);
+ 0884 04E3              ldi R16,52
+ 0886 E2DB              xcall _lcd_wcmd_1
+ 0888                   .dbline 571
+ 0888           ;               lcd_wcmd_2(0x34);
+ 0888 04E3              ldi R16,52
+ 088A 64DC              xcall _lcd_wcmd_2
+ 088C                   .dbline 572
+ 088C           ;         temp_x = x;                     //   
+ 088C 6C2D              mov R22,R12
+ 088E                   .dbline 573
+ 088E           ;         temp_y = y;                     //   
+ 088E 4A85              ldd R20,y+10
+ 0890                   .dbline 574
+ 0890           ;         temp_x |= 0x80;                 //   
+ 0890 6068              ori R22,128
+ 0892                   .dbline 575
+ 0892           ;         temp_y |= 0x80;                 //   
+ 0892 4068              ori R20,128
+ 0894                   .dbline 576
+ 0894           ;         for(i=0;i<32;i++ )               //上半屏32行   
+ 0894 AA24              clr R10
+ 0896 13C0              xjmp L182
+ 0898           L179:
+ 0898                   .dbline 577
+ 0898           ;         {   
+ 0898                   .dbline 578
+ 0898           ;             lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标0   
+ 0898 242E              mov R2,R20
+ 089A 4F5F              subi R20,255    ; addi 1
+ 089C 022D              mov R16,R2
+ 089E D6DB              xcall _lcd_wcmd_1
+ 08A0                   .dbline 579
+ 08A0           ;             lcd_wcmd_1(temp_x);        //设置绘图区的X地址坐标0   
+ 08A0 062F              mov R16,R22
+ 08A2 D4DB              xcall _lcd_wcmd_1
+ 08A4                   .dbline 580
+ 08A4           ;             for(j=0;j<24;j++)            //   
+ 08A4 EE24              clr R14
+ 08A6 07C0              xjmp L186
+ 08A8           L183:
+ 08A8                   .dbline 581
+ 08A8           ;             {   
+ 08A8                   .dbline 582
+ 08A8           ;                  lcd_wdat_1(*Draw++);  //   
+ 08A8 EC85              ldd R30,y+12
+ 08AA FD85              ldd R31,y+13
+ 08AC 0191              ld R16,Z+
+ 08AE FD87              std y+13,R31
+ 08B0 EC87              std y+12,R30
+ 08B2 FADB              xcall _lcd_wdat_1
+ 08B4                   .dbline 583
+ 08B4           ;             }   
+ 08B4           L184:
+ 08B4                   .dbline 580
+ 08B4 E394              inc R14
+ 08B6           L186:
+ 08B6                   .dbline 580
+ 08B6 8E2D              mov R24,R14
+ 08B8 8831              cpi R24,24
+ 08BA B0F3              brlo L183
+ 08BC           X66:
+ 08BC                   .dbline 584
+ 08BC           ;         }   
+ 08BC           L180:
+ 08BC                   .dbline 576
+ 08BC A394              inc R10
+ 08BE           L182:
+ 08BE                   .dbline 576
+ 08BE 8A2D              mov R24,R10
+ 08C0 8032              cpi R24,32
+ 08C2 50F3              brlo L179
+ 08C4           X67:
+ 08C4                   .dbline 586
+ 08C4           ;            
+ 08C4           ;         temp_x = x;                     //   
+ 08C4 6C2D              mov R22,R12
+ 08C6                   .dbline 587
+ 08C6           ;         temp_y = y;                     //   
+ 08C6 4A85              ldd R20,y+10
+ 08C8                   .dbline 588
+ 08C8           ;         temp_x |= 0x80;                 //   
+ 08C8 6068              ori R22,128
+ 08CA                   .dbline 589
+ 08CA           ;         temp_y |= 0x80;                   //   
+ 08CA 4068              ori R20,128
+ 08CC                   .dbline 590
+ 08CC           ;         j = 0;                          //   
+ 08CC EE24              clr R14
+ 08CE                   .dbline 591
+ 08CE           ;         for(;i<64;i++ )   
+ 08CE 13C0              xjmp L190
+ 08D0           L187:
+ 08D0                   .dbline 592
+ 08D0           ;         {   
+ 08D0                   .dbline 593
+ 08D0           ;             lcd_wcmd_2(temp_y++);      //设置绘图区的Y地址坐标   
+ 08D0 242E              mov R2,R20
+ 08D2 4F5F              subi R20,255    ; addi 1
+ 08D4 022D              mov R16,R2
+ 08D6 3EDC              xcall _lcd_wcmd_2
+ 08D8                   .dbline 594
+ 08D8           ;             lcd_wcmd_2(temp_x);        //设置绘图区的X地址坐标   
+ 08D8 062F              mov R16,R22
+ 08DA 3CDC              xcall _lcd_wcmd_2
+ 08DC                   .dbline 595
+ 08DC           ;             for(j=0;j<24;j++)   
+ 08DC EE24              clr R14
+ 08DE 07C0              xjmp L194
+ 08E0           L191:
+ 08E0                   .dbline 596
+ 08E0           ;             {   
+ 08E0                   .dbline 597
+ 08E0           ;                  lcd_wdat_2(*Draw++);  //   
+ 08E0 EC85              ldd R30,y+12
+ 08E2 FD85              ldd R31,y+13
+ 08E4 0191              ld R16,Z+
+ 08E6 FD87              std y+13,R31
+ 08E8 EC87              std y+12,R30
+ 08EA 62DC              xcall _lcd_wdat_2
+ 08EC                   .dbline 598
+ 08EC           ;             }   
+ 08EC           L192:
+ 08EC                   .dbline 595
+ 08EC E394              inc R14
+ 08EE           L194:
+ 08EE                   .dbline 595
+ 08EE 8E2D              mov R24,R14
+ 08F0 8831              cpi R24,24
+ 08F2 B0F3              brlo L191
+ 08F4           X68:
+ 08F4                   .dbline 599
+ 08F4           ;         }   
+ 08F4           L188:
+ 08F4                   .dbline 591
+ 08F4 A394              inc R10
+ 08F6           L190:
+ 08F6                   .dbline 591
+ 08F6 8A2D              mov R24,R10
+ 08F8 8034              cpi R24,64
+ 08FA 50F3              brlo L187
+ 08FC           X69:
+ 08FC                   .dbline 600
+ 08FC           ;        lcd_wcmd_1(0x36);
+ 08FC 06E3              ldi R16,54
+ 08FE A6DB              xcall _lcd_wcmd_1
+ 0900                   .dbline 601
+ 0900           ;          lcd_wcmd_2(0x36);
+ 0900 06E3              ldi R16,54
+ 0902 28DC              xcall _lcd_wcmd_2
+ 0904                   .dbline 602
+ 0904           ;          delay_ms(1);
+ 0904 01E0              ldi R16,1
+ 0906 10E0              ldi R17,0
+ 0908 0E940000          xcall _delay_ms
+ 090C                   .dbline 603
+ 090C           ;          lcd_wcmd_1(0x30);
+ 090C 00E3              ldi R16,48
+ 090E 9EDB              xcall _lcd_wcmd_1
+ 0910                   .dbline 604
+ 0910           ;          lcd_wcmd_2(0x30);
+ 0910 00E3              ldi R16,48
+ 0912 20DC              xcall _lcd_wcmd_2
+ 0914                   .dbline -2
+ 0914           L178:
+ 0914                   .dbline 0 ; func end
+ 0914 0E940000          xcall pop_xgsetF0FC
+ 0918 2296              adiw R28,2
+ 091A 0895              ret
+ 091C                   .dbsym r temp_y 20 c
+ 091C                   .dbsym r temp_x 22 c
+ 091C                   .dbsym r i 10 c
+ 091C                   .dbsym r j 14 c
+ 091C                   .dbsym l Draw 12 pc
+ 091C                   .dbsym l y 10 c
+ 091C                   .dbsym r x 12 c
+ 091C                   .dbend
+ 091C                   .dbfunc e lcd_Desk _lcd_Desk fV
+                        .even
+ 091C           _lcd_Desk::
+ 091C 2297              sbiw R28,2
+ 091E                   .dbline -1
+ 091E                   .dbline 612
+ 091E           ;               
+ 091E           ;     }  
+ 091E           ;     /*************************************************/  
+ 091E           ; //***********************************************************************
+ 091E           ; //      液晶显示界面初始化
+ 091E           ; //***********************************************************************
+ 091E           ; void lcd_Desk(void)
+ 091E           ; { 
+ 091E                   .dbline 616
+ 091E           ;   //uint i=0;   
+ 091E           ;  // lcd_clear();
+ 091E           ;   //lcd_write_str(0,0,"ADC0:");
+ 091E           ;   lcd_write_str(0,3,"反白测试第一次");
+ 091E 80E0              ldi R24,<L196
+ 0920 90E0              ldi R25,>L196
+ 0922 9983              std y+1,R25
+ 0924 8883              std y+0,R24
+ 0926 23E0              ldi R18,3
+ 0928 0027              clr R16
+ 092A CADC              xcall _lcd_write_str
+ 092C                   .dbline 617
+ 092C           ;   lcd_write_str(0,0,"反白测试第一次");
+ 092C 80E0              ldi R24,<L196
+ 092E 90E0              ldi R25,>L196
+ 0930 9983              std y+1,R25
+ 0932 8883              std y+0,R24
+ 0934 2227              clr R18
+ 0936 0027              clr R16
+ 0938 C3DC              xcall _lcd_write_str
+ 093A                   .dbline 620
+ 093A           ;   //delay_ms(100);
+ 093A           ;      
+ 093A           ;     Set_White(1,1,7); 
+ 093A 87E0              ldi R24,7
+ 093C 8883              std y+0,R24
+ 093E 21E0              ldi R18,1
+ 0940 01E0              ldi R16,1
+ 0942 23DF              xcall _Set_White
+ 0944                   .dbline 623
+ 0944           ;          
+ 0944           ;        
+ 0944           ;     delay_ms(3000); 
+ 0944 08EB              ldi R16,3000
+ 0946 1BE0              ldi R17,11
+ 0948 0E940000          xcall _delay_ms
+ 094C                   .dbline 624
+ 094C           ;      Set_White_off(1,1,7);
+ 094C 87E0              ldi R24,7
+ 094E 8883              std y+0,R24
+ 0950 21E0              ldi R18,1
+ 0952 01E0              ldi R16,1
+ 0954 9EDE              xcall _Set_White_off
+ 0956                   .dbline 625
+ 0956           ;       Set_White(2,1,2); 
+ 0956 82E0              ldi R24,2
+ 0958 8883              std y+0,R24
+ 095A 21E0              ldi R18,1
+ 095C 02E0              ldi R16,2
+ 095E 15DF              xcall _Set_White
+ 0960                   .dbline 626
+ 0960           ;        delay_ms(300); 
+ 0960 0CE2              ldi R16,300
+ 0962 11E0              ldi R17,1
+ 0964 0E940000          xcall _delay_ms
+ 0968                   .dbline 627
+ 0968           ;        Set_White_off(2,2,7);
+ 0968 87E0              ldi R24,7
+ 096A 8883              std y+0,R24
+ 096C 22E0              ldi R18,2
+ 096E 02E0              ldi R16,2
+ 0970 90DE              xcall _Set_White_off
+ 0972                   .dbline 628
+ 0972           ;        Set_White(3,1,5);   
+ 0972 85E0              ldi R24,5
+ 0974 8883              std y+0,R24
+ 0976 21E0              ldi R18,1
+ 0978 03E0              ldi R16,3
+ 097A 07DF              xcall _Set_White
+ 097C                   .dbline -2
+ 097C           L195:
+ 097C                   .dbline 0 ; func end
+ 097C 2296              adiw R28,2
+ 097E 0895              ret
+ 0980                   .dbend
                         .area data(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\lcd.c
- 0000           L179:
+ 0000           L196:
  0000                   .blkb 15
                         .area idata
  0000 B7B4B0D7B2E2CAD4B5DAD2BBB4CE00    .byte 183,180,176,215,178,226,202,212,181,218,210,187,180,206,0

@@ -8,6 +8,7 @@ void lcd_write_str(unsigned char x,unsigned char y,unsigned char *s) ;
 void lcd_write_char(unsigned char x,unsigned char y,unsigned char data) ;
 void lcd_write_char_con(unsigned char y,unsigned char data);
 void lcd_write_str_con(unsigned char y,unsigned char *s) ;
+ void Draw_Pic(uchar x, uchar y, const uchar *Draw);
 uchar read_data_1(unsigned char addr);
 uchar read_data_2(unsigned char addr);
 uchar read_data_xy(unsigned char x,unsigned char y);

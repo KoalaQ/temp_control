@@ -1,0 +1,629 @@
+#include<iom128v.h>
+#include "lcd.h"
+#include "delay.h" 
+#define rs_l PORTG&=~(1<<PG1)
+#define rs_h PORTG|=1<<PG1
+#define rw_l PORTG&=~(1<<PG0)
+#define rw_h PORTG|=1<<PG0
+#define ep1_l PORTG&=~(1<<PG3)
+#define ep1_h PORTG|=1<<PG3
+#define ep2_l PORTF&=~(1<<PF0)
+#define ep2_h PORTF|=1<<PF0
+//***********************************
+//上半屏幕
+//**********************************
+/*
+ 读忙程序。命令后，读入BF
+*/
+uint lcd_bz_1(void){
+	uint result;
+	DDRA=0x00;
+	rs_l;
+	rw_h;
+	ep1_h;
+	delay_ms(1);
+	result=PINA&(1<<PINA7);
+	DDRA=0xFF;
+	ep1_l;
+	return result;
+}
+void lcd_wcmd_1(uchar cmd){
+	 while(lcd_bz_1());
+	 rs_l;
+	 rw_l;
+	 ep1_l;
+	 delay_ms(1);
+	 PORTA=cmd;
+	 delay_ms(2);
+	 ep1_h;
+	 delay_ms(1);
+	 ep1_l;
+	 return;
+}
+/*
+写输出数据,char
+*/
+void lcd_wdat_1(uchar dat){
+	 while(lcd_bz_1());
+	 rs_h;
+	 rw_l;
+	 ep1_l;
+	 PORTA=dat;
+	 delay_ms(2);
+	 ep1_h;
+	 delay_ms(2);
+	 ep1_l;
+}
+
+/*清显示*/
+void lcd_clear_1(void) 
+{
+	lcd_wcmd_1(0x01);
+	delay_ms(1);
+}
+//***********************************
+//    下半屏幕
+//***********************************
+uint lcd_bz_2(void){
+	uint result;
+	DDRA=0x00;
+	rs_l;
+	rw_h;
+	ep2_h;
+	delay_ms(1);
+	result=PINA&(1<<PINA7);
+	DDRA=0xFF;
+	ep2_l;
+	return result;
+}
+void lcd_wcmd_2(uchar cmd){
+	 while(lcd_bz_2());
+	 rs_l;
+	 rw_l;
+	 ep2_l;
+	 delay_ms(1);
+	 PORTA=cmd;
+	 delay_ms(2);
+	 ep2_h;
+	 delay_ms(1);
+	 ep2_l;
+}
+//  写输出数据,char
+void lcd_wdat_2(uchar dat){
+	 while(lcd_bz_2());
+	 rs_h;
+	 rw_l;
+	 ep2_l;
+	 PORTA=dat;
+	 delay_ms(2);
+	 ep2_h;
+	 delay_ms(2);
+	 ep2_l;
+}
+/*清显示*/
+void lcd_clear_2(void) 
+{
+	
+	lcd_wcmd_2(0x01);
+
+	delay_ms(1);
+
+}
+
+//*************************************************
+//					写字符
+//***************************************************
+/*
+  附带y。调用 lcd_wdat（）方法。传入时转换为char。直接连续写入使用
+*/
+void lcd_write_char_con(unsigned char y,unsigned char data) 
+{
+	
+    if (y == 0 || y==1) 
+    {
+    	
+		 lcd_wdat_1( data);
+    }else  if(y==2 || y==3 )
+    {
+    	
+		 lcd_wdat_2( data);
+    }
+   return; 
+}
+/*
+  附带x,y。写光标位置
+*/
+void lcd_write_pos(unsigned char x,unsigned char y) 
+{
+	
+    if (y == 0) 
+    {
+    	lcd_wcmd_1(0x80 + x);
+    }
+    else  if(y==1)
+    {
+    	lcd_wcmd_1(0x90 + x);
+    }else  if(y==2)
+    {
+    	lcd_wcmd_2(0x80 + x);
+    }else  if(y==3)
+    {
+    	lcd_wcmd_2(0x90 + x);
+    }
+   return; 
+}
+/*
+  附带x,y。调用 lcd_wdat（）方法。传入时转换为char
+*/
+void lcd_write_char(unsigned char x,unsigned char y,unsigned char data) 
+{
+	
+    if (y == 0) 
+    {
+    	lcd_wcmd_1(0x80 + x);
+		 lcd_wdat_1( data);
+    }
+    else  if(y==1)
+    {
+    	lcd_wcmd_1(0x90 + x);
+		 lcd_wdat_1( data);
+    }else  if(y==2)
+    {
+    	lcd_wcmd_2(0x80 + x);
+		 lcd_wdat_2( data);
+    }else  if(y==3)
+    {
+    	lcd_wcmd_2(0x90 + x);
+		 lcd_wdat_2( data);
+    }
+   return; 
+}
+/*
+  附带x,y。调用 lcd_wdat（）方法，会通过指针遍历字符串。不太好，还是自己循环遍历
+*/
+void lcd_write_str(unsigned char x,unsigned char y,unsigned char *s) 
+{
+	
+    if (y == 0) 
+    {
+    	lcd_wcmd_1(0x80 + x);
+		 while (*s) 
+       {
+    	lcd_wdat_1( *s);
+    	s ++;
+        }
+    }
+    else  if(y==1)
+    {
+    	lcd_wcmd_1(0x90 + x);
+		 while (*s) 
+        {
+    	lcd_wdat_1( *s);
+    	s ++;
+       }
+    }else  if(y==2)
+    {
+    	lcd_wcmd_2(0x80 + x);
+		  while (*s) 
+       {
+    	lcd_wdat_2( *s);
+    	s ++;
+       }
+    }else  if(y==3)
+    {
+    	lcd_wcmd_2(0x90 + x);
+		  while (*s) 
+       {
+    	lcd_wdat_2( *s);
+    	s ++;
+       }
+    }
+   
+}
+/*
+  附带x,y。调用 lcd_wdat（）方法，会通过指针遍历字符串。不太好，还是自己循环遍历
+*/
+void lcd_write_str_con(unsigned char y,unsigned char *s) 
+{
+	
+    if (y == 0 || y==1) 
+    {
+    	
+		 while (*s) 
+       {
+    	lcd_wdat_1( *s);
+    	s ++;
+        }
+    }
+    else  if(y==2 || y==3)
+    {
+    	
+		  while (*s) 
+       {
+    	lcd_wdat_2( *s);
+    	s ++;
+       }
+    }
+   
+}
+//****************************
+//  读出数据,.不知道有没有用，先放在这
+//****************************
+/**
+ 读程序。命令后，读AC地址
+*/
+uchar read_ac_1(void){
+	uint result;
+	DDRA=0x00;
+	rs_l;
+	rw_h;
+	ep1_h;
+	delay_ms(1);
+	result=PINA&(~(1<<PINA7));
+	DDRA=0xFF;
+	ep1_l;
+	return result;
+}
+uchar read_ac_2(void){
+	uint result;
+	DDRA=0x00;
+	rs_l;
+	rw_h;
+	ep2_h;
+	delay_ms(1);
+	result=PINA&(~(1<<PINA7));
+	DDRA=0xFF;
+	ep2_l;
+	return result;
+}
+
+void lcd_clear(void){
+   lcd_clear_1();
+    lcd_clear_2();
+}
+/*
+ 读数据程序。命令后，读入。使用read_data函数会是设定的值，再吃调用本函数会使ac
+ 移动一次，8读取位的数据
+*/
+uchar date_cmd_1(void){
+	uint result;
+	DDRA=0x00;
+	rs_h;
+	rw_h;
+	ep1_h;
+	delay_ms(1);
+	result=PINA;
+	DDRA=0xFF;
+	ep1_l;
+	return result;
+}
+uchar date_cmd_2(void){
+	uint result;
+	DDRA=0x00;
+	rs_h;
+	rw_h;
+	ep2_h;
+	delay_ms(1);
+	result=PINA;
+	DDRA=0xFF;
+	ep2_l;
+	return result;
+}
+//**************************
+//读取函数，注意会ac位置
+//**************************
+uchar read_data_xy(unsigned char x,unsigned char y){
+	if (y == 0) {
+    	lcd_wcmd_1(0x80 + x);
+		delay_us(10);
+		return date_cmd_1();
+		
+    }else  if(y==1){
+    	lcd_wcmd_1(0x90 + x);
+		delay_us(10);
+		return date_cmd_1();
+    }else  if(y==2){
+    	lcd_wcmd_2(0x80 + x);
+		delay_us(10);
+		return date_cmd_2();
+    }else  if(y==3){
+    	lcd_wcmd_2(0x90 + x);
+		delay_us(10);
+		return date_cmd_2();
+    }
+	
+	return 0x00;
+}
+uchar read_data_1(unsigned char addr){
+	
+    	lcd_wcmd_1(addr);
+    	return date_cmd_1();
+}
+uchar read_data_2(unsigned char addr){
+    	lcd_wcmd_1(addr);
+		return date_cmd_2();
+}
+
+
+/*初始化功能*/
+void lcd_init(void){
+	 //初始化端口功能
+	 DDRA |=0xFF;
+	 PORTA=0xFF;
+	 DDRG |=0x0F;
+	 PORTG|=0x0F;
+	 DDRF|=0x01;
+	 PORTF|=0x01;
+	 //lcd_wcmd(0x38);//初始化功能,8位，基本指令
+	 lcd_wcmd_1(0x30);//初始化功能,8位，基本指令
+	 delay_us(1);
+	  lcd_wcmd_1(0x08);//关显示
+	 delay_us(1);
+	  lcd_wcmd_1(0x01);//清显示
+	 delay_us(1);
+	  lcd_wcmd_1(0x06);//输入模式，右移
+	  delay_us(1);
+	  lcd_wcmd_1(0x0c);//初始化光标,开显示
+	
+	 delay_us(1);
+	  lcd_wcmd_2(0x30);//初始化功能,8位，基本指令
+	 delay_us(1);
+	 lcd_wcmd_2(0x08);//关显示
+	 delay_us(1);
+	 lcd_wcmd_2(0x01);//清显示
+	 delay_us(1);
+	 lcd_wcmd_2(0x06);//输入模式，右移
+	  delay_us(1);
+	 lcd_wcmd_2(0x0c);//初始化光标,开显示
+}
+//************
+// 光标显示操作,默认初始化都是关闭。上半屏 0:关闭,1：开游标,2：游标反白,3：开游标、反白
+// 下半屏  4:关闭,5：开游标,6：游标反白,7：开游标、反白
+//************
+void cur_set(uint type){
+	 if(type==0){
+	 	lcd_wcmd_1(0x0c);	 
+	 }else if(type==1){
+	     lcd_wcmd_1(0x0e);
+	 }else if(type==2){
+	    lcd_wcmd_1(0x0d);
+	 }else if(type==3){
+	    lcd_wcmd_1(0x0f);
+	 }else if(type==4){
+	    lcd_wcmd_2(0x0c);
+	 }else if(type==5){
+	    lcd_wcmd_2(0x0e);
+	 }else if(type==6){
+	    lcd_wcmd_2(0x0d);
+	 }else if(type==7){
+	    lcd_wcmd_2(0x0f);
+	 }
+}
+//***************************************************
+//   反白相关
+//***************************************************
+/********************************************************************  
+    函 数 名：Set_Draw(  
+    入口参数：无  
+    出口参数：无  
+    修改日期：  
+    函数作用：  
+    说    明：  
+    ********************************************************************/   
+    void Set_Draw(void)   
+    {   
+        //W_1byte(0,0,0x01);            //清屏   
+        delay_ms(2);                  //延时   
+        //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
+        lcd_wcmd_1(0x36); 
+		lcd_wcmd_2(0x36);   
+        delay_ms(2);                  //延时   
+    }
+	void Set_UNDraw(void)   
+    {   
+        //W_1byte(0,0,0x01);            //清屏   
+        delay_ms(2);                  //延时   
+        //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
+        lcd_wcmd_1(0x30); 
+		lcd_wcmd_2(0x30);   
+        delay_ms(2);                  //延时   
+    }
+/**************************************************  
+    uchar x,起始位置
+	uchar y,对应y
+	uchar end_x, 反白结束位置
+	uchar clear 0：反白，1：不反白
+ **************************************************/   
+    void Set_White_off(uchar x,uchar y,uchar end_x)   
+    {   
+        uchar i, j, white_x, white_y,white_end_x,clr_x,clr_y;       //   
+        white_end_x = (end_x-x+1);   
+        white_end_x <<= 1;   //16*16，一次写8个，所以乘2
+		Set_Draw(); //开画图
+		delay_us(1); 
+        if(y==0)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==1)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        }   
+        else if(y==2)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==3)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        }   
+        delay_us(1); 
+		if(y==0 || y==1){    
+          for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+          {   
+             lcd_wcmd_1(white_y++);     //设置绘图区的Y地址坐标0   
+             lcd_wcmd_1(white_x);       //设置绘图区的X地址坐标0   
+             for(j=0;j<white_end_x;j++)   //   
+             {     
+               lcd_wdat_1(0x00); //取消这一行的8个点的反白，液晶地址自动加   
+             }   
+          }
+		}else if(y==2 || y==3){
+		    for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+          {   
+             lcd_wcmd_2(white_y++);     //设置绘图区的Y地址坐标0   
+             lcd_wcmd_2(white_x);       //设置绘图区的X地址坐标0   
+             for(j=0;j<white_end_x;j++)   //   
+             {     
+               lcd_wdat_2(0x00); //取消这一行的8个点的反白，液晶地址自动加   
+             }   
+          }
+		}
+		  Set_UNDraw();//关画图  
+		  delay_us(1);  
+    } 
+	void Set_White(uchar x,uchar y,uchar end_x)   
+    {   
+        uchar i, j, white_x, white_y,white_end_x,clr_x,clr_y;       //   
+        white_end_x = (end_x-x+1);   
+        white_end_x <<= 1;   //16*16，一次写8个，所以乘2
+		Set_Draw(); //开画图
+		delay_us(1); 
+        if(y==0)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==1)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        }   
+        else if(y==2)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x80;   
+            clr_x = 0x80;   
+            clr_y = 0x80;   
+        }   
+        else if(y==3)   
+        {   
+            white_x = (0x80+x-1);   
+            white_y = 0x90;   
+            clr_x = 0x80;   
+            clr_y = 0x90;   
+        } 
+		if(y==0 || y==1){          
+          for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+          {   
+              lcd_wcmd_1(white_y++);     //设置绘图区的Y地址坐标0   
+              lcd_wcmd_1(white_x);       //设置绘图区的X地址坐标0   
+              for(j=0;j<white_end_x;j++)   //   
+              {    
+                    lcd_wdat_1(0xff); //反白这一行的8个点，液晶地址自动加1     
+              }   
+          }
+		}else if(y==2 || y==3){
+		   for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
+            {   
+              lcd_wcmd_2(white_y++);     //设置绘图区的Y地址坐标0   
+              lcd_wcmd_2(white_x);       //设置绘图区的X地址坐标0   
+              for(j=0;j<white_end_x;j++)   //   
+              {    
+                    lcd_wdat_2(0xff); //反白这一行的8个点，液晶地址自动加1     
+              }   
+            }
+		}
+		  Set_UNDraw();//关画图  
+		  delay_us(1);  
+    } 
+	/********************************************************************  
+    函 数 名：Draw_Pic  128*64  
+    入口参数：x,y,*Draw  
+    出口参数：无  
+    建立日期：2007年8月26日  
+    修改日期：  
+    函数作用：  
+    说    明：  
+    ********************************************************************/   
+    /*************************************************/   
+    /*   
+    void Draw_Pic(uchar x, uchar y, const uchar *Draw)   
+    {   
+        uchar i, j, temp_x, temp_y;     //   
+        temp_x = x;                     //   
+        temp_y = y;                     //   
+        temp_x |= 0x80;                 //   
+        temp_y |= 0x80;                 //   
+        for(i=0;i<32;i++ )               //上半屏32行   
+        {   
+            lcd_wcmd_1(0,0,temp_y++);      //设置绘图区的Y地址坐标0   
+            lcd_wcmd_1(0,0,temp_x);        //设置绘图区的X地址坐标0   
+            for(j=0;j<16;j++)            //   
+            {   
+                 lcd_wdat_2(0,1,*Draw++);  //   
+            }   
+        }   
+           
+        temp_x = 0x88;                  //   
+        temp_y = 0x80;                  //   
+        j = 0;                          //   
+        for(;i<64;i++ )   
+        {   
+            lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标   
+            lcd_wdat_2(temp_x);        //设置绘图区的X地址坐标   
+            for(j=0;j<16;j++)   
+            {   
+                 lcd_wdat_2(0,1,*Draw++);  //   
+            }   
+        }   
+            
+    } */    
+    /*************************************************/  
+//***********************************************************************
+//      液晶显示界面初始化
+//***********************************************************************
+void lcd_Desk(void)
+{ 
+  //uint i=0;   
+ // lcd_clear();
+  //lcd_write_str(0,0,"ADC0:");
+  lcd_write_str(0,3,"反白测试第一次");
+  lcd_write_str(0,0,"反白测试第一次");
+  //delay_ms(100);
+     
+    Set_White(1,1,7); 
+	   
+	 
+    delay_ms(3000); 
+     Set_White_off(1,1,7);
+	Set_White(2,1,2); 
+	 delay_ms(300); 
+	 Set_White_off(2,2,7);
+	 Set_White(3,1,5);   
+  
+   //lcd_write_str(0,1,"第二行测试");
+  // lcd_write_str(0,2,"三行我测试");
+   //lcd_write_str(0,3,"四行我测试");
+  /*for(i=0;i<10;i++){
+  		lcd_write_char(0x0b,0,0x30+i);	
+		delay_ms(100);		
+  }*/
+  
+}
