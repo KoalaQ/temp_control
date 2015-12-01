@@ -20,6 +20,12 @@ void pageTime(uint y){
    showTime_page(y);
                  //开定时器 
 }
+void pageTime2(uint y){
+                //关定时器
+   //lcd_write_str(0,y,"时间:");
+   showTime_page(y);
+                 //开定时器 
+}
 //page1,首页的界面
 void page1(void){
    uint cur=0;
@@ -284,9 +290,10 @@ void page1(void){
 		 case 5:
 		    //全部停止
 		   break;
-		 case 6:
+		 case 6://重置
 		   Set_White_off(10,3,11);
-		    prePageNum=1;
+		   pageParam[2]=0;//表示是系统重置
+		   prePageNum=1;
 		   pageNum=5;
 		    return;
 		  default:
@@ -312,14 +319,14 @@ void page1(void){
 		   if(cur==1){
 		      Set_White_off(9,2,10);
 		      Set_White(3,2,4);
-			  cur=1;
+			  cur=0;
 		   }
 		   break;
 		case 'r':
 		   if(cur==0){
 		      Set_White_off(3,2,4);
 		      Set_White(9,2,10);
-			  cur=0;
+			  cur=1;
 		   }
 		  break;
 		case 't':
@@ -334,29 +341,322 @@ void page1(void){
  void page3(void){
   uint cur=0;
    uchar keyV;
-   lcd_write_str(2,0,"单个温控界面");
+   lcd_write_str(0,0,"T");
+    lcd_write_char_con(0,0x30 | (pageParam[0]+1));
+	lcd_write_char_con(0,':');
+   lcd_write_str(1,1,"温度:");
+   lcd_write_str(1,2,"状态:");
+   lcd_write_str(0,3,"编辑");
+   lcd_write_str(3,3,"运行");
+   lcd_write_str(7,3,"暂停");
+   lcd_write_str(10,3,"重置");
+   Set_White(1,3,2);
    //Set_White(9,2,10);
     while(1){
-      keyV=KeyScan_once();
+	lcd_write_pos(2,0);
+	pageTime2(0);
+	 lcd_write_str(4,1,"100");
+	 lcd_write_char(6,1,0xA1);
+     lcd_write_char_con(1,0xE6);
+	 lcd_write_str(4,2,"阶段1");
+	 lcd_write_str(8,2," 1:10");
+	
+      keyV=KeyScan_once();  
 	  if(keyV=='e'){
-		    pageNum=1;
-		    return;
+	      Set_White_off(1,3,2);
+		  Set_White_off(4,3,5);
+		  Set_White_off(8,3,9);
+		  Set_White_off(11,3,12);
+		  pageNum=1;
+		  return;
+	  }else if(keyV=='l'){
+	     switch(cur){
+		   case 1:
+		     Set_White_off(4,3,5);
+		     Set_White(1,3,2);
+			 cur=0;
+		     break;
+		   case 2:
+		     Set_White_off(8,3,9);
+		     Set_White(4,3,5);
+		     cur=1;
+		     break;
+		   case 3:
+		     Set_White_off(11,3,12);
+		     Set_White(8,3,9);
+		     cur=2;
+		     break;
+		 }
+	  }else if(keyV=='r'){
+	       switch(cur){
+		   case 0:
+		     Set_White(4,3,5);
+		     Set_White_off(1,3,2);
+			 cur=1;
+		     break;
+		   case 1:
+		     Set_White(8,3,9);
+		     Set_White_off(4,3,5);
+		     cur=2;
+		     break;
+		   case 2:
+		     Set_White(11,3,12);
+		     Set_White_off(8,3,9);
+		     cur=3;
+		     break;
+		 }
+	  }else if(keyV=='t'){
+	       switch(cur){
+		   case 0:
+		     Set_White_off(1,3,2);
+			 pageNum=4;
+		     return;
+		   case 1:
+		     //运行操作
+		     break;
+		   case 2:
+		     //暂停操作
+		     break;
+		  case 3:
+		     //重置操作
+		     break;
+		 }
+	  }else if(keyV=='s'){
+	       Set_White_off(1,3,2);
+		   Set_White_off(4,3,5);
+		   Set_White_off(8,3,9);
+		   Set_White_off(11,3,12);
+			pageNum=4;
+		     return;
 	  }
 	}
+ }
+ //等下调用page_ac()函数改变ac写数据
+ void page4_data(uint cur,uint y){
+      uint numH=0xA2;
+      uint numL=0xC4;//带括号的123，低位加1是1、方便操作，需要加上即可
+    //这个判断需要些到读取值函数中去
+	 if(y>0 && y<3){
+	   lcd_write_char(2,1,numH);
+       lcd_write_char_con(1,numL+1);
+	   lcd_write_char(2,2,numH);
+       lcd_write_char_con(2,numL+2);
+       lcd_write_char(2,3,numH);
+       lcd_write_char_con(3,numL+3);
+	  }else if(y>=3 && y<6){
+	   lcd_write_char(2,1,numH);
+       lcd_write_char_con(1,numL+4);
+	   lcd_write_char(2,2,numH);
+       lcd_write_char_con(2,numL+5);
+       lcd_write_char(2,3,numH);
+       lcd_write_char_con(3,numL+6);
+	  }else if(y>=6 && y<9){
+	   lcd_write_char(2,1,numH);
+       lcd_write_char_con(1,numL+7);
+	   lcd_write_char(2,2,numH);
+       lcd_write_char_con(2,numL+8);
+       lcd_write_char(2,3,numH);
+       lcd_write_char_con(3,numL+9);
+	  }else if(y>=9 && y<12){
+	   lcd_write_char(2,1,numH);
+       lcd_write_char_con(1,numL+10);
+	   lcd_write_char(2,2,numH);
+       lcd_write_char_con(2,numL+11);
+       lcd_write_char(2,3,numH);
+       lcd_write_char_con(3,numL+12);
+	  }
+	  //还要做数据读取操作
+ }
+ //传入cur做ac位置操作,判断是否翻页
+ void page4_ac(uint cur,uint oldcur){
+      uint y=cur/11;//逻辑y.从0开始
+	  uint lcd_y;//显示y
+	  uint x=cur%11;//x轴
+	  switch(y%3){
+	   case 0://1行
+	     lcd_y=1;
+	     break;
+	   case 1://2行
+	     lcd_y=2;
+		 break;
+	   case 2://3行
+	     lcd_y=3;
+	     break;
+	  }
+	  switch((oldcur/11)/3){
+	    case 0:
+		 if(cur>32){
+		   page4_data(cur,y);
+		 }
+		 break;
+		case 1:
+		  if(cur>65 || cur<33){
+		   page4_data(cur,y);
+		 }
+		 break;
+		case 2:
+		if(cur<66 || cur>98){
+		   page4_data(cur,y);
+		 }
+		 break;
+		case 3:
+		if(cur<99){
+		   page4_data(cur,y);
+		 }
+		 break;
+	  }
+	  if(lcd_y==1){
+	     cur_set(3);
+		 cur_set(4);
+	  }else if(lcd_y==2 || lcd_y==3){
+	     cur_set(0);
+		 cur_set(7);
+	  }
+	  if(x==0){
+	      lcd_write_pos(3,lcd_y);
+	  }else if(x==2){
+	       lcd_write_pos(5,lcd_y);
+	  }else if(x==4){
+	        lcd_write_pos(7,lcd_y);
+	  }else if(x==6){
+	        lcd_write_pos(9,lcd_y);
+	  }else if(x==8){
+	        lcd_write_pos(10,lcd_y);
+			lcd_write_str_con(lcd_y," ");
+	  }else if(x==9){
+	        lcd_write_pos(11,lcd_y);
+	  }
+	  return;
  }
   void page4(void){
+    //定义一个局部的结构体，从对呀温度中获得数据。暂时未写
+  uint numH=0xA2;
+  uint numL=0xC4;//带括号的123，低位加1是1、方便操作，需要加上即可
     uint cur=0;
+	uint oldcur=0;
    uchar keyV;
-   lcd_write_str(2,0,"单个温控设置界面");
+   lcd_write_str(0,0,"T");
+   lcd_write_char_con(0,0x30 | (pageParam[0]+1));
+   lcd_write_char_con(0,':');
+   
+   lcd_write_str(4,0,"升温");
+   lcd_write_str(7,0,"恒温");
+   lcd_write_str(10,0,"温度");
+   lcd_write_str(0,1,"保存");
+   lcd_write_str(0,2,"取消");
+   lcd_write_str(0,3,"重置");
+   
+   lcd_write_char(2,1,numH);
+   lcd_write_char_con(1,numL+1);
+   lcd_write_str(3,1,"01: 00  01: 00 100");
+   lcd_write_char(2,2,numH);
+   lcd_write_char_con(2,numL+2);
+   lcd_write_str(3,2,"01: 32  01: 00 10");
+   lcd_write_char(2,3,numH);
+   lcd_write_char_con(3,numL+3);
+   lcd_write_str(3,3,"01: 15  01: 12 150");
+   //初始化操作
+   cur=0;
+   lcd_write_pos(3,1);
+   cur_set(3);
+   
    //Set_White(9,2,10);
     while(1){
       keyV=KeyScan_once();
 	  if(keyV=='e'){
+	        Set_White_off(1,1,2);
+			Set_White_off(1,2,2);
+			Set_White_off(1,3,2);
+			cur_set(0);
+			cur_set(4);
 		    pageNum=3;
 		    return;
-	  }
+	  }else if(keyV=='u'){
+	     if(cur==133){
+		    Set_White(1,1,2);
+			Set_White_off(1,2,2);
+			cur=132;
+		 }else if(cur==134){
+		    Set_White(1,2,2);
+			Set_White_off(1,3,2);
+			cur=133;
+		 }else if(cur>10 && cur<=131){
+		   oldcur=cur;
+	       cur=(cur/11-1)*11;
+		   page4_ac(cur,oldcur);
+		 }
+	  }else if(keyV=='d'){
+	     if(cur==132){
+		    Set_White_off(1,1,2);
+			Set_White(1,2,2);
+			cur=133;
+		 }else if(cur==133){
+		    Set_White_off(1,2,2);
+			Set_White(1,3,2);
+			cur=134;
+		 }else if(cur<121){
+	      oldcur=cur;
+	      cur=(cur/11+1)*11;
+		  page4_ac(cur,oldcur);
+		}
+		
+	  }else if(keyV=='l'){
+	   oldcur=cur;
+	  if(cur%11==0){
+	        Set_White(1,1,2);
+			cur_set(0);
+			cur_set(4);
+			cur=132;
+	   }else if(cur>0){
+	      cur--;
+		   page4_ac(cur,oldcur);
+		}
+	  
+	  }else if(keyV=='r'){
+	  if(cur>131){
+	      Set_White_off(1,1,2);
+	      Set_White_off(1,2,2);
+		  Set_White_off(1,3,2);
+		  cur=oldcur;
+	  }else  if(cur<131){
+		 oldcur=cur;
+	     cur++;
+		 }
+	    page4_ac(cur,oldcur);
+	  }else if(keyV=='t'){
+	        Set_White_off(1,1,2);
+			Set_White_off(1,2,2);
+			Set_White_off(1,3,2);
+		    
+	     if(cur==132){
+		   cur_set(0);
+			cur_set(4);
+		    pageParam[1]=1;//表示是温度数据的，这里处理保存的方法，因为数据在这里。只是跳转过去，参数如果是1表示成功。2表示失败
+		    prePageNum=4;
+		    pageNum=6;
+		    return;
+		 }else if(cur==133){
+		    cur_set(0);
+			cur_set(4);
+		    pageNum=3;
+		    return;
+		 }else if(cur==134){
+		   cur_set(0);
+			cur_set(4);
+		   //重置。有提示
+			pageParam[2]=1;//表示重置是温度数据的
+			prePageNum=4;
+		    pageNum=7;
+		    return;
+		 }
+	     
+	  }else if(keyV=='0' || keyV=='1' || keyV=='2' || keyV=='3' || keyV=='4' || keyV=='5' 
+	           || keyV=='6'  || keyV=='7' || keyV=='8' || keyV=='9'){
+			   
+		}
 	}
  }
+ 
  void page5(void){
   uint cur=0;
    uchar keyV;
@@ -436,7 +736,13 @@ void page1(void){
    
  }
  void page6(void){//复用的方法
-   lcd_write_str(5,1,"保存成功！");
+ if(pageParam[1]==0){
+     lcd_write_str(4,1,"时间保存成功！");
+   }else if(pageParam[1]==1){
+     lcd_write_str(4,1,"温度保存成功！");
+   }else if(pageParam[1]==2){
+     lcd_write_str(4,1,"温度保存失败！");
+   }
    delay_ms(500);
    pageNum=prePageNum;
  }
@@ -491,7 +797,7 @@ void page1(void){
    uchar date[15];
    uint i;
     uint dateAc[14]={1,2,3,4,6,7,9,10,2,3,5,6,8,9};
-	prePageNum=8;//同样 是违反规则的设置
+	
    date[0]=2;
    date[1]=0;
    date[2]=1;
@@ -588,6 +894,8 @@ void page1(void){
 	 }else if(keyV=='t'){
 	      if(cur==14){
 		        //保存操作
+				pageParam[1]=0;//标记是时间的保存
+				prePageNum=8;
 				pageNum=6;
 				return;
 		 }else if(cur==15){
@@ -621,10 +929,13 @@ void page1(void){
    }
  }
 void page9(void){//复用的方法
-   lcd_write_str(5,1,"重置中。。。。");
-   while(1){
-      
+  if(pageParam[2]==0){
+     lcd_write_str(4,1,"系统重置中。。。");
+   }else if(pageParam[2]==1){
+     lcd_write_str(4,1,"数据重置中。。。");
    }
+   delay_ms(500);
+   pageNum=prePageNum;
  }
 //分发Pages
 void dispatchPages(void){

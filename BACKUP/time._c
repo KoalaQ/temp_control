@@ -30,7 +30,7 @@
 #define  CE_H    PORTD|=1<<PD2
 #define  CE_L   PORTD&=~(1<<PD2) 
 
-const unsigned char nihao[]={};
+
 //地址、数据发送子程序
 void Write1302  ( unsigned char  addr,unsigned char dat )
 { 

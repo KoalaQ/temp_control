@@ -110,10 +110,10 @@ DDRD&=0xFD;
 void Initial_time(void) {
    DDRD|=0x07;
    PORTD=0x00;
-  // Write1302(WRITE_PROTECT,0X00);//禁止写保护
-   //Write1302(WRITE_SECOND,0x00);//秒位初始化
-   //Write1302(WRITE_MINUTE,0x50);//分钟初始化
-  // Write1302(WRITE_HOUR,0xa4);//小时初始化
+   Write1302(WRITE_PROTECT,0X00);//禁止写保护
+   Write1302(WRITE_SECOND,0x00);//秒位初始化
+   Write1302(WRITE_MINUTE,0x50);//分钟初始化
+   Write1302(WRITE_HOUR,0x91);//小时初始化
    Write1302(WRITE_PROTECT,0x80);//写保护
 }
 //显示时间，时分秒

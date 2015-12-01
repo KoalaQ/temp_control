@@ -21,7 +21,7 @@ uint lcd_bz_1(void){
 	rs_l;
 	rw_h;
 	ep1_h;
-	delay_ms(1);
+	delay_us(1);
 	result=PINA&(1<<PINA7);
 	DDRA=0xFF;
 	ep1_l;
@@ -32,11 +32,9 @@ void lcd_wcmd_1(uchar cmd){
 	 rs_l;
 	 rw_l;
 	 ep1_l;
-	 delay_ms(1);
 	 PORTA=cmd;
-	 delay_ms(2);
 	 ep1_h;
-	 delay_ms(1);
+	 delay_us(1);
 	 ep1_l;
 	 return;
 }
@@ -49,9 +47,8 @@ void lcd_wdat_1(uchar dat){
 	 rw_l;
 	 ep1_l;
 	 PORTA=dat;
-	 delay_ms(2);
 	 ep1_h;
-	 delay_ms(2);
+	 delay_us(1);
 	 ep1_l;
 }
 
@@ -70,7 +67,7 @@ uint lcd_bz_2(void){
 	rs_l;
 	rw_h;
 	ep2_h;
-	delay_ms(1);
+	delay_us(1);
 	result=PINA&(1<<PINA7);
 	DDRA=0xFF;
 	ep2_l;
@@ -81,11 +78,9 @@ void lcd_wcmd_2(uchar cmd){
 	 rs_l;
 	 rw_l;
 	 ep2_l;
-	 delay_ms(1);
 	 PORTA=cmd;
-	 delay_ms(2);
 	 ep2_h;
-	 delay_ms(1);
+	delay_us(1);
 	 ep2_l;
 }
 //  写输出数据,char
@@ -95,19 +90,14 @@ void lcd_wdat_2(uchar dat){
 	 rw_l;
 	 ep2_l;
 	 PORTA=dat;
-	 delay_ms(2);
 	 ep2_h;
-	 delay_ms(2);
+	delay_us(1);
 	 ep2_l;
 }
 /*清显示*/
 void lcd_clear_2(void) 
 {
-	
 	lcd_wcmd_2(0x01);
-
-	delay_ms(1);
-
 }
 
 //*************************************************
@@ -356,24 +346,15 @@ void lcd_init(void){
 	 PORTF|=0x01;
 	 //lcd_wcmd(0x38);//初始化功能,8位，基本指令
 	 lcd_wcmd_1(0x30);//初始化功能,8位，基本指令
-	 delay_us(1);
 	  lcd_wcmd_1(0x08);//关显示
-	 delay_us(1);
 	  lcd_wcmd_1(0x01);//清显示
-	 delay_us(1);
 	  lcd_wcmd_1(0x06);//输入模式，右移
-	  delay_us(1);
 	  lcd_wcmd_1(0x0c);//初始化光标,开显示
 	
-	 delay_us(1);
 	  lcd_wcmd_2(0x30);//初始化功能,8位，基本指令
-	 delay_us(1);
 	 lcd_wcmd_2(0x08);//关显示
-	 delay_us(1);
 	 lcd_wcmd_2(0x01);//清显示
-	 delay_us(1);
 	 lcd_wcmd_2(0x06);//输入模式，右移
-	  delay_us(1);
 	 lcd_wcmd_2(0x0c);//初始化光标,开显示
 }
 //************
@@ -412,21 +393,17 @@ void cur_set(uint type){
     ********************************************************************/   
     void Set_Draw(void)   
     {   
-        //W_1byte(0,0,0x01);            //清屏   
-        delay_ms(2);                  //延时   
+        //W_1byte(0,0,0x01);            //清屏    
         //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
         lcd_wcmd_1(0x36); 
 		lcd_wcmd_2(0x36);   
-        delay_ms(2);                  //延时   
     }
 	void Set_UNDraw(void)   
     {   
         //W_1byte(0,0,0x01);            //清屏   
-        delay_ms(2);                  //延时   
         //W_1byte(0,0,0x34);            //8BIT控制界面，扩充指令集,，绘图显示OFF   
         lcd_wcmd_1(0x30); 
 		lcd_wcmd_2(0x30);   
-        delay_ms(2);                  //延时   
     }
 /**************************************************  
     uchar x,起始位置
@@ -440,7 +417,6 @@ void cur_set(uint type){
         white_end_x = (end_x-x+1);   
         white_end_x <<= 1;   //16*16，一次写8个，所以乘2
 		Set_Draw(); //开画图
-		delay_us(1); 
         if(y==0)   
         {   
             white_x = (0x80+x-1);   
@@ -469,7 +445,6 @@ void cur_set(uint type){
             clr_x = 0x80;   
             clr_y = 0x90;   
         }   
-        delay_us(1); 
 		if(y==0 || y==1){    
           for(i=0;i<16;i++ )               //16行，因为是16*16汉字   
           {   
@@ -492,7 +467,6 @@ void cur_set(uint type){
           }
 		}
 		  Set_UNDraw();//关画图  
-		  delay_us(1);  
     } 
 	void Set_White(uchar x,uchar y,uchar end_x)   
     {   
@@ -500,7 +474,6 @@ void cur_set(uint type){
         white_end_x = (end_x-x+1);   
         white_end_x <<= 1;   //16*16，一次写8个，所以乘2
 		Set_Draw(); //开画图
-		delay_us(1); 
         if(y==0)   
         {   
             white_x = (0x80+x-1);   
@@ -551,7 +524,6 @@ void cur_set(uint type){
             }
 		}
 		  Set_UNDraw();//关画图  
-		  delay_us(1);  
     } 
 	/********************************************************************  
     函 数 名：Draw_Pic  128*64  
@@ -577,7 +549,7 @@ void cur_set(uint type){
         {   
             lcd_wcmd_1(temp_y++);      //设置绘图区的Y地址坐标0   
             lcd_wcmd_1(temp_x);        //设置绘图区的X地址坐标0   
-            for(j=0;j<16;j++)            //   
+            for(j=0;j<24;j++)            //   
             {   
                  lcd_wdat_1(*Draw++);  //   
             }   
@@ -592,14 +564,14 @@ void cur_set(uint type){
         {   
             lcd_wcmd_2(temp_y++);      //设置绘图区的Y地址坐标   
             lcd_wcmd_2(temp_x);        //设置绘图区的X地址坐标   
-            for(j=0;j<16;j++)   
+            for(j=0;j<24;j++)   
             {   
                  lcd_wdat_2(*Draw++);  //   
             }   
         }   
        lcd_wcmd_1(0x36);
 	   lcd_wcmd_2(0x36);
-	   delay_ms(1);
+	   delay_us(100);
 	   lcd_wcmd_1(0x30);
 	   lcd_wcmd_2(0x30);
 	        
