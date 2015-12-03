@@ -1,0 +1,856 @@
+                        .module temp.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile temp.c
+ 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\temp.c
+ 0000                   .dbfunc e tempdata_init _tempdata_init fV
+ 0000           ;              i -> R20,R21
+ 0000           ;              j -> R22,R23
+                        .even
+ 0000           _tempdata_init::
+ 0000 0E940000          xcall push_xgsetF000
+ 0004                   .dbline -1
+ 0004                   .dbline 6
+ 0004           ; #include<iom128v.h>
+ 0004           ; #include "temp.h"
+ 0004           ; #include "main.h"
+ 0004           ; #include "eeprom.h"
+ 0004           ; //开机初始化空间。全部置0,不初始化数据，等用户或EEPROM数据回填
+ 0004           ; void tempdata_init(void){
+ 0004                   .dbline 8
+ 0004           ;  uint i,j;
+ 0004           ;  for(i=0;i<4;i++){
+ 0004 4427              clr R20
+ 0006 5527              clr R21
+ 0008 2CC0              xjmp L5
+ 000A           L2:
+ 000A                   .dbline 8
+ 000A                   .dbline 9
+ 000A           ;     temps[i].flag=0;
+ 000A 0AE0              ldi R16,266
+ 000C 11E0              ldi R17,1
+ 000E 9A01              movw R18,R20
+ 0010 0E940000          xcall empy16s
+ 0014 80E0              ldi R24,<_temps
+ 0016 90E0              ldi R25,>_temps
+ 0018 F801              movw R30,R16
+ 001A E80F              add R30,R24
+ 001C F91F              adc R31,R25
+ 001E 2224              clr R2
+ 0020 3324              clr R3
+ 0022 3182              std z+1,R3
+ 0024 2082              std z+0,R2
+ 0026                   .dbline 10
+ 0026           ;       for(j=0;j<132;j++){
+ 0026 6627              clr R22
+ 0028 7727              clr R23
+ 002A 15C0              xjmp L9
+ 002C           L6:
+ 002C                   .dbline 10
+ 002C                   .dbline 11
+ 002C           ;        temps[i].temp_data[j]=0;
+ 002C 0AE0              ldi R16,266
+ 002E 11E0              ldi R17,1
+ 0030 9A01              movw R18,R20
+ 0032 0E940000          xcall empy16s
+ 0036 1801              movw R2,R16
+ 0038 80E0              ldi R24,<_temps+2
+ 003A 90E0              ldi R25,>_temps+2
+ 003C 280E              add R2,R24
+ 003E 391E              adc R3,R25
+ 0040 FB01              movw R30,R22
+ 0042 EE0F              lsl R30
+ 0044 FF1F              rol R31
+ 0046 E20D              add R30,R2
+ 0048 F31D              adc R31,R3
+ 004A 2224              clr R2
+ 004C 3324              clr R3
+ 004E 3182              std z+1,R3
+ 0050 2082              std z+0,R2
+ 0052                   .dbline 12
+ 0052           ;       }
+ 0052           L7:
+ 0052                   .dbline 10
+ 0052 6F5F              subi R22,255  ; offset = 1
+ 0054 7F4F              sbci R23,255
+ 0056           L9:
+ 0056                   .dbline 10
+ 0056 6438              cpi R22,132
+ 0058 E0E0              ldi R30,0
+ 005A 7E07              cpc R23,R30
+ 005C 38F3              brlo L6
+ 005E           X0:
+ 005E                   .dbline 13
+ 005E           ;  } 
+ 005E           L3:
+ 005E                   .dbline 8
+ 005E 4F5F              subi R20,255  ; offset = 1
+ 0060 5F4F              sbci R21,255
+ 0062           L5:
+ 0062                   .dbline 8
+ 0062 4430              cpi R20,4
+ 0064 E0E0              ldi R30,0
+ 0066 5E07              cpc R21,R30
+ 0068 80F2              brlo L2
+ 006A           X1:
+ 006A                   .dbline -2
+ 006A           L1:
+ 006A                   .dbline 0 ; func end
+ 006A 0C940000          xjmp pop_xgsetF000
+ 006E                   .dbsym r i 20 i
+ 006E                   .dbsym r j 22 i
+ 006E                   .dbend
+ 006E                   .dbfunc e data_recover _data_recover fV
+ 006E           ;          dataC -> R22,R23
+ 006E           ;              i -> R20,R21
+ 006E           ;              j -> R22,R23
+                        .even
+ 006E           _data_recover::
+ 006E 0E940000          xcall push_xgsetF00C
+ 0072                   .dbline -1
+ 0072                   .dbline 15
+ 0072           ; }
+ 0072           ; void data_recover(void){
+ 0072                   .dbline 18
+ 0072           ;  uint i,j;
+ 0072           ;  uint dataC;
+ 0072           ;  for(i=0;i<4;i++){
+ 0072 4427              clr R20
+ 0074 5527              clr R21
+ 0076 46C0              xjmp L15
+ 0078           L12:
+ 0078                   .dbline 18
+ 0078                   .dbline 19
+ 0078           ;    dataC=EEPROM_read(i+1,0);//读取标记位
+ 0078 2227              clr R18
+ 007A 3327              clr R19
+ 007C 8A01              movw R16,R20
+ 007E 0F5F              subi R16,255  ; offset = 1
+ 0080 1F4F              sbci R17,255
+ 0082 0E940000          xcall _EEPROM_read
+ 0086 B801              movw R22,R16
+ 0088                   .dbline 20
+ 0088           ;    if(dataC==1){
+ 0088 0130              cpi R16,1
+ 008A E0E0              ldi R30,0
+ 008C 1E07              cpc R17,R30
+ 008E 09F0              breq X5
+ 0090 37C0              xjmp L16
+ 0092           X5:
+ 0092           X2:
+ 0092                   .dbline 20
+ 0092                   .dbline 21
+ 0092           ;       temps[i].flag=EEPROM_read(i+1,133);
+ 0092 25E8              ldi R18,133
+ 0094 30E0              ldi R19,0
+ 0096 8A01              movw R16,R20
+ 0098 0F5F              subi R16,255  ; offset = 1
+ 009A 1F4F              sbci R17,255
+ 009C 0E940000          xcall _EEPROM_read
+ 00A0 1801              movw R2,R16
+ 00A2 0AE0              ldi R16,266
+ 00A4 11E0              ldi R17,1
+ 00A6 9A01              movw R18,R20
+ 00A8 0E940000          xcall empy16s
+ 00AC 80E0              ldi R24,<_temps
+ 00AE 90E0              ldi R25,>_temps
+ 00B0 F801              movw R30,R16
+ 00B2 E80F              add R30,R24
+ 00B4 F91F              adc R31,R25
+ 00B6 3182              std z+1,R3
+ 00B8 2082              std z+0,R2
+ 00BA                   .dbline 22
+ 00BA           ;         for(j=0;j<132;j++){
+ 00BA 6627              clr R22
+ 00BC 7727              clr R23
+ 00BE 1CC0              xjmp L21
+ 00C0           L18:
+ 00C0                   .dbline 22
+ 00C0                   .dbline 23
+ 00C0           ;           temps[i].temp_data[j]=EEPROM_read(i+1,j+1);
+ 00C0 9B01              movw R18,R22
+ 00C2 2F5F              subi R18,255  ; offset = 1
+ 00C4 3F4F              sbci R19,255
+ 00C6 8A01              movw R16,R20
+ 00C8 0F5F              subi R16,255  ; offset = 1
+ 00CA 1F4F              sbci R17,255
+ 00CC 0E940000          xcall _EEPROM_read
+ 00D0 5801              movw R10,R16
+ 00D2 0AE0              ldi R16,266
+ 00D4 11E0              ldi R17,1
+ 00D6 9A01              movw R18,R20
+ 00D8 0E940000          xcall empy16s
+ 00DC 1801              movw R2,R16
+ 00DE 80E0              ldi R24,<_temps+2
+ 00E0 90E0              ldi R25,>_temps+2
+ 00E2 280E              add R2,R24
+ 00E4 391E              adc R3,R25
+ 00E6 FB01              movw R30,R22
+ 00E8 EE0F              lsl R30
+ 00EA FF1F              rol R31
+ 00EC E20D              add R30,R2
+ 00EE F31D              adc R31,R3
+ 00F0 B182              std z+1,R11
+ 00F2 A082              std z+0,R10
+ 00F4                   .dbline 24
+ 00F4           ;          }
+ 00F4           L19:
+ 00F4                   .dbline 22
+ 00F4 6F5F              subi R22,255  ; offset = 1
+ 00F6 7F4F              sbci R23,255
+ 00F8           L21:
+ 00F8                   .dbline 22
+ 00F8 6438              cpi R22,132
+ 00FA E0E0              ldi R30,0
+ 00FC 7E07              cpc R23,R30
+ 00FE 00F3              brlo L18
+ 0100           X3:
+ 0100                   .dbline 25
+ 0100           ;       }
+ 0100           L16:
+ 0100                   .dbline 26
+ 0100           ;  } 
+ 0100           L13:
+ 0100                   .dbline 18
+ 0100 4F5F              subi R20,255  ; offset = 1
+ 0102 5F4F              sbci R21,255
+ 0104           L15:
+ 0104                   .dbline 18
+ 0104 4430              cpi R20,4
+ 0106 E0E0              ldi R30,0
+ 0108 5E07              cpc R21,R30
+ 010A 08F4              brsh X6
+ 010C B5CF              xjmp L12
+ 010E           X6:
+ 010E           X4:
+ 010E                   .dbline -2
+ 010E           L11:
+ 010E                   .dbline 0 ; func end
+ 010E 0C940000          xjmp pop_xgsetF00C
+ 0112                   .dbsym r dataC 22 i
+ 0112                   .dbsym r i 20 i
+ 0112                   .dbsym r j 22 i
+ 0112                   .dbend
+ 0112                   .dbfunc e set_temp_data _set_temp_data fV
+ 0112           ;              j -> R20,R21
+ 0112           ;       dataCach -> R10,R11
+ 0112           ;              t -> R22,R23
+                        .even
+ 0112           _set_temp_data::
+ 0112 0E940000          xcall push_xgsetF00C
+ 0116 5901              movw R10,R18
+ 0118 B801              movw R22,R16
+ 011A 2297              sbiw R28,2
+ 011C                   .dbline -1
+ 011C                   .dbline 29
+ 011C           ; }
+ 011C           ; //设置指定的数据,保存相关标志位
+ 011C           ; void set_temp_data(uint t,uint* dataCach){
+ 011C                   .dbline 31
+ 011C           ;     uint j;
+ 011C           ;       temps[t].flag=6;
+ 011C 0AE0              ldi R16,266
+ 011E 11E0              ldi R17,1
+ 0120 9B01              movw R18,R22
+ 0122 0E940000          xcall empy16s
+ 0126 80E0              ldi R24,<_temps
+ 0128 90E0              ldi R25,>_temps
+ 012A F801              movw R30,R16
+ 012C E80F              add R30,R24
+ 012E F91F              adc R31,R25
+ 0130 86E0              ldi R24,6
+ 0132 90E0              ldi R25,0
+ 0134 9183              std z+1,R25
+ 0136 8083              std z+0,R24
+ 0138                   .dbline 32
+ 0138           ;       EEPROM_write(t+1,0,0x01);
+ 0138 81E0              ldi R24,1
+ 013A 9983              std y+1,R25
+ 013C 8883              std y+0,R24
+ 013E 2227              clr R18
+ 0140 3327              clr R19
+ 0142 8B01              movw R16,R22
+ 0144 0F5F              subi R16,255  ; offset = 1
+ 0146 1F4F              sbci R17,255
+ 0148 0E940000          xcall _EEPROM_write
+ 014C                   .dbline 33
+ 014C           ;     for(j=0;j<132;j++){
+ 014C 4427              clr R20
+ 014E 5527              clr R21
+ 0150 35C0              xjmp L27
+ 0152           L24:
+ 0152                   .dbline 33
+ 0152                   .dbline 34
+ 0152           ;          temps[t].temp_data[j]=*(dataCach+j);
+ 0152 1A01              movw R2,R20
+ 0154 220C              lsl R2
+ 0156 331C              rol R3
+ 0158 2101              movw R4,R2
+ 015A 0AE0              ldi R16,266
+ 015C 11E0              ldi R17,1
+ 015E 9B01              movw R18,R22
+ 0160 0E940000          xcall empy16s
+ 0164 1801              movw R2,R16
+ 0166 80E0              ldi R24,<_temps+2
+ 0168 90E0              ldi R25,>_temps+2
+ 016A 280E              add R2,R24
+ 016C 391E              adc R3,R25
+ 016E F201              movw R30,R4
+ 0170 E20D              add R30,R2
+ 0172 F31D              adc R31,R3
+ 0174 D201              movw R26,R4
+ 0176 AA0D              add R26,R10
+ 0178 BB1D              adc R27,R11
+ 017A 2D90              ld R2,x+
+ 017C 3C90              ld R3,x
+ 017E 3182              std z+1,R3
+ 0180 2082              std z+0,R2
+ 0182                   .dbline 35
+ 0182           ;          EEPROM_write(t+1,j+1,temps[t].temp_data[j]);
+ 0182 0AE0              ldi R16,266
+ 0184 11E0              ldi R17,1
+ 0186 9B01              movw R18,R22
+ 0188 0E940000          xcall empy16s
+ 018C 1801              movw R2,R16
+ 018E 80E0              ldi R24,<_temps+2
+ 0190 90E0              ldi R25,>_temps+2
+ 0192 280E              add R2,R24
+ 0194 391E              adc R3,R25
+ 0196 FA01              movw R30,R20
+ 0198 EE0F              lsl R30
+ 019A FF1F              rol R31
+ 019C E20D              add R30,R2
+ 019E F31D              adc R31,R3
+ 01A0 2080              ldd R2,z+0
+ 01A2 3180              ldd R3,z+1
+ 01A4 3982              std y+1,R3
+ 01A6 2882              std y+0,R2
+ 01A8 9A01              movw R18,R20
+ 01AA 2F5F              subi R18,255  ; offset = 1
+ 01AC 3F4F              sbci R19,255
+ 01AE 8B01              movw R16,R22
+ 01B0 0F5F              subi R16,255  ; offset = 1
+ 01B2 1F4F              sbci R17,255
+ 01B4 0E940000          xcall _EEPROM_write
+ 01B8                   .dbline 36
+ 01B8           ;       }
+ 01B8           L25:
+ 01B8                   .dbline 33
+ 01B8 4F5F              subi R20,255  ; offset = 1
+ 01BA 5F4F              sbci R21,255
+ 01BC           L27:
+ 01BC                   .dbline 33
+ 01BC 4438              cpi R20,132
+ 01BE E0E0              ldi R30,0
+ 01C0 5E07              cpc R21,R30
+ 01C2 08F4              brsh X8
+ 01C4 C6CF              xjmp L24
+ 01C6           X8:
+ 01C6           X7:
+ 01C6                   .dbline -2
+ 01C6           L23:
+ 01C6                   .dbline 0 ; func end
+ 01C6 2296              adiw R28,2
+ 01C8 0C940000          xjmp pop_xgsetF00C
+ 01CC                   .dbsym r j 20 i
+ 01CC                   .dbsym r dataCach 10 pi
+ 01CC                   .dbsym r t 22 i
+ 01CC                   .dbend
+ 01CC                   .dbfunc e reset_temp_data _reset_temp_data fV
+ 01CC           ;              j -> R20,R21
+ 01CC           ;              t -> R22,R23
+                        .even
+ 01CC           _reset_temp_data::
+ 01CC 0E940000          xcall push_xgsetF000
+ 01D0 B801              movw R22,R16
+ 01D2 2297              sbiw R28,2
+ 01D4                   .dbline -1
+ 01D4                   .dbline 40
+ 01D4           ; }
+ 01D4           ; 
+ 01D4           ; //重置指定的数据,保存相关标志位
+ 01D4           ; void reset_temp_data(uint t){
+ 01D4                   .dbline 42
+ 01D4           ;     uint j;
+ 01D4           ;       temps[t].flag=0;
+ 01D4 0AE0              ldi R16,266
+ 01D6 11E0              ldi R17,1
+ 01D8 9B01              movw R18,R22
+ 01DA 0E940000          xcall empy16s
+ 01DE 80E0              ldi R24,<_temps
+ 01E0 90E0              ldi R25,>_temps
+ 01E2 F801              movw R30,R16
+ 01E4 E80F              add R30,R24
+ 01E6 F91F              adc R31,R25
+ 01E8 2224              clr R2
+ 01EA 3324              clr R3
+ 01EC 3182              std z+1,R3
+ 01EE 2082              std z+0,R2
+ 01F0                   .dbline 43
+ 01F0           ;       EEPROM_write(t+1,0,0x00);
+ 01F0 3982              std y+1,R3
+ 01F2 2882              std y+0,R2
+ 01F4 2227              clr R18
+ 01F6 3327              clr R19
+ 01F8 8B01              movw R16,R22
+ 01FA 0F5F              subi R16,255  ; offset = 1
+ 01FC 1F4F              sbci R17,255
+ 01FE 0E940000          xcall _EEPROM_write
+ 0202                   .dbline 44
+ 0202           ;       EEPROM_write(t+1,133,0x00);
+ 0202 2224              clr R2
+ 0204 3324              clr R3
+ 0206 3982              std y+1,R3
+ 0208 2882              std y+0,R2
+ 020A 25E8              ldi R18,133
+ 020C 30E0              ldi R19,0
+ 020E 8B01              movw R16,R22
+ 0210 0F5F              subi R16,255  ; offset = 1
+ 0212 1F4F              sbci R17,255
+ 0214 0E940000          xcall _EEPROM_write
+ 0218                   .dbline 45
+ 0218           ;     for(j=0;j<132;j++){
+ 0218 4427              clr R20
+ 021A 5527              clr R21
+ 021C 1FC0              xjmp L34
+ 021E           L31:
+ 021E                   .dbline 45
+ 021E                   .dbline 46
+ 021E           ;          temps[t].temp_data[j]=0;
+ 021E 0AE0              ldi R16,266
+ 0220 11E0              ldi R17,1
+ 0222 9B01              movw R18,R22
+ 0224 0E940000          xcall empy16s
+ 0228 1801              movw R2,R16
+ 022A 80E0              ldi R24,<_temps+2
+ 022C 90E0              ldi R25,>_temps+2
+ 022E 280E              add R2,R24
+ 0230 391E              adc R3,R25
+ 0232 FA01              movw R30,R20
+ 0234 EE0F              lsl R30
+ 0236 FF1F              rol R31
+ 0238 E20D              add R30,R2
+ 023A F31D              adc R31,R3
+ 023C 2224              clr R2
+ 023E 3324              clr R3
+ 0240 3182              std z+1,R3
+ 0242 2082              std z+0,R2
+ 0244                   .dbline 47
+ 0244           ;          EEPROM_write(t+1,j+1,0);
+ 0244 3982              std y+1,R3
+ 0246 2882              std y+0,R2
+ 0248 9A01              movw R18,R20
+ 024A 2F5F              subi R18,255  ; offset = 1
+ 024C 3F4F              sbci R19,255
+ 024E 8B01              movw R16,R22
+ 0250 0F5F              subi R16,255  ; offset = 1
+ 0252 1F4F              sbci R17,255
+ 0254 0E940000          xcall _EEPROM_write
+ 0258                   .dbline 48
+ 0258           ;       }
+ 0258           L32:
+ 0258                   .dbline 45
+ 0258 4F5F              subi R20,255  ; offset = 1
+ 025A 5F4F              sbci R21,255
+ 025C           L34:
+ 025C                   .dbline 45
+ 025C 4438              cpi R20,132
+ 025E E0E0              ldi R30,0
+ 0260 5E07              cpc R21,R30
+ 0262 E8F2              brlo L31
+ 0264           X9:
+ 0264                   .dbline -2
+ 0264           L30:
+ 0264                   .dbline 0 ; func end
+ 0264 2296              adiw R28,2
+ 0266 0C940000          xjmp pop_xgsetF000
+ 026A                   .dbsym r j 20 i
+ 026A                   .dbsym r t 22 i
+ 026A                   .dbend
+ 026A                   .dbfunc e set_all_start _set_all_start fV
+ 026A           ;              j -> R20,R21
+                        .even
+ 026A           _set_all_start::
+ 026A 4A93              st -y,R20
+ 026C 5A93              st -y,R21
+ 026E 2297              sbiw R28,2
+ 0270                   .dbline -1
+ 0270                   .dbline 51
+ 0270           ; }
+ 0270           ; //温度全部开始工作。状态为停止和刚重置数据的可以开始
+ 0270           ; void set_all_start(void){
+ 0270                   .dbline 54
+ 0270           ;     uint j;
+ 0270           ;       
+ 0270           ;     for(j=0;j<4;j++){
+ 0270 4427              clr R20
+ 0272 5527              clr R21
+ 0274 2EC0              xjmp L40
+ 0276           L37:
+ 0276                   .dbline 54
+ 0276                   .dbline 55
+ 0276           ;          if(temps[j].flag==3 || temps[j].flag==6){
+ 0276 0AE0              ldi R16,266
+ 0278 11E0              ldi R17,1
+ 027A 9A01              movw R18,R20
+ 027C 0E940000          xcall empy16s
+ 0280 80E0              ldi R24,<_temps
+ 0282 90E0              ldi R25,>_temps
+ 0284 F801              movw R30,R16
+ 0286 E80F              add R30,R24
+ 0288 F91F              adc R31,R25
+ 028A 2080              ldd R2,z+0
+ 028C 3180              ldd R3,z+1
+ 028E C101              movw R24,R2
+ 0290 8330              cpi R24,3
+ 0292 E0E0              ldi R30,0
+ 0294 9E07              cpc R25,R30
+ 0296 21F0              breq L43
+ 0298           X10:
+ 0298 8630              cpi R24,6
+ 029A E0E0              ldi R30,0
+ 029C 9E07              cpc R25,R30
+ 029E B9F4              brne L41
+ 02A0           X11:
+ 02A0           L43:
+ 02A0                   .dbline 55
+ 02A0                   .dbline 56
+ 02A0           ;            temps[j].flag=5;
+ 02A0 0AE0              ldi R16,266
+ 02A2 11E0              ldi R17,1
+ 02A4 9A01              movw R18,R20
+ 02A6 0E940000          xcall empy16s
+ 02AA 80E0              ldi R24,<_temps
+ 02AC 90E0              ldi R25,>_temps
+ 02AE F801              movw R30,R16
+ 02B0 E80F              add R30,R24
+ 02B2 F91F              adc R31,R25
+ 02B4 85E0              ldi R24,5
+ 02B6 90E0              ldi R25,0
+ 02B8 9183              std z+1,R25
+ 02BA 8083              std z+0,R24
+ 02BC                   .dbline 57
+ 02BC           ;                EEPROM_write(j+1,133,5);
+ 02BC 9983              std y+1,R25
+ 02BE 8883              std y+0,R24
+ 02C0 25E8              ldi R18,133
+ 02C2 30E0              ldi R19,0
+ 02C4 8A01              movw R16,R20
+ 02C6 0F5F              subi R16,255  ; offset = 1
+ 02C8 1F4F              sbci R17,255
+ 02CA 0E940000          xcall _EEPROM_write
+ 02CE                   .dbline 58
+ 02CE           ;          }
+ 02CE           L41:
+ 02CE                   .dbline 59
+ 02CE           ;       }
+ 02CE           L38:
+ 02CE                   .dbline 54
+ 02CE 4F5F              subi R20,255  ; offset = 1
+ 02D0 5F4F              sbci R21,255
+ 02D2           L40:
+ 02D2                   .dbline 54
+ 02D2 4430              cpi R20,4
+ 02D4 E0E0              ldi R30,0
+ 02D6 5E07              cpc R21,R30
+ 02D8 70F2              brlo L37
+ 02DA           X12:
+ 02DA                   .dbline -2
+ 02DA           L36:
+ 02DA                   .dbline 0 ; func end
+ 02DA 2296              adiw R28,2
+ 02DC 5991              ld R21,y+
+ 02DE 4991              ld R20,y+
+ 02E0 0895              ret
+ 02E2                   .dbsym r j 20 i
+ 02E2                   .dbend
+ 02E2                   .dbfunc e set_all_stop _set_all_stop fV
+ 02E2           ;              j -> R20,R21
+                        .even
+ 02E2           _set_all_stop::
+ 02E2 4A93              st -y,R20
+ 02E4 5A93              st -y,R21
+ 02E6 2297              sbiw R28,2
+ 02E8                   .dbline -1
+ 02E8                   .dbline 62
+ 02E8           ; }
+ 02E8           ; //温度全部暂停.要运行的才会暂停
+ 02E8           ; void set_all_stop(void){
+ 02E8                   .dbline 65
+ 02E8           ;     uint j;
+ 02E8           ;       
+ 02E8           ;     for(j=0;j<4;j++){
+ 02E8 4427              clr R20
+ 02EA 5527              clr R21
+ 02EC 2EC0              xjmp L48
+ 02EE           L45:
+ 02EE                   .dbline 65
+ 02EE                   .dbline 66
+ 02EE           ;         if(temps[j].flag==1 || temps[j].flag==5){
+ 02EE 0AE0              ldi R16,266
+ 02F0 11E0              ldi R17,1
+ 02F2 9A01              movw R18,R20
+ 02F4 0E940000          xcall empy16s
+ 02F8 80E0              ldi R24,<_temps
+ 02FA 90E0              ldi R25,>_temps
+ 02FC F801              movw R30,R16
+ 02FE E80F              add R30,R24
+ 0300 F91F              adc R31,R25
+ 0302 2080              ldd R2,z+0
+ 0304 3180              ldd R3,z+1
+ 0306 C101              movw R24,R2
+ 0308 8130              cpi R24,1
+ 030A E0E0              ldi R30,0
+ 030C 9E07              cpc R25,R30
+ 030E 21F0              breq L51
+ 0310           X13:
+ 0310 8530              cpi R24,5
+ 0312 E0E0              ldi R30,0
+ 0314 9E07              cpc R25,R30
+ 0316 B9F4              brne L49
+ 0318           X14:
+ 0318           L51:
+ 0318                   .dbline 66
+ 0318                   .dbline 67
+ 0318           ;            temps[j].flag=3;
+ 0318 0AE0              ldi R16,266
+ 031A 11E0              ldi R17,1
+ 031C 9A01              movw R18,R20
+ 031E 0E940000          xcall empy16s
+ 0322 80E0              ldi R24,<_temps
+ 0324 90E0              ldi R25,>_temps
+ 0326 F801              movw R30,R16
+ 0328 E80F              add R30,R24
+ 032A F91F              adc R31,R25
+ 032C 83E0              ldi R24,3
+ 032E 90E0              ldi R25,0
+ 0330 9183              std z+1,R25
+ 0332 8083              std z+0,R24
+ 0334                   .dbline 68
+ 0334           ;                 EEPROM_write(j+1,133,3);
+ 0334 9983              std y+1,R25
+ 0336 8883              std y+0,R24
+ 0338 25E8              ldi R18,133
+ 033A 30E0              ldi R19,0
+ 033C 8A01              movw R16,R20
+ 033E 0F5F              subi R16,255  ; offset = 1
+ 0340 1F4F              sbci R17,255
+ 0342 0E940000          xcall _EEPROM_write
+ 0346                   .dbline 69
+ 0346           ;          }
+ 0346           L49:
+ 0346                   .dbline 70
+ 0346           ;       }
+ 0346           L46:
+ 0346                   .dbline 65
+ 0346 4F5F              subi R20,255  ; offset = 1
+ 0348 5F4F              sbci R21,255
+ 034A           L48:
+ 034A                   .dbline 65
+ 034A 4430              cpi R20,4
+ 034C E0E0              ldi R30,0
+ 034E 5E07              cpc R21,R30
+ 0350 70F2              brlo L45
+ 0352           X15:
+ 0352                   .dbline -2
+ 0352           L44:
+ 0352                   .dbline 0 ; func end
+ 0352 2296              adiw R28,2
+ 0354 5991              ld R21,y+
+ 0356 4991              ld R20,y+
+ 0358 0895              ret
+ 035A                   .dbsym r j 20 i
+ 035A                   .dbend
+ 035A                   .dbfunc e set_start _set_start fV
+ 035A           ;              t -> R20,R21
+                        .even
+ 035A           _set_start::
+ 035A 4A93              st -y,R20
+ 035C 5A93              st -y,R21
+ 035E A801              movw R20,R16
+ 0360 2297              sbiw R28,2
+ 0362                   .dbline -1
+ 0362                   .dbline 73
+ 0362           ; }
+ 0362           ; //指定温度开始
+ 0362           ; void set_start(uint t){
+ 0362                   .dbline 74
+ 0362           ;  if(temps[t].flag==3 || temps[t].flag==6){
+ 0362 0AE0              ldi R16,266
+ 0364 11E0              ldi R17,1
+ 0366 9A01              movw R18,R20
+ 0368 0E940000          xcall empy16s
+ 036C 80E0              ldi R24,<_temps
+ 036E 90E0              ldi R25,>_temps
+ 0370 F801              movw R30,R16
+ 0372 E80F              add R30,R24
+ 0374 F91F              adc R31,R25
+ 0376 2080              ldd R2,z+0
+ 0378 3180              ldd R3,z+1
+ 037A C101              movw R24,R2
+ 037C 8330              cpi R24,3
+ 037E E0E0              ldi R30,0
+ 0380 9E07              cpc R25,R30
+ 0382 21F0              breq L55
+ 0384           X16:
+ 0384 8630              cpi R24,6
+ 0386 E0E0              ldi R30,0
+ 0388 9E07              cpc R25,R30
+ 038A B9F4              brne L53
+ 038C           X17:
+ 038C           L55:
+ 038C                   .dbline 74
+ 038C                   .dbline 75
+ 038C           ;            temps[t].flag=5;
+ 038C 0AE0              ldi R16,266
+ 038E 11E0              ldi R17,1
+ 0390 9A01              movw R18,R20
+ 0392 0E940000          xcall empy16s
+ 0396 80E0              ldi R24,<_temps
+ 0398 90E0              ldi R25,>_temps
+ 039A F801              movw R30,R16
+ 039C E80F              add R30,R24
+ 039E F91F              adc R31,R25
+ 03A0 85E0              ldi R24,5
+ 03A2 90E0              ldi R25,0
+ 03A4 9183              std z+1,R25
+ 03A6 8083              std z+0,R24
+ 03A8                   .dbline 76
+ 03A8           ;                 EEPROM_write(t+1,133,5);
+ 03A8 9983              std y+1,R25
+ 03AA 8883              std y+0,R24
+ 03AC 25E8              ldi R18,133
+ 03AE 30E0              ldi R19,0
+ 03B0 8A01              movw R16,R20
+ 03B2 0F5F              subi R16,255  ; offset = 1
+ 03B4 1F4F              sbci R17,255
+ 03B6 0E940000          xcall _EEPROM_write
+ 03BA                   .dbline 77
+ 03BA           ;       }
+ 03BA           L53:
+ 03BA                   .dbline -2
+ 03BA           L52:
+ 03BA                   .dbline 0 ; func end
+ 03BA 2296              adiw R28,2
+ 03BC 5991              ld R21,y+
+ 03BE 4991              ld R20,y+
+ 03C0 0895              ret
+ 03C2                   .dbsym r t 20 i
+ 03C2                   .dbend
+ 03C2                   .dbfunc e set_stop _set_stop fV
+ 03C2           ;              t -> R20,R21
+                        .even
+ 03C2           _set_stop::
+ 03C2 4A93              st -y,R20
+ 03C4 5A93              st -y,R21
+ 03C6 A801              movw R20,R16
+ 03C8 2297              sbiw R28,2
+ 03CA                   .dbline -1
+ 03CA                   .dbline 80
+ 03CA           ; }
+ 03CA           ; //指定温度暂停
+ 03CA           ; void set_stop(uint t){
+ 03CA                   .dbline 81
+ 03CA           ;  if(temps[t].flag==1 || temps[t].flag==5){
+ 03CA 0AE0              ldi R16,266
+ 03CC 11E0              ldi R17,1
+ 03CE 9A01              movw R18,R20
+ 03D0 0E940000          xcall empy16s
+ 03D4 80E0              ldi R24,<_temps
+ 03D6 90E0              ldi R25,>_temps
+ 03D8 F801              movw R30,R16
+ 03DA E80F              add R30,R24
+ 03DC F91F              adc R31,R25
+ 03DE 2080              ldd R2,z+0
+ 03E0 3180              ldd R3,z+1
+ 03E2 C101              movw R24,R2
+ 03E4 8130              cpi R24,1
+ 03E6 E0E0              ldi R30,0
+ 03E8 9E07              cpc R25,R30
+ 03EA 21F0              breq L59
+ 03EC           X18:
+ 03EC 8530              cpi R24,5
+ 03EE E0E0              ldi R30,0
+ 03F0 9E07              cpc R25,R30
+ 03F2 B9F4              brne L57
+ 03F4           X19:
+ 03F4           L59:
+ 03F4                   .dbline 81
+ 03F4                   .dbline 82
+ 03F4           ;            temps[t].flag=3;
+ 03F4 0AE0              ldi R16,266
+ 03F6 11E0              ldi R17,1
+ 03F8 9A01              movw R18,R20
+ 03FA 0E940000          xcall empy16s
+ 03FE 80E0              ldi R24,<_temps
+ 0400 90E0              ldi R25,>_temps
+ 0402 F801              movw R30,R16
+ 0404 E80F              add R30,R24
+ 0406 F91F              adc R31,R25
+ 0408 83E0              ldi R24,3
+ 040A 90E0              ldi R25,0
+ 040C 9183              std z+1,R25
+ 040E 8083              std z+0,R24
+ 0410                   .dbline 83
+ 0410           ;                EEPROM_write(t+1,133,3);
+ 0410 9983              std y+1,R25
+ 0412 8883              std y+0,R24
+ 0414 25E8              ldi R18,133
+ 0416 30E0              ldi R19,0
+ 0418 8A01              movw R16,R20
+ 041A 0F5F              subi R16,255  ; offset = 1
+ 041C 1F4F              sbci R17,255
+ 041E 0E940000          xcall _EEPROM_write
+ 0422                   .dbline 84
+ 0422           ;          }
+ 0422           L57:
+ 0422                   .dbline -2
+ 0422           L56:
+ 0422                   .dbline 0 ; func end
+ 0422 2296              adiw R28,2
+ 0424 5991              ld R21,y+
+ 0426 4991              ld R20,y+
+ 0428 0895              ret
+ 042A                   .dbsym r t 20 i
+ 042A                   .dbend
+ 042A           ; }
+ 042A           ; /***********************************************************************
+ 042A           ; * 函数功能：  PID参数初始化
+ 042A           ; * 参      数：        无
+ 042A           ; * 返 回  值： 无                      
+ 042A           ; * 备     注： 
+ 042A           ; **1
+ 042A           ; **********************************************************************/
+ 042A           ; /*void PID_init(void)
+ 042A           ; {
+ 042A           ;     pid.setspeed=0.0;
+ 042A           ;     pid.actualspeed=0.0;
+ 042A           ;     pid.err=0.0;
+ 042A           ;     pid.err_last=0.0;
+ 042A           ;     pid.err_next=0.0;
+ 042A           ;     pid.Kp=0.35;//0.35
+ 042A           ;     pid.Ki=0.03; //0.03      
+ 042A           ;     pid.Kd=0.2;//0.2
+ 042A           ;     pid.incrementspeed=0.0;
+ 042A           ; }
+ 042A           ; */
+ 042A           ; /***********************************************************************
+ 042A           ; * 函数功能：  PID计算
+ 042A           ; * 参      数：        实际速度
+ 042A           ; * 返 回  值： 无                      
+ 042A           ; * 备     注： 
+ 042A           ; **1
+ 042A           ; **********************************************************************/
+ 042A           ; /*float PID_realize(float speed)
+ 042A           ; {
+ 042A           ;    pid.setspeed=speed;
+ 042A           ;    pid.actualspeed=zengliang;
+ 042A           ;    pid.err=pid.setspeed-pid.actualspeed;
+ 042A           ;    pid.incrementspeed=pid.Kp*(pid.err-pid.err_next)+pid.Ki*pid.err+pid.Kd*(pid.err-
+ 042A           ; 
+ 042A           ; 2*pid.err_next+pid.err_last);
+ 042A           ;    pid.err_last=pid.err_next;
+ 042A           ;    pid.err_next=pid.err;
+ 042A           ;    pid.incrementspeed=pid.incrementspeed/2;
+ 042A           ;    return pid.incrementspeed;
+ 042A           ; }
+ 042A           ; */

@@ -1,0 +1,6 @@
+#ifndef __TEMP_H__
+#define __TEMP_H__
+#define uchar unsigned char
+#define uint unsigned int
+void tempdata_init(void);
+#endif

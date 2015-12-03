@@ -1,0 +1,47 @@
+#include<iom128v.h>
+#include "eeprom.h"
+#include "delay.h"
+
+uint data=0x00;
+uint addr_h;
+uint addr_l;
+uint type=0;//0表示读，1表示写。写的时候使用中断，读取的时候不使用中断最好
+#pragma interrupt_handler int_timer0:17
+void int_eeprom(void){ //写使用中断，读取不使用。如果是连续读写。通过读写标记位。写的时候处理
+	SREG&=0x7F;//关中断
+	  EEARL=addr_l;
+	 EEARH=addr_h;
+	 EEDR=data;
+	 EECR|=(1<<EEMWE);
+	 EECR|=(1<<EEWE);
+	SREG|=0x80;//开中断 
+	return;
+}
+void EEPROM_write(uint addr_h,uint addr_l,uint data){
+   SREG&=0x7F;//关中断
+    while(EECR & (1<<EEWE)){
+	 			 
+	 } 
+	  EEARL=addr_l;
+	 EEARH=addr_h;
+	 EEDR=data;
+	 EECR|=(1<<EEMWE);
+	 EECR|=(1<<EEWE);
+	  delay_us(1);
+	 SREG|=0x80;//开中断
+	 return;
+}
+uchar EEPROM_read(uint addr_h,uint addr_l){
+   uchar data;
+   SREG&=0x7F;//关中断
+    while(EECR & (1<<EEWE)){ 			 
+	 }
+	EEARL=addr_l;
+	 EEARH=addr_h;
+	 
+	 EECR|=(1<<EERE);
+	 delay_us(1);
+	 data=EEDR;
+	 SREG|=0x80;//开中断
+	 return data;
+}

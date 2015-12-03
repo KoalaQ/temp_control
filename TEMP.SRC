@@ -10,6 +10,7 @@ out.c
 uart.c
 eeprom.c
 pages.c
+temp.c
 [Headers]
 delay.h
 time.h
@@ -22,4 +23,5 @@ out.h
 uart.h
 eeprom.h
 pages.h
+temp.h
 [Documents]

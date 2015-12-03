@@ -1,0 +1,71 @@
+#include<iom128v.h>
+#include "temp.h"
+#include "main.h"
+
+//开机初始化空间。全部置0,不初始化数据，等用户或EEPROM数据回填
+void tempdata_init(void){
+ uint i,j;
+ for(i=0;i<4;i++){
+    temps[i].flag=0;
+	for(j=0;j<131;j++){
+	 temps[i].temp_data[j]=0;
+	}
+ } 
+}
+//设置指定的数据,保存相关标志位
+void set_temp_data(uint t,uint* dataCach){
+    uint j;
+    for(j=0;j<131;j++){
+	   temps[t].temp_data[j]=*(dataCach+j);
+	}
+}
+
+//重置指定的数据,保存相关标志位
+void reset_temp_data(uint t){
+    uint j;
+	temps[t].flag=0;
+    for(j=0;j<131;j++){
+	   temps[t].temp_data[j]=0;
+	}
+}
+/***********************************************************************
+* 函数功能：	PID参数初始化
+* 参      数：	无
+* 返 回  值：	无			
+* 备	   注：	
+**1
+**********************************************************************/
+/*void PID_init(void)
+{
+    pid.setspeed=0.0;
+    pid.actualspeed=0.0;
+    pid.err=0.0;
+    pid.err_last=0.0;
+    pid.err_next=0.0;
+    pid.Kp=0.35;//0.35
+    pid.Ki=0.03; //0.03      
+    pid.Kd=0.2;//0.2
+    pid.incrementspeed=0.0;
+}
+*/
+/***********************************************************************
+* 函数功能：	PID计算
+* 参      数：	实际速度
+* 返 回  值：	无			
+* 备	   注：	
+**1
+**********************************************************************/
+/*float PID_realize(float speed)
+{
+   pid.setspeed=speed;
+   pid.actualspeed=zengliang;
+   pid.err=pid.setspeed-pid.actualspeed;
+   pid.incrementspeed=pid.Kp*(pid.err-pid.err_next)+pid.Ki*pid.err+pid.Kd*(pid.err-
+
+2*pid.err_next+pid.err_last);
+   pid.err_last=pid.err_next;
+   pid.err_next=pid.err;
+   pid.incrementspeed=pid.incrementspeed/2;
+   return pid.incrementspeed;
+}
+*/
