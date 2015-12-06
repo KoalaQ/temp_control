@@ -1,6 +1,5 @@
 [Files]
 delay.c
-time.c
 key.c
 lcd.c
 main.c
@@ -11,9 +10,9 @@ uart.c
 eeprom.c
 pages.c
 temp.c
+time1307.c
 [Headers]
 delay.h
-time.h
 key.h
 lcd.h
 main.h
@@ -24,4 +23,5 @@ uart.h
 eeprom.h
 pages.h
 temp.h
+time1307.h
 [Documents]

@@ -1,11 +1,12 @@
 #include<iom128v.h>
 #include "main.h"
 #include "lcd.h"
-#include "time.h"
+#include "time1307.h"
 #include "timertask.h"
 #include "key.h"
 #include "delay.h"
 #include "temp.h"
+#include "eeprom.h"
 //************************
 // 所有界面信息在这里,用到全局变量， 
 // unsigned int pageNum;//当前页面，如需跳转改变这个值就行
@@ -299,11 +300,25 @@ void page1(void){
  void page2(void){
    uint cur=0;
    uchar keyV;
+   uint ft0,ft1,ft2,ft3;
+   ft0=EEPROM_read(1,0);
+   ft1=EEPROM_read(2,0);
+   ft2=EEPROM_read(3,0);
+   ft3=EEPROM_read(4,0);
+ if(!(ft0==0 && ft1==0 && ft2==0 && ft3==0)){//判断是否有数据，任何一个有数据就询问是否恢复
    //初始画面，会有读取EEPROM的判断默认操作，本次只是画界面
    lcd_write_str(2,0,"是否恢复上次工作");
    lcd_write_str(2,2,"恢复");
    lcd_write_str(8,2,"取消");
-   Set_White(3,2,4);
+   ft3=EEPROM_read(0,0);//复用读取首选项
+   if(ft3==1){//默认恢复
+     cur=0;
+     Set_White(3,2,4);
+   }else{
+     cur=1;
+     Set_White(9,2,10);
+   }
+  //使用定时器，定时一段时间更改标记，while中读取这个标记确定是否结束while
     while(1){
       keyV=KeyScan_once();
 	  switch(keyV){
@@ -329,11 +344,16 @@ void page1(void){
 			  lcd_clear();
 			  lcd_write_str(5,2,"恢复中. . .");
 			  data_recover();//恢复数据，可以跳转到界面后操作。暂时放在这
+			  delay_ms(200);
 			}
 		  pageNum=1;
 		  return;
 	  }
 	}
+  }else{
+     pageNum=1;
+     return;
+  }
  }
  void page3(void){
   uint cur=0;
@@ -748,14 +768,18 @@ void page1(void){
  void page5(void){
   uint cur=0;
    uchar keyV;
-   lcd_write_str(4,0,"断电自动重置");
+   uint ddflag;
+   lcd_write_str(4,0,"断电自动恢复");
    lcd_write_str(4,1,"设置时间");
    lcd_write_str(4,2,"重置系统");
-   lcd_write_char(3,0,0xA1);
-   lcd_write_char_con(0,0xC1);
-   
-   /* lcd_write_char(1,0,0xA1);
-   lcd_write_char_con(0,0xCC);*/
+    ddflag=EEPROM_read(0,0);
+	if(ddflag==0){
+      lcd_write_char(3,0,0xA1);
+      lcd_write_char_con(0,0xC1);
+   }else {
+      lcd_write_char(3,0,0xA1);
+      lcd_write_char_con(0,0xCC);
+   }
    cur=0;
    Set_White(5,0,10);
    while(1){
@@ -807,6 +831,19 @@ void page1(void){
 	    switch(cur){
 		  case 0:
 		     //执行EEPROM操作
+			 if(ddflag==0){
+			   ddflag=1;
+			 }else{
+			   ddflag=0;
+			 }
+			 EEPROM_write(0,0,ddflag);//写入到EEPROM
+			if(ddflag==0){
+               lcd_write_char(3,0,0xA1);
+               lcd_write_char_con(0,0xC1);
+            }else{
+              lcd_write_char(3,0,0xA1);
+              lcd_write_char_con(0,0xCC);
+            }
 		    break;
 		  case 1:
 		   pageNum=8;
@@ -833,7 +870,7 @@ void page1(void){
    }else if(pageParam[1]==2){
      lcd_write_str(4,1,"温度保存失败！");
    }
-   delay_ms(500);
+   delay_ms(50);
    pageNum=prePageNum;
  }
  void page7(void){

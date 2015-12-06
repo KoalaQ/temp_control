@@ -1,0 +1,133 @@
+#include<iom128v.h>
+#include "time.h"
+#include "delay.h"
+#include "lcd.h"
+//寄存器宏定义
+#define SECOND 0x00
+#define MINUTE 0x01 
+#define HOUR 0x02
+#define DAY 0x04
+#define MONTH 0x05 
+#define WEEK 0x03
+#define YEAE 0x06
+#define CIBTPOL 0x07 
+
+
+
+#define  SCL_H  PORTD|=1<<PD0 //
+#define  SCL_L  PORTD&=~(1<<PD0) //
+#define  SDA_IN   PORTD&(~(1<<PD1)) //会获得PB1的值，判断是否等于0来确定值
+#define  SDA_H   PORTD|=1<<PD1 //
+#define  SDA_L  PORTD&=~(1<<PD1)  //
+uchar BP;
+void time1307_init(void){
+   DDRD |= 0x03;//先全部输出
+}
+void I2C_start(void){//启动IIC总线
+   SDA_H;
+   SCL_H;
+   delay_us(8);
+   SDA_L;
+   delay_us(8);
+   SCL_L;
+   
+}
+void I2C_stop(void){//启动IIC总线
+   SDA_L;
+   SCL_H;
+   delay_us(8);
+   SDA_H;
+   delay_us(8);
+   SCL_L;
+   
+}
+void I2C_send_ack(void){//应答ack
+  SDA_L;
+  SCL_H;
+  delay_us(8);
+  SCL_L;
+} 
+void I2C_send_noack(void){
+  SDA_H;
+  SCL_H;
+   delay_us(8);
+   SCL_L;
+}
+void I2C_write_byte(unsigned char IIC_data){
+   unsigned cahr i;
+   BP=0;
+   for(i=0;i<8;i++){//循环输出数据
+      SCL_L;
+	   if((IIC_data<<i) && 0x80){
+	      SDA_H;
+	   }else{
+	   	  SDA_L;
+	   }
+	   delay_us(4);
+	   SCL_H;
+	   delay_us(4);
+	   SCL_L;
+   }
+   //读取ACK
+   delay_us(4);
+   DDRD &=~(0x02);
+   delay_us(4);
+   if();
+}
+
+uint getYear(void){
+ return 1;
+}
+uint getMonth(void){
+  return 1;
+}
+uint getDay(void){
+ return 1;
+}
+uint getWeek(void){
+ return 1;
+}
+uint getHour(void){
+ return 1;
+}
+uint getMinute(void){
+ return 1;
+}
+uint getSecond(void){
+ return 1;
+}
+void setTime(uint year,uint month,uint day,uint week,uint hour,uint minute,uint second){
+
+}
+//显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
+void showTime_page(uint y){
+   //PORTE=~Read1302(0x81);
+   //年
+    lcd_write_str_con(y, "20");
+    lcd_write_char_con(y, 0x30|((Read1302(0x8D)>>4)&0x0F));
+    lcd_write_char_con(y,0x30|(Read1302(0x8D)&0x0F)); 
+	lcd_write_char_con(y,'-');
+	 //月
+	 lcd_write_char_con(y, 0x30|((Read1302(0x89)>>4)&0x01));
+     lcd_write_char_con(y,0x30|(Read1302(0x89)&0x0F)); 
+	 lcd_write_char_con(y,'-');
+	 //日
+	 lcd_write_char_con(y, 0x30|((Read1302(0x87)>>4)&0x03));
+     lcd_write_char_con(y,0x30|(Read1302(0x87)&0x0F)); 
+	 lcd_write_char_con(y,' ');
+	//时
+	 lcd_write_char_con(y, 0x30|((Read1302(0x85)>>4)&0x03));
+	 lcd_write_char_con(y,0x30|(Read1302(0x85)&0x0F)); 
+	 lcd_write_char_con(y,':');
+	//分
+	 lcd_write_char_con(y, 0x30|Read1302(0x83)>>4);
+	 lcd_write_char_con(y,0x30|(Read1302(0x83)&0x0F));
+	 lcd_write_char_con(y,':');
+	//秒
+	 lcd_write_char_con(y, 0x30|(Read1302(0x81)>>4));
+	 lcd_write_char_con(y,0x30|(Read1302(0x81)&0x0F));
+}
+
+
+
+

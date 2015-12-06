@@ -100,7 +100,7 @@ void int_timer1(void){
 }
 #pragma interrupt_handler int_timer2:11
 void int_timer2(void){
-      PORTE=~PORTE;
+      //PORTE=~PORTE;
 		TCCR2=0x00;
 		for(i=0;i<5;i++){
   		 lcd_write_char(0x00,3,0x30+i);	

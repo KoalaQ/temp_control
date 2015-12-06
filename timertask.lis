@@ -452,198 +452,194 @@
  01DA           ; }
  01DA           ; #pragma interrupt_handler int_timer2:11
  01DA           ; void int_timer2(void){
- 01DA                   .dbline 103
- 01DA           ;       PORTE=~PORTE;
- 01DA 23B0              in R2,0x3
- 01DC 2094              com R2
- 01DE 23B8              out 0x3,R2
- 01E0                   .dbline 104
- 01E0           ;               TCCR2=0x00;
- 01E0 2224              clr R2
- 01E2 25BC              out 0x25,R2
+ 01DA                   .dbline 104
+ 01DA           ;       //PORTE=~PORTE;
+ 01DA           ;               TCCR2=0x00;
+ 01DA 2224              clr R2
+ 01DC 25BC              out 0x25,R2
+ 01DE                   .dbline 105
+ 01DE           ;               for(i=0;i<5;i++){
+ 01DE 20920000          sts _i,R2
+ 01E2 11C0              xjmp L19
+ 01E4           L16:
  01E4                   .dbline 105
- 01E4           ;               for(i=0;i<5;i++){
- 01E4 20920000          sts _i,R2
- 01E8 11C0              xjmp L19
- 01EA           L16:
- 01EA                   .dbline 105
- 01EA                   .dbline 106
- 01EA           ;                lcd_write_char(0x00,3,0x30+i); 
- 01EA 80910000          lds R24,_i
- 01EE 805D              subi R24,208    ; addi 48
- 01F0 8883              std y+0,R24
- 01F2 23E0              ldi R18,3
- 01F4 0027              clr R16
- 01F6 0E940000          xcall _lcd_write_char
- 01FA                   .dbline 107
- 01FA           ;                delay_ms(100);         
- 01FA 04E6              ldi R16,100
- 01FC 10E0              ldi R17,0
- 01FE 0E940000          xcall _delay_ms
- 0202                   .dbline 108
- 0202           ;         }
- 0202           L17:
- 0202                   .dbline 105
- 0202 80910000          lds R24,_i
- 0206 8F5F              subi R24,255    ; addi 1
- 0208 80930000          sts _i,R24
- 020C           L19:
- 020C                   .dbline 105
- 020C 80910000          lds R24,_i
- 0210 8530              cpi R24,5
- 0212 58F3              brlo L16
- 0214           X2:
- 0214                   .dbline 109
- 0214           ;               TCNT2=time_2;
- 0214 20900100          lds R2,_time_2
- 0218 24BC              out 0x24,R2
- 021A                   .dbline 110
- 021A           ;               TCCR2=0x05;
- 021A 85E0              ldi R24,5
- 021C 85BD              out 0x25,R24
- 021E                   .dbline 111
- 021E           ;               return;
- 021E                   .dbline -2
- 021E           L15:
- 021E                   .dbline 0 ; func end
- 021E 2196              adiw R28,1
- 0220 0990              ld R0,y+
- 0222 0FBE              OUT 63,R0
- 0224 F991              ld R31,y+
- 0226 E991              ld R30,y+
- 0228 B991              ld R27,y+
- 022A A991              ld R26,y+
- 022C 9991              ld R25,y+
- 022E 8991              ld R24,y+
- 0230 3991              ld R19,y+
- 0232 2991              ld R18,y+
- 0234 1991              ld R17,y+
- 0236 0991              ld R16,y+
- 0238 9990              ld R9,y+
- 023A 8990              ld R8,y+
- 023C 7990              ld R7,y+
- 023E 6990              ld R6,y+
- 0240 5990              ld R5,y+
- 0242 4990              ld R4,y+
- 0244 3990              ld R3,y+
- 0246 2990              ld R2,y+
- 0248 1990              ld R1,y+
- 024A 0990              ld R0,y+
- 024C 1895              reti
- 024E                   .dbend
+ 01E4                   .dbline 106
+ 01E4           ;                lcd_write_char(0x00,3,0x30+i); 
+ 01E4 80910000          lds R24,_i
+ 01E8 805D              subi R24,208    ; addi 48
+ 01EA 8883              std y+0,R24
+ 01EC 23E0              ldi R18,3
+ 01EE 0027              clr R16
+ 01F0 0E940000          xcall _lcd_write_char
+ 01F4                   .dbline 107
+ 01F4           ;                delay_ms(100);         
+ 01F4 04E6              ldi R16,100
+ 01F6 10E0              ldi R17,0
+ 01F8 0E940000          xcall _delay_ms
+ 01FC                   .dbline 108
+ 01FC           ;         }
+ 01FC           L17:
+ 01FC                   .dbline 105
+ 01FC 80910000          lds R24,_i
+ 0200 8F5F              subi R24,255    ; addi 1
+ 0202 80930000          sts _i,R24
+ 0206           L19:
+ 0206                   .dbline 105
+ 0206 80910000          lds R24,_i
+ 020A 8530              cpi R24,5
+ 020C 58F3              brlo L16
+ 020E           X2:
+ 020E                   .dbline 109
+ 020E           ;               TCNT2=time_2;
+ 020E 20900100          lds R2,_time_2
+ 0212 24BC              out 0x24,R2
+ 0214                   .dbline 110
+ 0214           ;               TCCR2=0x05;
+ 0214 85E0              ldi R24,5
+ 0216 85BD              out 0x25,R24
+ 0218                   .dbline 111
+ 0218           ;               return;
+ 0218                   .dbline -2
+ 0218           L15:
+ 0218                   .dbline 0 ; func end
+ 0218 2196              adiw R28,1
+ 021A 0990              ld R0,y+
+ 021C 0FBE              OUT 63,R0
+ 021E F991              ld R31,y+
+ 0220 E991              ld R30,y+
+ 0222 B991              ld R27,y+
+ 0224 A991              ld R26,y+
+ 0226 9991              ld R25,y+
+ 0228 8991              ld R24,y+
+ 022A 3991              ld R19,y+
+ 022C 2991              ld R18,y+
+ 022E 1991              ld R17,y+
+ 0230 0991              ld R16,y+
+ 0232 9990              ld R9,y+
+ 0234 8990              ld R8,y+
+ 0236 7990              ld R7,y+
+ 0238 6990              ld R6,y+
+ 023A 5990              ld R5,y+
+ 023C 4990              ld R4,y+
+ 023E 3990              ld R3,y+
+ 0240 2990              ld R2,y+
+ 0242 1990              ld R1,y+
+ 0244 0990              ld R0,y+
+ 0246 1895              reti
+ 0248                   .dbend
                         .area vector(rom, abs)
                         .org 116
- 0074 0C942701          jmp _int_timer3
+ 0074 0C942401          jmp _int_timer3
                         .area text(rom, con, rel)
- 024E                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
- 024E                   .dbfunc e int_timer3 _int_timer3 fV
+ 0248                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 0248                   .dbfunc e int_timer3 _int_timer3 fV
                         .even
- 024E           _int_timer3::
- 024E 0A92              st -y,R0
- 0250 1A92              st -y,R1
- 0252 2A92              st -y,R2
- 0254 3A92              st -y,R3
- 0256 4A92              st -y,R4
- 0258 5A92              st -y,R5
- 025A 6A92              st -y,R6
- 025C 7A92              st -y,R7
- 025E 8A92              st -y,R8
- 0260 9A92              st -y,R9
- 0262 0A93              st -y,R16
- 0264 1A93              st -y,R17
- 0266 2A93              st -y,R18
- 0268 3A93              st -y,R19
- 026A 8A93              st -y,R24
- 026C 9A93              st -y,R25
- 026E AA93              st -y,R26
- 0270 BA93              st -y,R27
- 0272 EA93              st -y,R30
- 0274 FA93              st -y,R31
- 0276 0FB6              IN R0,63
- 0278 0A92              st -y,R0
- 027A 2197              sbiw R28,1
- 027C                   .dbline -1
- 027C                   .dbline 115
- 027C           ; }
- 027C           ; //16位定时器，定时器3溢出中断。
- 027C           ; #pragma interrupt_handler int_timer3:30
- 027C           ; void int_timer3(void){
- 027C                   .dbline 116
- 027C           ;     TCCR1B=0x00;
- 027C 2224              clr R2
- 027E 2EBC              out 0x2e,R2
+ 0248           _int_timer3::
+ 0248 0A92              st -y,R0
+ 024A 1A92              st -y,R1
+ 024C 2A92              st -y,R2
+ 024E 3A92              st -y,R3
+ 0250 4A92              st -y,R4
+ 0252 5A92              st -y,R5
+ 0254 6A92              st -y,R6
+ 0256 7A92              st -y,R7
+ 0258 8A92              st -y,R8
+ 025A 9A92              st -y,R9
+ 025C 0A93              st -y,R16
+ 025E 1A93              st -y,R17
+ 0260 2A93              st -y,R18
+ 0262 3A93              st -y,R19
+ 0264 8A93              st -y,R24
+ 0266 9A93              st -y,R25
+ 0268 AA93              st -y,R26
+ 026A BA93              st -y,R27
+ 026C EA93              st -y,R30
+ 026E FA93              st -y,R31
+ 0270 0FB6              IN R0,63
+ 0272 0A92              st -y,R0
+ 0274 2197              sbiw R28,1
+ 0276                   .dbline -1
+ 0276                   .dbline 115
+ 0276           ; }
+ 0276           ; //16位定时器，定时器3溢出中断。
+ 0276           ; #pragma interrupt_handler int_timer3:30
+ 0276           ; void int_timer3(void){
+ 0276                   .dbline 116
+ 0276           ;     TCCR1B=0x00;
+ 0276 2224              clr R2
+ 0278 2EBC              out 0x2e,R2
+ 027A                   .dbline 117
+ 027A           ;      for(i=0;i<5;i++){
+ 027A 20920000          sts _i,R2
+ 027E 11C0              xjmp L24
+ 0280           L21:
  0280                   .dbline 117
- 0280           ;      for(i=0;i<5;i++){
- 0280 20920000          sts _i,R2
- 0284 11C0              xjmp L24
- 0286           L21:
- 0286                   .dbline 117
- 0286                   .dbline 118
- 0286           ;                lcd_write_char(0x02,3,0x30+i); 
- 0286 80910000          lds R24,_i
- 028A 805D              subi R24,208    ; addi 48
- 028C 8883              std y+0,R24
- 028E 23E0              ldi R18,3
- 0290 02E0              ldi R16,2
- 0292 0E940000          xcall _lcd_write_char
- 0296                   .dbline 119
- 0296           ;                delay_ms(100);         
- 0296 04E6              ldi R16,100
- 0298 10E0              ldi R17,0
- 029A 0E940000          xcall _delay_ms
- 029E                   .dbline 120
- 029E           ;         }
- 029E           L22:
- 029E                   .dbline 117
- 029E 80910000          lds R24,_i
- 02A2 8F5F              subi R24,255    ; addi 1
- 02A4 80930000          sts _i,R24
- 02A8           L24:
- 02A8                   .dbline 117
- 02A8 80910000          lds R24,_i
- 02AC 8530              cpi R24,5
- 02AE 58F3              brlo L21
- 02B0           X3:
- 02B0                   .dbline 121
- 02B0           ;       TCNT3H=time_h_3;
- 02B0 20900400          lds R2,_time_h_3
- 02B4 20928900          sts 137,R2
- 02B8                   .dbline 122
- 02B8           ;     TCNT3L=time_l_3;
- 02B8 20900300          lds R2,_time_l_3
- 02BC 20928800          sts 136,R2
- 02C0                   .dbline 123
- 02C0           ;        TCCR1B=0x05;
- 02C0 85E0              ldi R24,5
- 02C2 8EBD              out 0x2e,R24
- 02C4                   .dbline -2
- 02C4           L20:
- 02C4                   .dbline 0 ; func end
- 02C4 2196              adiw R28,1
- 02C6 0990              ld R0,y+
- 02C8 0FBE              OUT 63,R0
- 02CA F991              ld R31,y+
- 02CC E991              ld R30,y+
- 02CE B991              ld R27,y+
- 02D0 A991              ld R26,y+
- 02D2 9991              ld R25,y+
- 02D4 8991              ld R24,y+
- 02D6 3991              ld R19,y+
- 02D8 2991              ld R18,y+
- 02DA 1991              ld R17,y+
- 02DC 0991              ld R16,y+
- 02DE 9990              ld R9,y+
- 02E0 8990              ld R8,y+
- 02E2 7990              ld R7,y+
- 02E4 6990              ld R6,y+
- 02E6 5990              ld R5,y+
- 02E8 4990              ld R4,y+
- 02EA 3990              ld R3,y+
- 02EC 2990              ld R2,y+
- 02EE 1990              ld R1,y+
- 02F0 0990              ld R0,y+
- 02F2 1895              reti
- 02F4                   .dbend
+ 0280                   .dbline 118
+ 0280           ;                lcd_write_char(0x02,3,0x30+i); 
+ 0280 80910000          lds R24,_i
+ 0284 805D              subi R24,208    ; addi 48
+ 0286 8883              std y+0,R24
+ 0288 23E0              ldi R18,3
+ 028A 02E0              ldi R16,2
+ 028C 0E940000          xcall _lcd_write_char
+ 0290                   .dbline 119
+ 0290           ;                delay_ms(100);         
+ 0290 04E6              ldi R16,100
+ 0292 10E0              ldi R17,0
+ 0294 0E940000          xcall _delay_ms
+ 0298                   .dbline 120
+ 0298           ;         }
+ 0298           L22:
+ 0298                   .dbline 117
+ 0298 80910000          lds R24,_i
+ 029C 8F5F              subi R24,255    ; addi 1
+ 029E 80930000          sts _i,R24
+ 02A2           L24:
+ 02A2                   .dbline 117
+ 02A2 80910000          lds R24,_i
+ 02A6 8530              cpi R24,5
+ 02A8 58F3              brlo L21
+ 02AA           X3:
+ 02AA                   .dbline 121
+ 02AA           ;       TCNT3H=time_h_3;
+ 02AA 20900400          lds R2,_time_h_3
+ 02AE 20928900          sts 137,R2
+ 02B2                   .dbline 122
+ 02B2           ;     TCNT3L=time_l_3;
+ 02B2 20900300          lds R2,_time_l_3
+ 02B6 20928800          sts 136,R2
+ 02BA                   .dbline 123
+ 02BA           ;        TCCR1B=0x05;
+ 02BA 85E0              ldi R24,5
+ 02BC 8EBD              out 0x2e,R24
+ 02BE                   .dbline -2
+ 02BE           L20:
+ 02BE                   .dbline 0 ; func end
+ 02BE 2196              adiw R28,1
+ 02C0 0990              ld R0,y+
+ 02C2 0FBE              OUT 63,R0
+ 02C4 F991              ld R31,y+
+ 02C6 E991              ld R30,y+
+ 02C8 B991              ld R27,y+
+ 02CA A991              ld R26,y+
+ 02CC 9991              ld R25,y+
+ 02CE 8991              ld R24,y+
+ 02D0 3991              ld R19,y+
+ 02D2 2991              ld R18,y+
+ 02D4 1991              ld R17,y+
+ 02D6 0991              ld R16,y+
+ 02D8 9990              ld R9,y+
+ 02DA 8990              ld R8,y+
+ 02DC 7990              ld R7,y+
+ 02DE 6990              ld R6,y+
+ 02E0 5990              ld R5,y+
+ 02E2 4990              ld R4,y+
+ 02E4 3990              ld R3,y+
+ 02E6 2990              ld R2,y+
+ 02E8 1990              ld R1,y+
+ 02EA 0990              ld R0,y+
+ 02EC 1895              reti
+ 02EE                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
  0000           _i::

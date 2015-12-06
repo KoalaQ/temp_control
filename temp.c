@@ -30,6 +30,7 @@ void set_temp_data(uint t,uint* dataCach){
     uint j;
 	temps[t].flag=6;
 	EEPROM_write(t+1,0,0x01);
+	EEPROM_write(t+1,133,6);
     for(j=0;j<132;j++){
 	   temps[t].temp_data[j]=*(dataCach+j);
 	   EEPROM_write(t+1,j+1,temps[t].temp_data[j]);

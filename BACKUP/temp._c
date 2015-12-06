@@ -27,25 +27,7 @@ void data_recover(void){
 }
 //设置指定的数据,保存相关标志位
 void set_temp_data(uint t,uint* dataCach){
-    //uint ddrH;
-	//uint ddrL;
     uint j;
-	/*switch(t){
-	 case 0:
-	   ddrH=0x01;
-	   break;
-	 case 1:
-	   ddrH=0x02;
-	   break;
-	 case 2:
-	   ddrH=0x03;
-	   break;
-	 case 3:
-	   ddrH=0x04;
-	   break;
-	}*/
-	//ddrH=t;
-	//ddrL=0x00;
 	temps[t].flag=6;
 	EEPROM_write(t+1,0,0x01);
     for(j=0;j<132;j++){
@@ -59,8 +41,10 @@ void reset_temp_data(uint t){
     uint j;
 	temps[t].flag=0;
 	EEPROM_write(t+1,0,0x00);
+	EEPROM_write(t+1,133,0x00);
     for(j=0;j<132;j++){
 	   temps[t].temp_data[j]=0;
+	   EEPROM_write(t+1,j+1,0);
 	}
 }
 //温度全部开始工作。状态为停止和刚重置数据的可以开始
