@@ -8,4 +8,6 @@
 void Initial_time(void) ;
 //void showTimeLcd(void);
 void showTime_page(uint y);//用于page第一行显示数据
+void setTime(uint year,uint month,uint day,uint hour,uint minute,uint second);
+unsigned int Read1307(unsigned char add);
 #endif

@@ -7,6 +7,9 @@
 #include "delay.h"
 #include "temp.h"
 #include "eeprom.h"
+//下面这个头文件里包含WDR();喂狗的方法
+//#include <AVRdef.h>
+
 //************************
 // 所有界面信息在这里,用到全局变量， 
 // unsigned int pageNum;//当前页面，如需跳转改变这个值就行
@@ -71,7 +74,10 @@ void page1(void){
 		   lcd_write_str_con(y,"停止");
 		   break;
 		 case 1:
-		   lcd_write_str_con(y,"150");
+		   lcd_write_char_con(y,0x30 | (int)temps[i].actualtemp/100);
+		   lcd_write_char_con(y,0x30 | ((int)temps[i].actualtemp/10)%10);
+		   lcd_write_char_con(y,0x30 | (int)temps[i].actualtemp%10);
+		   lcd_write_char_con(y,' ');
 		   lcd_write_char_con(y,0xA1);
           lcd_write_char_con(y,0xE6);
 		   break;
@@ -240,6 +246,9 @@ void page1(void){
 		 case 3:
 		   Set_White_off(7,2,8);
 		    break;
+		 case 4:
+		    Set_White_off(2,3,3);
+		    break;
 		case 5:
 		    Set_White_off(6,3,7);
 		    break;
@@ -318,11 +327,27 @@ void page1(void){
      cur=1;
      Set_White(9,2,10);
    }
-  //使用定时器，定时一段时间更改标记，while中读取这个标记确定是否结束while
+   Timerinit_0(0x00); //使用定时器，定时一段时间更改标记，while中读取这个标记确定是否结束while
     while(1){
+	if(waitflag==1){
+	  //执行相关操作
+		   Set_White_off(9,2,10);
+		    Set_White_off(3,2,4);
+			if(cur==0){
+			  lcd_clear();
+			  lcd_write_str(5,2,"恢复中. . .");
+			  data_recover();//恢复数据，可以跳转到界面后操作。暂时放在这
+			  delay_ms(200);
+			}
+		  pageNum=1;
+		  return;
+	  }
       keyV=KeyScan_once();
 	  switch(keyV){
 	    case 'l':
+		   TCCR0=0x00;//定时器停止
+		   lcd_write_char(10,0,' ');
+	       lcd_write_char(11,0,' ');	
 		   if(cur==1){
 		      Set_White_off(9,2,10);
 		      Set_White(3,2,4);
@@ -330,14 +355,19 @@ void page1(void){
 		   }
 		   break;
 		case 'r':
+		   TCCR0=0x00;//定时器停止
+		   lcd_write_char(10,0,' ');
+	       lcd_write_char(11,0,' ');	
 		   if(cur==0){
 		      Set_White_off(3,2,4);
 		      Set_White(9,2,10);
 			  cur=1;
 		   }
+		   
 		  break;
 		case 't':
 		  //执行相关操作
+		   TCCR0=0x00;//定时器停止
 		   Set_White_off(9,2,10);
 		    Set_White_off(3,2,4);
 			if(cur==0){
@@ -372,6 +402,21 @@ void page1(void){
     while(1){
 	lcd_write_pos(2,0);
 	pageTime2(0);
+	//写温度
+	if(temps[pageParam[0]].flag!=2){
+	  lcd_write_pos(4,1);
+	  if(temps[pageParam[0]].actualtemp==0){
+	     PORTE=~0x0a;
+	  }else{
+	    PORTE=~0xa0;
+	  }
+	  lcd_write_char_con(1,0x30 | ((int)temps[pageParam[0]].actualtemp)/100);
+	  lcd_write_char_con(1,0x30 | (((int)temps[pageParam[0]].actualtemp)/10)%10);
+	  lcd_write_char_con(1,0x30 | ((int)temps[pageParam[0]].actualtemp)%10);
+	  lcd_write_char_con(1,' ');
+	  lcd_write_char_con(1,0xA1);
+      lcd_write_char_con(1,0xE6);
+	}
 	//数据需要读入
 	lcd_write_pos(4,2);
 	switch(temps[pageParam[0]].flag){
@@ -379,12 +424,8 @@ void page1(void){
 		   lcd_write_str_con(2,"停止");
 		   break;
 		 case 1:
-		   //写温度
-		   lcd_write_pos(4,1);
-		   lcd_write_str_con(1,"150");
-		   lcd_write_char_con(1,0xA1);
-           lcd_write_char_con(1,0xE6);
 		   //写状态
+		   lcd_write_str_con(2,"写状态");
 		   break;
 		 case 2:
 		   lcd_write_str_con(2,"故障");
@@ -916,28 +957,33 @@ void page1(void){
 	  }
 	}
  }
- //由于使用DS1307，暂时不做读取和保存时间的。等实时时钟模块买来
  void page8(void){
    uint cur=0;
    uchar keyV;
-   uchar date[15];
+   uint date[15];
    uint i;
+   uint time_cacah;
     uint dateAc[14]={1,2,3,4,6,7,9,10,2,3,5,6,8,9};
-	
+   time_cacah=Read1307(0x06);
    date[0]=2;
    date[1]=0;
-   date[2]=1;
-   date[3]=5;
-   date[4]=1;
-   date[5]=2;
-   date[6]=2;
-   date[7]=5;
-   date[8]=1;
-   date[9]=2;
-   date[10]=3;
-   date[11]=0;
-   date[12]=5;
-   date[13]=0;
+   date[2]=time_cacah>>4;
+   date[3]=time_cacah&0x0F;
+   time_cacah=Read1307(0x05);
+   date[4]=(time_cacah>>4)&0x01;
+   date[5]=time_cacah&0x0F;
+    time_cacah=Read1307(0x04);
+   date[6]=0x03&(time_cacah>>4);
+   date[7]=time_cacah&0x0F;
+   time_cacah=Read1307(0x02);
+   date[8]=0x03&(time_cacah>>4);
+   date[9]=time_cacah&0x0F;
+   time_cacah=Read1307(0x01);
+   date[10]=0x07&(time_cacah>>4);
+   date[11]=time_cacah&0x0f;
+   time_cacah=Read1307(0x00);
+   date[12]=0x07&(time_cacah>>4);
+   date[13]=time_cacah&0x0F;
     lcd_write_pos(1,0);
   for(i=0;i<8;i++){
    lcd_write_char_con(0,0x30 | date[i]);
@@ -1019,7 +1065,9 @@ void page1(void){
 	     //退出界面
 	 }else if(keyV=='t'){
 	      if(cur==14){
-		        //保存操作
+		      setTime((date[2]*16)+date[3],(date[4]*16)+date[5],(date[6]*16)+date[7],(date[8]*16)+date[9],(date[10]*16)+date[11],(date[12]*16)+date[13]);
+		        //setTime(1*16+2,1<<4+2+0x00,2*16+2,1<<4+2+0x00,5+0x00,5<<4+1+0x00);
+				//保存操作
 				pageParam[1]=0;//标记是时间的保存
 				prePageNum=8;
 				pageNum=6;
@@ -1037,7 +1085,39 @@ void page1(void){
 			if(cur<14){
 			 lcd_write_char_con(0,0x30 | keyV);
 			 lcd_write_char_con(0,' ');
-			 date[cur]=keyV;
+			 switch(keyV){
+			  case '0':
+			    date[cur]=0;
+			    break;
+			  case '1':
+			    date[cur]=1;
+			    break;
+			  case '2':
+			    date[cur]=2;
+			    break;
+			  case '3':
+			    date[cur]=3;
+			    break;
+			  case '4':
+			    date[cur]=4;
+			    break;
+			  case '5':
+			    date[cur]=5;
+			    break;
+			  case '6':
+			    date[cur]=6;
+			    break;
+			  case '7':
+			    date[cur]=7;
+			    break;
+		      case '8':
+			    date[cur]=8;
+			    break;
+			  case '9':
+			    date[cur]=9;
+			    break;
+			  
+			 }
 			  if(cur==3 || cur==5){
 			    lcd_write_str_con(0,"- ");
 			 }else if(cur==9 || cur==11){
@@ -1057,6 +1137,11 @@ void page1(void){
 void page9(void){//复用的方法
   if(pageParam[2]==0){
      lcd_write_str(4,1,"系统重置中。。。");
+	 //是否需要清除数据，考虑中
+	 WDTCR|=(1<<WDCE)|(1<<WDE); /* 置位 WDTOE 和 WDE(在设置看门狗定时器的预置分频器参数时需要将其写1)*/
+     WDTCR=(1<<WDE)|(1<<WDP2)|(1<<WDP1); /*设定周期为1S*/
+	 while(1){
+	 }
    }else if(pageParam[2]==1){
      lcd_write_str(4,1,"数据重置中。。。");
 	 reset_temp_data(pageParam[0]);

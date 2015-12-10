@@ -19,13 +19,13 @@ lcd.o:	lcd.c
 main.o: D:\iccv7avr\include\iom128v.h .\main.h .\lcd.h .\time1307.h .\key.h .\delay.h .\timertask.h .\eeprom.h .\pages.h .\temp.h
 main.o:	main.c
 	$(CC) -c $(CFLAGS) main.c
-timertask.o: D:\iccv7avr\include\iom128v.h .\timertask.h D:\iccv7avr\include\time.h .\lcd.h .\delay.h
+timertask.o: D:\iccv7avr\include\iom128v.h .\timertask.h D:\iccv7avr\include\time.h .\lcd.h .\delay.h .\main.h .\temp.h .\out.h
 timertask.o:	timertask.c
 	$(CC) -c $(CFLAGS) timertask.c
 max6675.o: D:\iccv7avr\include\iom128v.h .\max6675.h .\main.h .\delay.h
 max6675.o:	max6675.c
 	$(CC) -c $(CFLAGS) max6675.c
-out.o: D:\iccv7avr\include\iom128v.h .\out.h
+out.o: D:\iccv7avr\include\iom128v.h .\out.h .\lcd.h .\main.h
 out.o:	out.c
 	$(CC) -c $(CFLAGS) out.c
 uart.o: D:\iccv7avr\include\iom128v.h .\uart.h
@@ -37,7 +37,7 @@ eeprom.o:	eeprom.c
 pages.o: D:\iccv7avr\include\iom128v.h .\main.h .\lcd.h .\time1307.h .\timertask.h .\key.h .\delay.h .\temp.h .\eeprom.h
 pages.o:	pages.c
 	$(CC) -c $(CFLAGS) pages.c
-temp.o: D:\iccv7avr\include\iom128v.h .\temp.h .\main.h .\eeprom.h
+temp.o: D:\iccv7avr\include\iom128v.h .\temp.h .\main.h .\eeprom.h .\lcd.h .\max6675.h
 temp.o:	temp.c
 	$(CC) -c $(CFLAGS) temp.c
 time1307.o: D:\iccv7avr\include\iom128v.h .\time1307.h .\delay.h .\lcd.h .\main.h

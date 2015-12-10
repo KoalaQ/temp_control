@@ -4,6 +4,5 @@
 
 #define uchar unsigned char
 #define uint unsigned int
-//void readTemp(void);
-
+void readTemp(uint n);
 #endif

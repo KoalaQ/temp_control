@@ -116,10 +116,10 @@ void Write1307(unsigned char add,unsigned char dat)
   I2C_stop();
 }
 /***********************************************************************/
-unsigned char Read1307(unsigned char add)
+unsigned int Read1307(unsigned char add)
 {
   
-  unsigned char dat;
+  unsigned int dat;
   I2C_start();
   I2C_write_byte(WRITEDS1307);
   I2C_write_byte(add);
@@ -130,31 +130,17 @@ unsigned char Read1307(unsigned char add)
   I2C_stop();      
   return (dat);
  }
-uint getYear(void){
- return 1;
+//年、月、日、星期、时、分、秒。星期没有写入
+void setTime(uint year,uint month,uint day,uint hour,uint minute,uint second){
+   Write1307(0x00,second);//
+   Write1307(0x01,minute);//
+   Write1307(0x02,hour);//
+   //Write1307(0x03,0X01);//
+   Write1307(0x04,day);//
+   Write1307(0x05,month);//
+   Write1307(0x06,year);
 }
-uint getMonth(void){
-  return 1;
-}
-uint getDay(void){
- return 1;
-}
-uint getWeek(void){
- return 1;
-}
-uint getHour(void){
- return 1;
-}
-uint getMinute(void){
- return 1;
-}
-uint getSecond(void){
- return 1;
-}
-void setTime(uint year,uint month,uint day,uint week,uint hour,uint minute,uint second){
-
-}
-void Initial_time(void){
+void Initial_time(void){//初始化输出、方波、中断
    DDRD|=0x07;
    PORTD=0x00;
   /* Write1307(0x00,0X00);//
@@ -163,11 +149,11 @@ void Initial_time(void){
    Write1307(0x03,0X01);//
    Write1307(0x04,0X21);//
    Write1307(0x05,0X05);//
-   Write1307(0x06,0X15);//
+   Write1307(0x06,0X15);//*/
     Write1307(0x07,0x10);
    
    EIMSK |= 0x04;//开中断2
-   EICRA |=0x30;*/
+   EICRA |=0x30;
    
 }
 //显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
@@ -206,7 +192,7 @@ void showTime_page(uint y){
 	 lcd_write_char_con(y,0x30|(time_cacah &0x0F));
 }
 
-/*中断1s进入，使用int1
+//中断1s进入，使用int2。可以使用，但是买的这个DS1307，硬件电路问题不可以使用
 #pragma interrupt_handler int_int2:4
 void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
 
@@ -214,7 +200,7 @@ void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
   EIMSK &= ~(0x04);//关中断2
   
   EIMSK |= 0x04;//开中断2  
-}*/
+}
 
 
 

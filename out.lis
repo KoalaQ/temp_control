@@ -1,129 +1,259 @@
                         .module out.c
                         .area text(rom, con, rel)
  0000                   .dbfile out.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile out.c
+ 0000           _hz::
+ 0000                   .blkb 2
+                        .area idata
+ 0000 0100              .word 1
+                        .area data(ram, con, rel)
+ 0002                   .dbfile out.c
+ 0002                   .dbfile E:\ICCDemo\Temp_Control\temp_control\out.c
+ 0002                   .dbsym e hz _hz i
+                        .area text(rom, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\out.c
- 0000                   .dbfunc e out_all _out_all fV
- 0000           ;            out -> R16
+ 0000                   .dbfunc e out_port _out_port fV
                         .even
- 0000           _out_all::
- 0000                   .dbline -1
- 0000                   .dbline 4
- 0000           ; #include<iom128v.h>
- 0000           ; #include "out.h"
- 0000           ; 
- 0000           ; void out_all(uchar out){
- 0000                   .dbline 5
- 0000           ;   DDRC=0xFF;
- 0000 8FEF              ldi R24,255
- 0002 84BB              out 0x14,R24
- 0004                   .dbline 6
- 0004           ;   PORTC=out;
- 0004 05BB              out 0x15,R16
- 0006                   .dbline -2
- 0006           L1:
- 0006                   .dbline 0 ; func end
- 0006 0895              ret
- 0008                   .dbsym r out 16 c
- 0008                   .dbend
- 0008                   .dbfunc e out_port _out_port fV
- 0008           ;           port -> R10,R11
- 0008           ;            out -> R20,R21
-                        .even
- 0008           _out_port::
- 0008 0E940000          xcall push_xgset300C
- 000C 5901              movw R10,R18
- 000E A801              movw R20,R16
- 0010                   .dbline -1
- 0010                   .dbline 9
- 0010           ; }
- 0010           ; //0、1的传入。port由0~7
- 0010           ; void out_port(uint out,uint port){
- 0010                   .dbline 10
- 0010           ;   DDRC=0xFF;
- 0010 8FEF              ldi R24,255
- 0012 84BB              out 0x14,R24
- 0014                   .dbline 11
- 0014           ;   if(out==0){
- 0014 4030              cpi R20,0
- 0016 4507              cpc R20,R21
- 0018 71F4              brne L3
- 001A           X0:
- 001A                   .dbline 11
- 001A                   .dbline 12
- 001A           ;    PORTC&=~(1<<port);
- 001A 01E0              ldi R16,1
- 001C 10E0              ldi R17,0
- 001E 9501              movw R18,R10
- 0020 0E940000          xcall lsl16
- 0024 1801              movw R2,R16
- 0026 2094              com R2
- 0028 3094              com R3
- 002A 45B2              in R4,0x15
- 002C 5524              clr R5
- 002E 4220              and R4,R2
- 0030 5320              and R5,R3
- 0032 45BA              out 0x15,R4
- 0034                   .dbline 13
- 0034           ;   }else if(out==1){
- 0034 0EC0              xjmp L4
- 0036           L3:
- 0036                   .dbline 13
- 0036 4130              cpi R20,1
- 0038 E0E0              ldi R30,0
- 003A 5E07              cpc R21,R30
- 003C 51F4              brne L5
- 003E           X1:
- 003E                   .dbline 13
- 003E                   .dbline 14
- 003E           ;    PORTC|=(1<<port);
- 003E 01E0              ldi R16,1
- 0040 10E0              ldi R17,0
- 0042 9501              movw R18,R10
- 0044 0E940000          xcall lsl16
- 0048 25B2              in R2,0x15
- 004A 3324              clr R3
- 004C 202A              or R2,R16
- 004E 312A              or R3,R17
- 0050 25BA              out 0x15,R2
- 0052                   .dbline 15
- 0052           ;   }
- 0052           L5:
- 0052           L4:
- 0052                   .dbline -2
- 0052           L2:
- 0052                   .dbline 0 ; func end
- 0052 0C940000          xjmp pop_xgset300C
- 0056                   .dbsym r port 10 i
- 0056                   .dbsym r out 20 i
- 0056                   .dbend
- 0056                   .dbfunc e read_port _read_port fi
- 0056           ;           port -> R10,R11
-                        .even
- 0056           _read_port::
- 0056 AA92              st -y,R10
- 0058 BA92              st -y,R11
- 005A 5801              movw R10,R16
- 005C                   .dbline -1
- 005C                   .dbline 17
- 005C           ; }
- 005C           ; uint read_port(uint port){
- 005C                   .dbline 18
- 005C           ;   return PINC&(1<<port);
- 005C 01E0              ldi R16,1
- 005E 10E0              ldi R17,0
- 0060 9501              movw R18,R10
- 0062 0E940000          xcall lsl16
- 0066 23B2              in R2,0x13
- 0068 3324              clr R3
- 006A 2022              and R2,R16
- 006C 3122              and R3,R17
- 006E 8101              movw R16,R2
- 0070                   .dbline -2
- 0070           L7:
- 0070                   .dbline 0 ; func end
- 0070 B990              ld R11,y+
- 0072 A990              ld R10,y+
- 0074 0895              ret
- 0076                   .dbsym r port 10 i
- 0076                   .dbend
- 0076           ; }
+ 0000           _out_port::
+ 0000 AA92              st -y,R10
+ 0002 BA92              st -y,R11
+ 0004                   .dbline -1
+ 0004                   .dbline 11
+ 0004           ; #include<iom128v.h>
+ 0004           ; #include "out.h"
+ 0004           ; #include "lcd.h"
+ 0004           ; #include "main.h"
+ 0004           ; //*********************
+ 0004           ; // 1秒钟50周期，控制功率是50周期输出量
+ 0004           ; //*********************
+ 0004           ; uint hz=1;//1~50表示周期
+ 0004           ; 
+ 0004           ; //0、1的传入。port由0~7
+ 0004           ; void out_port(void){
+ 0004                   .dbline 12
+ 0004           ;    if(hz==51){
+ 0004 80910000          lds R24,_hz
+ 0008 90910100          lds R25,_hz+1
+ 000C 8333              cpi R24,51
+ 000E E0E0              ldi R30,0
+ 0010 9E07              cpc R25,R30
+ 0012 31F4              brne L2
+ 0014           X0:
+ 0014                   .dbline 12
+ 0014                   .dbline 13
+ 0014           ;      hz=0;
+ 0014 2224              clr R2
+ 0016 3324              clr R3
+ 0018 30920100          sts _hz+1,R3
+ 001C 20920000          sts _hz,R2
+ 0020                   .dbline 14
+ 0020           ;    }
+ 0020           L2:
+ 0020                   .dbline 15
+ 0020           ;    if(temps[0].flag==1){
+ 0020 80910000          lds R24,_temps
+ 0024 90910100          lds R25,_temps+1
+ 0028 8130              cpi R24,1
+ 002A E0E0              ldi R30,0
+ 002C 9E07              cpc R25,R30
+ 002E E1F4              brne L4
+ 0030           X1:
+ 0030                   .dbline 15
+ 0030                   .dbline 16
+ 0030           ;         if(temps[0].incrementtemp>=hz){
+ 0030 40903801          lds R4,_temps+310+2
+ 0034 50903901          lds R5,_temps+310+2+1
+ 0038 20903601          lds R2,_temps+310
+ 003C 30903701          lds R3,_temps+310+1
+ 0040 00910000          lds R16,_hz
+ 0044 10910100          lds R17,_hz+1
+ 0048 0E940000          xcall uint2fp
+ 004C 3A93              st -y,R19
+ 004E 2A93              st -y,R18
+ 0050 1A93              st -y,R17
+ 0052 0A93              st -y,R16
+ 0054 8101              movw R16,R2
+ 0056 9201              movw R18,R4
+ 0058 0E940000          xcall fpcmp2
+ 005C 14F0              brlt L6
+ 005E           X2:
+ 005E                   .dbline 16
+ 005E                   .dbline 17
+ 005E           ;           PORTE |=0x01;
+ 005E 189A              sbi 0x3,0
+ 0060                   .dbline 18
+ 0060           ;         }else {
+ 0060 03C0              xjmp L7
+ 0062           L6:
+ 0062                   .dbline 18
+ 0062                   .dbline 19
+ 0062           ;           PORTE &=0xFE;
+ 0062 83B1              in R24,0x3
+ 0064 8E7F              andi R24,254
+ 0066 83B9              out 0x3,R24
+ 0068                   .dbline 20
+ 0068           ;         }
+ 0068           L7:
+ 0068                   .dbline 21
+ 0068           ;    }
+ 0068           L4:
+ 0068                   .dbline 22
+ 0068           ;     if(temps[1].flag==1){
+ 0068 80913A01          lds R24,_temps+314
+ 006C 90913B01          lds R25,_temps+314+1
+ 0070 8130              cpi R24,1
+ 0072 E0E0              ldi R30,0
+ 0074 9E07              cpc R25,R30
+ 0076 E1F4              brne L9
+ 0078           X3:
+ 0078                   .dbline 22
+ 0078                   .dbline 23
+ 0078           ;         if(temps[0].incrementtemp>=hz){
+ 0078 40903801          lds R4,_temps+310+2
+ 007C 50903901          lds R5,_temps+310+2+1
+ 0080 20903601          lds R2,_temps+310
+ 0084 30903701          lds R3,_temps+310+1
+ 0088 00910000          lds R16,_hz
+ 008C 10910100          lds R17,_hz+1
+ 0090 0E940000          xcall uint2fp
+ 0094 3A93              st -y,R19
+ 0096 2A93              st -y,R18
+ 0098 1A93              st -y,R17
+ 009A 0A93              st -y,R16
+ 009C 8101              movw R16,R2
+ 009E 9201              movw R18,R4
+ 00A0 0E940000          xcall fpcmp2
+ 00A4 14F0              brlt L12
+ 00A6           X4:
+ 00A6                   .dbline 23
+ 00A6                   .dbline 24
+ 00A6           ;             PORTC |=0x02;
+ 00A6 A99A              sbi 0x15,1
+ 00A8                   .dbline 25
+ 00A8           ;           }else {
+ 00A8 03C0              xjmp L13
+ 00AA           L12:
+ 00AA                   .dbline 25
+ 00AA                   .dbline 26
+ 00AA           ;             PORTC &=0xFD;
+ 00AA 85B3              in R24,0x15
+ 00AC 8D7F              andi R24,253
+ 00AE 85BB              out 0x15,R24
+ 00B0                   .dbline 27
+ 00B0           ;           }
+ 00B0           L13:
+ 00B0                   .dbline 28
+ 00B0           ;    }
+ 00B0           L9:
+ 00B0                   .dbline 29
+ 00B0           ;     if(temps[2].flag==1){
+ 00B0 80917402          lds R24,_temps+628
+ 00B4 90917502          lds R25,_temps+628+1
+ 00B8 8130              cpi R24,1
+ 00BA E0E0              ldi R30,0
+ 00BC 9E07              cpc R25,R30
+ 00BE E1F4              brne L15
+ 00C0           X5:
+ 00C0                   .dbline 29
+ 00C0                   .dbline 30
+ 00C0           ;         if(temps[0].incrementtemp>=hz){
+ 00C0 40903801          lds R4,_temps+310+2
+ 00C4 50903901          lds R5,_temps+310+2+1
+ 00C8 20903601          lds R2,_temps+310
+ 00CC 30903701          lds R3,_temps+310+1
+ 00D0 00910000          lds R16,_hz
+ 00D4 10910100          lds R17,_hz+1
+ 00D8 0E940000          xcall uint2fp
+ 00DC 3A93              st -y,R19
+ 00DE 2A93              st -y,R18
+ 00E0 1A93              st -y,R17
+ 00E2 0A93              st -y,R16
+ 00E4 8101              movw R16,R2
+ 00E6 9201              movw R18,R4
+ 00E8 0E940000          xcall fpcmp2
+ 00EC 14F0              brlt L18
+ 00EE           X6:
+ 00EE                   .dbline 30
+ 00EE                   .dbline 31
+ 00EE           ;             PORTC |=0x04;
+ 00EE AA9A              sbi 0x15,2
+ 00F0                   .dbline 32
+ 00F0           ;           }else {
+ 00F0 03C0              xjmp L19
+ 00F2           L18:
+ 00F2                   .dbline 32
+ 00F2                   .dbline 33
+ 00F2           ;             PORTC &=0xFB;
+ 00F2 85B3              in R24,0x15
+ 00F4 8B7F              andi R24,251
+ 00F6 85BB              out 0x15,R24
+ 00F8                   .dbline 34
+ 00F8           ;           }
+ 00F8           L19:
+ 00F8                   .dbline 35
+ 00F8           ;    }
+ 00F8           L15:
+ 00F8                   .dbline 36
+ 00F8           ;     if(temps[3].flag==1){
+ 00F8 8091AE03          lds R24,_temps+942
+ 00FC 9091AF03          lds R25,_temps+942+1
+ 0100 8130              cpi R24,1
+ 0102 E0E0              ldi R30,0
+ 0104 9E07              cpc R25,R30
+ 0106 E1F4              brne L21
+ 0108           X7:
+ 0108                   .dbline 36
+ 0108                   .dbline 37
+ 0108           ;         if(temps[0].incrementtemp>=hz){
+ 0108 40903801          lds R4,_temps+310+2
+ 010C 50903901          lds R5,_temps+310+2+1
+ 0110 20903601          lds R2,_temps+310
+ 0114 30903701          lds R3,_temps+310+1
+ 0118 00910000          lds R16,_hz
+ 011C 10910100          lds R17,_hz+1
+ 0120 0E940000          xcall uint2fp
+ 0124 3A93              st -y,R19
+ 0126 2A93              st -y,R18
+ 0128 1A93              st -y,R17
+ 012A 0A93              st -y,R16
+ 012C 8101              movw R16,R2
+ 012E 9201              movw R18,R4
+ 0130 0E940000          xcall fpcmp2
+ 0134 14F0              brlt L24
+ 0136           X8:
+ 0136                   .dbline 37
+ 0136                   .dbline 38
+ 0136           ;             PORTC |=0x08;
+ 0136 AB9A              sbi 0x15,3
+ 0138                   .dbline 39
+ 0138           ;           }else {
+ 0138 03C0              xjmp L25
+ 013A           L24:
+ 013A                   .dbline 39
+ 013A                   .dbline 40
+ 013A           ;             PORTC &=0xF7;
+ 013A 85B3              in R24,0x15
+ 013C 877F              andi R24,247
+ 013E 85BB              out 0x15,R24
+ 0140                   .dbline 41
+ 0140           ;           }
+ 0140           L25:
+ 0140                   .dbline 42
+ 0140           ;    }
+ 0140           L21:
+ 0140                   .dbline 43
+ 0140           ;     hz++;
+ 0140 80910000          lds R24,_hz
+ 0144 90910100          lds R25,_hz+1
+ 0148 0196              adiw R24,1
+ 014A 90930100          sts _hz+1,R25
+ 014E 80930000          sts _hz,R24
+ 0152                   .dbline -2
+ 0152           L1:
+ 0152                   .dbline 0 ; func end
+ 0152 B990              ld R11,y+
+ 0154 A990              ld R10,y+
+ 0156 0895              ret
+ 0158                   .dbend
+ 0158           ; }

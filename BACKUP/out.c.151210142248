@@ -1,0 +1,41 @@
+#include<iom128v.h>
+#include "out.h"
+#include "lcd.h"
+#include "main.h"
+uint hz=1;
+
+//0、1的传入。port由0~7
+void out_port(void){
+   if(hz==51){
+     hz=0;
+   }
+   if(temps[0].flag==1){
+	  if(temps[0].incrementtemp>hz){
+	    PORTE |=0x01;
+	  }else {
+	    PORTE &=0xFE;
+	  }
+   }
+    if(temps[1].flag==1){
+	  if(temps[0].incrementtemp>hz){
+	      PORTC |=0x02;
+	    }else {
+	      PORTC &=0xFD;
+	    }
+   }
+    if(temps[2].flag==1){
+	  if(temps[0].incrementtemp>hz){
+	      PORTC |=0x04;
+	    }else {
+	      PORTC &=0xFB;
+	    }
+   }
+    if(temps[3].flag==1){
+	  if(temps[0].incrementtemp>hz){
+	      PORTC |=0x08;
+	    }else {
+	      PORTC &=0xF7;
+	    }
+   }
+    hz++;
+}

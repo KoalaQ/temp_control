@@ -1,0 +1,152 @@
+#include<iom128v.h>
+#include "temp.h"
+#include "main.h"
+#include "eeprom.h"
+void set_start_real(uint t);
+uint ddd=0;
+ //执行温度控制数据更新操作，读取温度更新输出参数.会对温度数据故障更新
+void tempcontrol(void){
+   uint i;
+   for(i=0;i<4;i++){
+      if(temps[i].flag==1)//运行中的
+	  {
+	     lcd_write_char(0x03,3,0x30 | ddd++);
+	  }else if(temps[i].flag==5)//和1相同，
+	  {
+	    set_start_real(i); 
+	  }else if(temps[i].flag==2){//故障的
+	  
+	  }
+   }
+}
+
+//开机初始化空间。全部置0,不初始化数据，等用户或EEPROM数据回填
+void tempdata_init(void){
+ uint i,j;
+ for(i=0;i<4;i++){
+    temps[i].flag=0;
+	for(j=0;j<132;j++){
+	 temps[i].temp_data[j]=0;
+	}
+ } 
+}
+void data_recover(void){
+ uint i,j;
+ uint dataC;
+ for(i=0;i<4;i++){
+   dataC=EEPROM_read(i+1,0);//读取标记位
+   if(dataC==1){
+      temps[i].flag=EEPROM_read(i+1,133);
+	  for(j=0;j<132;j++){
+	    temps[i].temp_data[j]=EEPROM_read(i+1,j+1);
+	   }
+	}
+ } 
+}
+//设置指定的数据,保存相关标志位
+void set_temp_data(uint t,uint* dataCach){
+    uint j;
+	temps[t].flag=6;
+	EEPROM_write(t+1,0,0x01);
+	EEPROM_write(t+1,133,6);
+    for(j=0;j<132;j++){
+	   temps[t].temp_data[j]=*(dataCach+j);
+	   EEPROM_write(t+1,j+1,temps[t].temp_data[j]);
+	}
+}
+
+//重置指定的数据,保存相关标志位
+void reset_temp_data(uint t){
+    uint j;
+	temps[t].flag=0;
+	EEPROM_write(t+1,0,0x00);
+	EEPROM_write(t+1,133,0x00);
+    for(j=0;j<132;j++){
+	   temps[t].temp_data[j]=0;
+	   EEPROM_write(t+1,j+1,0);
+	}
+}
+//温度全部开始工作。状态为停止和刚重置数据的可以开始
+void set_all_start(void){
+    uint j;
+	
+    for(j=0;j<4;j++){
+	   if(temps[j].flag==3 || temps[j].flag==6){
+	     temps[j].flag=5;
+		 EEPROM_write(j+1,133,5);
+	   }
+	}
+}
+//温度全部暂停.要运行的才会暂停
+void set_all_stop(void){
+    uint j;
+	
+    for(j=0;j<4;j++){
+	  if(temps[j].flag==1 || temps[j].flag==5){
+	     temps[j].flag=3;
+		  EEPROM_write(j+1,133,3);
+	   }
+	}
+}
+//指定温度开始,预备
+void set_start(uint t){
+ if(temps[t].flag==3 || temps[t].flag==6){
+	     temps[t].flag=5;
+		  EEPROM_write(t+1,133,5);
+	}
+}
+//指定温度开始,正式开始
+void set_start_real(uint t){
+ if(temps[t].flag==5){
+	     temps[t].flag=1;
+		  EEPROM_write(t+1,133,1);
+	}
+}
+//指定温度暂停
+void set_stop(uint t){
+ if(temps[t].flag==1 || temps[t].flag==5){
+	     temps[t].flag=3;
+		 EEPROM_write(t+1,133,3);
+	   }
+}
+/***********************************************************************
+* 函数功能：	PID参数初始化
+* 参      数：	无
+* 返 回  值：	无			
+* 备	   注：	
+**1
+**********************************************************************/
+/*void PID_init(void)
+{
+    pid.setspeed=0.0;
+    pid.actualspeed=0.0;
+    pid.err=0.0;
+    pid.err_last=0.0;
+    pid.err_next=0.0;
+    pid.Kp=0.35;//0.35
+    pid.Ki=0.03; //0.03      
+    pid.Kd=0.2;//0.2
+    pid.incrementspeed=0.0;
+}
+*/
+/***********************************************************************
+* 函数功能：	PID计算
+* 参      数：	实际速度
+* 返 回  值：	无			
+* 备	   注：	
+**1
+**********************************************************************/
+/*float PID_realize(float speed)
+{
+   pid.setspeed=speed;
+   pid.actualspeed=zengliang;
+   pid.err=pid.setspeed-pid.actualspeed;
+   pid.incrementspeed=pid.Kp*(pid.err-pid.err_next)+pid.Ki*pid.err+pid.Kd*(pid.err-
+
+2*pid.err_next+pid.err_last);
+   pid.err_last=pid.err_next;
+   pid.err_next=pid.err;
+   pid.incrementspeed=pid.incrementspeed/2;
+   return pid.incrementspeed;
+}
+*/

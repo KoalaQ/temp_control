@@ -395,418 +395,409 @@
  0106                   .dbsym r dat 10 c
  0106                   .dbsym r add 12 c
  0106                   .dbend
- 0106                   .dbfunc e Read1307 _Read1307 fc
- 0106           ;            dat -> R10
+ 0106                   .dbfunc e Read1307 _Read1307 fi
+ 0106           ;            dat -> R10,R11
  0106           ;            add -> R10
                         .even
  0106           _Read1307::
  0106 AA92              st -y,R10
- 0108 A02E              mov R10,R16
- 010A                   .dbline -1
- 010A                   .dbline 120
- 010A           ; }
- 010A           ; /***********************************************************************/
- 010A           ; unsigned char Read1307(unsigned char add)
- 010A           ; {
- 010A                   .dbline 123
- 010A           ;   
- 010A           ;   unsigned char dat;
- 010A           ;   I2C_start();
- 010A 7ADF              xcall _I2C_start
- 010C                   .dbline 124
- 010C           ;   I2C_write_byte(WRITEDS1307);
- 010C 00ED              ldi R16,208
- 010E A2DF              xcall _I2C_write_byte
- 0110                   .dbline 125
- 0110           ;   I2C_write_byte(add);
- 0110 0A2D              mov R16,R10
- 0112 A0DF              xcall _I2C_write_byte
- 0114                   .dbline 126
- 0114           ;   I2C_start();
- 0114 75DF              xcall _I2C_start
- 0116                   .dbline 127
- 0116           ;   I2C_write_byte(READDS1307);
- 0116 01ED              ldi R16,209
- 0118 9DDF              xcall _I2C_write_byte
- 011A                   .dbline 128
- 011A           ;   dat=I2C_read_byte(); 
- 011A CEDF              xcall _I2C_read_byte
- 011C A02E              mov R10,R16
- 011E                   .dbline 129
- 011E           ;   I2C_send_noack();
- 011E 92DF              xcall _I2C_send_noack
- 0120                   .dbline 130
- 0120           ;   I2C_stop();      
- 0120 7CDF              xcall _I2C_stop
- 0122                   .dbline 131
- 0122           ;   return (dat);
- 0122 0A2D              mov R16,R10
- 0124                   .dbline -2
- 0124           L22:
- 0124                   .dbline 0 ; func end
- 0124 A990              ld R10,y+
- 0126 0895              ret
- 0128                   .dbsym r dat 10 c
- 0128                   .dbsym r add 10 c
- 0128                   .dbend
- 0128                   .dbfunc e getYear _getYear fi
-                        .even
- 0128           _getYear::
- 0128                   .dbline -1
- 0128                   .dbline 133
- 0128           ;  }
- 0128           ; uint getYear(void){
- 0128                   .dbline 134
- 0128           ;  return 1;
- 0128 01E0              ldi R16,1
- 012A 10E0              ldi R17,0
- 012C                   .dbline -2
- 012C           L23:
- 012C                   .dbline 0 ; func end
+ 0108 BA92              st -y,R11
+ 010A A02E              mov R10,R16
+ 010C                   .dbline -1
+ 010C                   .dbline 120
+ 010C           ; }
+ 010C           ; /***********************************************************************/
+ 010C           ; unsigned int Read1307(unsigned char add)
+ 010C           ; {
+ 010C                   .dbline 123
+ 010C           ;   
+ 010C           ;   unsigned int dat;
+ 010C           ;   I2C_start();
+ 010C 79DF              xcall _I2C_start
+ 010E                   .dbline 124
+ 010E           ;   I2C_write_byte(WRITEDS1307);
+ 010E 00ED              ldi R16,208
+ 0110 A1DF              xcall _I2C_write_byte
+ 0112                   .dbline 125
+ 0112           ;   I2C_write_byte(add);
+ 0112 0A2D              mov R16,R10
+ 0114 9FDF              xcall _I2C_write_byte
+ 0116                   .dbline 126
+ 0116           ;   I2C_start();
+ 0116 74DF              xcall _I2C_start
+ 0118                   .dbline 127
+ 0118           ;   I2C_write_byte(READDS1307);
+ 0118 01ED              ldi R16,209
+ 011A 9CDF              xcall _I2C_write_byte
+ 011C                   .dbline 128
+ 011C           ;   dat=I2C_read_byte(); 
+ 011C CDDF              xcall _I2C_read_byte
+ 011E A02E              mov R10,R16
+ 0120 BB24              clr R11
+ 0122                   .dbline 129
+ 0122           ;   I2C_send_noack();
+ 0122 90DF              xcall _I2C_send_noack
+ 0124                   .dbline 130
+ 0124           ;   I2C_stop();      
+ 0124 7ADF              xcall _I2C_stop
+ 0126                   .dbline 131
+ 0126           ;   return (dat);
+ 0126 8501              movw R16,R10
+ 0128                   .dbline -2
+ 0128           L22:
+ 0128                   .dbline 0 ; func end
+ 0128 B990              ld R11,y+
+ 012A A990              ld R10,y+
  012C 0895              ret
+ 012E                   .dbsym r dat 10 i
+ 012E                   .dbsym r add 10 c
  012E                   .dbend
- 012E                   .dbfunc e getMonth _getMonth fi
+ 012E                   .dbfunc e setTime _setTime fV
+ 012E           ;         second -> R10,R11
+ 012E           ;         minute -> R22,R23
+ 012E           ;           hour -> R20,R21
+ 012E           ;            day -> R14,R15
+ 012E           ;          month -> R12,R13
+ 012E           ;           year -> y+10
                         .even
- 012E           _getMonth::
- 012E                   .dbline -1
- 012E                   .dbline 136
- 012E           ; }
- 012E           ; uint getMonth(void){
- 012E                   .dbline 137
- 012E           ;   return 1;
- 012E 01E0              ldi R16,1
- 0130 10E0              ldi R17,0
- 0132                   .dbline -2
- 0132           L24:
- 0132                   .dbline 0 ; func end
- 0132 0895              ret
- 0134                   .dbend
- 0134                   .dbfunc e getDay _getDay fi
+ 012E           _setTime::
+ 012E 0E940000          xcall push_arg4
+ 0132 0E940000          xcall push_xgsetF0FC
+ 0136 6901              movw R12,R18
+ 0138 EE84              ldd R14,y+14
+ 013A FF84              ldd R15,y+15
+ 013C 4889              ldd R20,y+16
+ 013E 5989              ldd R21,y+17
+ 0140 6A89              ldd R22,y+18
+ 0142 7B89              ldd R23,y+19
+ 0144 AC88              ldd R10,y+20
+ 0146 BD88              ldd R11,y+21
+ 0148                   .dbline -1
+ 0148                   .dbline 134
+ 0148           ;  }
+ 0148           ; //年、月、日、星期、时、分、秒。星期没有写入
+ 0148           ; void setTime(uint year,uint month,uint day,uint hour,uint minute,uint second){
+ 0148                   .dbline 135
+ 0148           ;    Write1307(0x00,second);//
+ 0148 2A2D              mov R18,R10
+ 014A 0027              clr R16
+ 014C CDDF              xcall _Write1307
+ 014E                   .dbline 136
+ 014E           ;    Write1307(0x01,minute);//
+ 014E 262F              mov R18,R22
+ 0150 01E0              ldi R16,1
+ 0152 CADF              xcall _Write1307
+ 0154                   .dbline 137
+ 0154           ;    Write1307(0x02,hour);//
+ 0154 242F              mov R18,R20
+ 0156 02E0              ldi R16,2
+ 0158 C7DF              xcall _Write1307
+ 015A                   .dbline 139
+ 015A           ;    //Write1307(0x03,0X01);//
+ 015A           ;    Write1307(0x04,day);//
+ 015A 2E2D              mov R18,R14
+ 015C 04E0              ldi R16,4
+ 015E C4DF              xcall _Write1307
+ 0160                   .dbline 140
+ 0160           ;    Write1307(0x05,month);//
+ 0160 2C2D              mov R18,R12
+ 0162 05E0              ldi R16,5
+ 0164 C1DF              xcall _Write1307
+ 0166                   .dbline 141
+ 0166           ;    Write1307(0x06,year);
+ 0166 2A85              ldd R18,y+10
+ 0168 3B85              ldd R19,y+11
+ 016A 06E0              ldi R16,6
+ 016C BDDF              xcall _Write1307
+ 016E                   .dbline -2
+ 016E           L23:
+ 016E                   .dbline 0 ; func end
+ 016E 0E940000          xcall pop_xgsetF0FC
+ 0172 2496              adiw R28,4
+ 0174 0895              ret
+ 0176                   .dbsym r second 10 i
+ 0176                   .dbsym r minute 22 i
+ 0176                   .dbsym r hour 20 i
+ 0176                   .dbsym r day 14 i
+ 0176                   .dbsym r month 12 i
+ 0176                   .dbsym l year 10 i
+ 0176                   .dbend
+ 0176                   .dbfunc e Initial_time _Initial_time fV
                         .even
- 0134           _getDay::
- 0134                   .dbline -1
- 0134                   .dbline 139
- 0134           ; }
- 0134           ; uint getDay(void){
- 0134                   .dbline 140
- 0134           ;  return 1;
- 0134 01E0              ldi R16,1
- 0136 10E0              ldi R17,0
- 0138                   .dbline -2
- 0138           L25:
- 0138                   .dbline 0 ; func end
- 0138 0895              ret
- 013A                   .dbend
- 013A                   .dbfunc e getWeek _getWeek fi
+ 0176           _Initial_time::
+ 0176                   .dbline -1
+ 0176                   .dbline 143
+ 0176           ; }
+ 0176           ; void Initial_time(void){//初始化输出、方波、中断
+ 0176                   .dbline 144
+ 0176           ;    DDRD|=0x07;
+ 0176 81B3              in R24,0x11
+ 0178 8760              ori R24,7
+ 017A 81BB              out 0x11,R24
+ 017C                   .dbline 145
+ 017C           ;    PORTD=0x00;
+ 017C 2224              clr R2
+ 017E 22BA              out 0x12,R2
+ 0180                   .dbline 153
+ 0180           ;   /* Write1307(0x00,0X00);//
+ 0180           ;    Write1307(0x01,0X00);//
+ 0180           ;    Write1307(0x02,0X12);//
+ 0180           ;    Write1307(0x03,0X01);//
+ 0180           ;    Write1307(0x04,0X21);//
+ 0180           ;    Write1307(0x05,0X05);//
+ 0180           ;    Write1307(0x06,0X15);//*/
+ 0180           ;     Write1307(0x07,0x10);
+ 0180 20E1              ldi R18,16
+ 0182 07E0              ldi R16,7
+ 0184 B1DF              xcall _Write1307
+ 0186                   .dbline 155
+ 0186           ;    
+ 0186           ;    EIMSK |= 0x04;//开中断2
+ 0186 89B7              in R24,0x39
+ 0188 8460              ori R24,4
+ 018A 89BF              out 0x39,R24
+ 018C                   .dbline 156
+ 018C           ;    EICRA |=0x30;
+ 018C 80916A00          lds R24,106
+ 0190 8063              ori R24,48
+ 0192 80936A00          sts 106,R24
+ 0196                   .dbline -2
+ 0196           L24:
+ 0196                   .dbline 0 ; func end
+ 0196 0895              ret
+ 0198                   .dbend
+ 0198                   .dbfunc e showTime_page _showTime_page fV
+ 0198           ;     time_cacah -> R20
+ 0198           ;              y -> R10,R11
                         .even
- 013A           _getWeek::
- 013A                   .dbline -1
- 013A                   .dbline 142
- 013A           ; }
- 013A           ; uint getWeek(void){
- 013A                   .dbline 143
- 013A           ;  return 1;
- 013A 01E0              ldi R16,1
- 013C 10E0              ldi R17,0
- 013E                   .dbline -2
- 013E           L26:
- 013E                   .dbline 0 ; func end
- 013E 0895              ret
- 0140                   .dbend
- 0140                   .dbfunc e getHour _getHour fi
-                        .even
- 0140           _getHour::
- 0140                   .dbline -1
- 0140                   .dbline 145
- 0140           ; }
- 0140           ; uint getHour(void){
- 0140                   .dbline 146
- 0140           ;  return 1;
- 0140 01E0              ldi R16,1
- 0142 10E0              ldi R17,0
- 0144                   .dbline -2
- 0144           L27:
- 0144                   .dbline 0 ; func end
- 0144 0895              ret
- 0146                   .dbend
- 0146                   .dbfunc e getMinute _getMinute fi
-                        .even
- 0146           _getMinute::
- 0146                   .dbline -1
- 0146                   .dbline 148
- 0146           ; }
- 0146           ; uint getMinute(void){
- 0146                   .dbline 149
- 0146           ;  return 1;
- 0146 01E0              ldi R16,1
- 0148 10E0              ldi R17,0
- 014A                   .dbline -2
- 014A           L28:
- 014A                   .dbline 0 ; func end
- 014A 0895              ret
- 014C                   .dbend
- 014C                   .dbfunc e getSecond _getSecond fi
-                        .even
- 014C           _getSecond::
- 014C                   .dbline -1
- 014C                   .dbline 151
- 014C           ; }
- 014C           ; uint getSecond(void){
- 014C                   .dbline 152
- 014C           ;  return 1;
- 014C 01E0              ldi R16,1
- 014E 10E0              ldi R17,0
- 0150                   .dbline -2
- 0150           L29:
- 0150                   .dbline 0 ; func end
- 0150 0895              ret
- 0152                   .dbend
- 0152                   .dbfunc e setTime _setTime fV
- 0152           ;         second -> R6,R7
- 0152           ;         minute -> R5,R6
- 0152           ;           hour -> R4,R5
- 0152           ;           week -> R3,R4
- 0152           ;            day -> R2,R3
- 0152           ;          month -> R1,R2
- 0152           ;           year -> R0,R1
-                        .even
- 0152           _setTime::
- 0152                   .dbline -1
- 0152                   .dbline 154
- 0152           ; }
- 0152           ; void setTime(uint year,uint month,uint day,uint week,uint hour,uint minute,uint second){
- 0152                   .dbline -2
- 0152           L30:
- 0152                   .dbline 0 ; func end
- 0152 0895              ret
- 0154                   .dbsym l second 12 i
- 0154                   .dbsym l minute 10 i
- 0154                   .dbsym l hour 8 i
- 0154                   .dbsym l week 6 i
- 0154                   .dbsym l day 4 i
- 0154                   .dbsym l month 2 i
- 0154                   .dbsym l year 0 i
- 0154                   .dbend
- 0154                   .dbfunc e Initial_time _Initial_time fV
-                        .even
- 0154           _Initial_time::
- 0154                   .dbline -1
- 0154                   .dbline 157
- 0154           ; 
- 0154           ; }
- 0154           ; void Initial_time(void){
- 0154                   .dbline 158
- 0154           ;    DDRD|=0x07;
- 0154 81B3              in R24,0x11
- 0156 8760              ori R24,7
- 0158 81BB              out 0x11,R24
- 015A                   .dbline 159
- 015A           ;    PORTD=0x00;
- 015A 2224              clr R2
- 015C 22BA              out 0x12,R2
- 015E                   .dbline -2
- 015E           L31:
- 015E                   .dbline 0 ; func end
- 015E 0895              ret
- 0160                   .dbend
- 0160                   .dbfunc e showTime_page _showTime_page fV
- 0160           ;     time_cacah -> R20
- 0160           ;              y -> R10,R11
-                        .even
- 0160           _showTime_page::
- 0160 0E940000          xcall push_xgset303C
- 0164 5801              movw R10,R16
- 0166                   .dbline -1
- 0166                   .dbline 174
- 0166           ;   /* Write1307(0x00,0X00);//
- 0166           ;    Write1307(0x01,0X00);//
- 0166           ;    Write1307(0x02,0X12);//
- 0166           ;    Write1307(0x03,0X01);//
- 0166           ;    Write1307(0x04,0X21);//
- 0166           ;    Write1307(0x05,0X05);//
- 0166           ;    Write1307(0x06,0X15);//
- 0166           ;     Write1307(0x07,0x10);
- 0166           ;    
- 0166           ;    EIMSK |= 0x04;//开中断2
- 0166           ;    EICRA |=0x30;*/
- 0166           ;    
- 0166           ; }
- 0166           ; //显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
- 0166           ; void showTime_page(uint y){
- 0166                   .dbline 178
- 0166           ;    //PORTE=~Read1302(0x81);
- 0166           ;    uchar time_cacah;
- 0166           ;  //年
- 0166           ;     time_cacah=Read1307(0x06);
- 0166 06E0              ldi R16,6
- 0168 CEDF              xcall _Read1307
- 016A 402F              mov R20,R16
- 016C                   .dbline 179
- 016C           ;     lcd_write_str_con(y, "20");
- 016C 20E0              ldi R18,<L33
- 016E 30E0              ldi R19,>L33
- 0170 0A2D              mov R16,R10
- 0172 0E940000          xcall _lcd_write_str_con
- 0176                   .dbline 180
- 0176           ;     lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x0F));
- 0176 242F              mov R18,R20
- 0178 2295              swap R18
- 017A 2F70              andi R18,#0x0F
- 017C 2F70              andi R18,15
- 017E 2063              ori R18,48
- 0180 0A2D              mov R16,R10
- 0182 0E940000          xcall _lcd_write_char_con
- 0186                   .dbline 181
- 0186           ;     lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
- 0186 242F              mov R18,R20
- 0188 2F70              andi R18,15
- 018A 2063              ori R18,48
- 018C 0A2D              mov R16,R10
- 018E 0E940000          xcall _lcd_write_char_con
- 0192                   .dbline 182
- 0192           ;       lcd_write_char_con(y,'-');
- 0192 2DE2              ldi R18,45
- 0194 0A2D              mov R16,R10
- 0196 0E940000          xcall _lcd_write_char_con
- 019A                   .dbline 184
- 019A           ;        //月
- 019A           ;        time_cacah=Read1307(0x05);
- 019A 05E0              ldi R16,5
- 019C B4DF              xcall _Read1307
- 019E 402F              mov R20,R16
- 01A0                   .dbline 185
- 01A0           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x01));
- 01A0 242F              mov R18,R20
- 01A2 2295              swap R18
- 01A4 2F70              andi R18,#0x0F
- 01A6 2170              andi R18,1
- 01A8 2063              ori R18,48
- 01AA 0A2D              mov R16,R10
- 01AC 0E940000          xcall _lcd_write_char_con
- 01B0                   .dbline 186
- 01B0           ;      lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
- 01B0 242F              mov R18,R20
- 01B2 2F70              andi R18,15
- 01B4 2063              ori R18,48
- 01B6 0A2D              mov R16,R10
- 01B8 0E940000          xcall _lcd_write_char_con
- 01BC                   .dbline 187
- 01BC           ;        lcd_write_char_con(y,'-');
- 01BC 2DE2              ldi R18,45
- 01BE 0A2D              mov R16,R10
- 01C0 0E940000          xcall _lcd_write_char_con
- 01C4                   .dbline 189
- 01C4           ;        //日
- 01C4           ;        time_cacah=Read1307(0x04);
- 01C4 04E0              ldi R16,4
- 01C6 9FDF              xcall _Read1307
- 01C8 C02E              mov R12,R16
- 01CA 4C2D              mov R20,R12
- 01CC                   .dbline 190
- 01CC           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x03));
- 01CC 242F              mov R18,R20
- 01CE 2295              swap R18
- 01D0 2F70              andi R18,#0x0F
- 01D2 2370              andi R18,3
- 01D4 2063              ori R18,48
- 01D6 0A2D              mov R16,R10
- 01D8 0E940000          xcall _lcd_write_char_con
- 01DC                   .dbline 191
- 01DC           ;      lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
- 01DC 242F              mov R18,R20
- 01DE 2F70              andi R18,15
+ 0198           _showTime_page::
+ 0198 0E940000          xcall push_xgset303C
+ 019C 5801              movw R10,R16
+ 019E                   .dbline -1
+ 019E                   .dbline 160
+ 019E           ;    
+ 019E           ; }
+ 019E           ; //显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写
+ 019E           ; void showTime_page(uint y){
+ 019E                   .dbline 164
+ 019E           ;    //PORTE=~Read1302(0x81);
+ 019E           ;    uchar time_cacah;
+ 019E           ;  //年
+ 019E           ;     time_cacah=Read1307(0x06);
+ 019E 06E0              ldi R16,6
+ 01A0 B2DF              xcall _Read1307
+ 01A2 402F              mov R20,R16
+ 01A4                   .dbline 165
+ 01A4           ;     lcd_write_str_con(y, "20");
+ 01A4 20E0              ldi R18,<L26
+ 01A6 30E0              ldi R19,>L26
+ 01A8 0A2D              mov R16,R10
+ 01AA 0E940000          xcall _lcd_write_str_con
+ 01AE                   .dbline 166
+ 01AE           ;     lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x0F));
+ 01AE 242F              mov R18,R20
+ 01B0 2295              swap R18
+ 01B2 2F70              andi R18,#0x0F
+ 01B4 2F70              andi R18,15
+ 01B6 2063              ori R18,48
+ 01B8 0A2D              mov R16,R10
+ 01BA 0E940000          xcall _lcd_write_char_con
+ 01BE                   .dbline 167
+ 01BE           ;     lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
+ 01BE 242F              mov R18,R20
+ 01C0 2F70              andi R18,15
+ 01C2 2063              ori R18,48
+ 01C4 0A2D              mov R16,R10
+ 01C6 0E940000          xcall _lcd_write_char_con
+ 01CA                   .dbline 168
+ 01CA           ;       lcd_write_char_con(y,'-');
+ 01CA 2DE2              ldi R18,45
+ 01CC 0A2D              mov R16,R10
+ 01CE 0E940000          xcall _lcd_write_char_con
+ 01D2                   .dbline 170
+ 01D2           ;        //月
+ 01D2           ;        time_cacah=Read1307(0x05);
+ 01D2 05E0              ldi R16,5
+ 01D4 98DF              xcall _Read1307
+ 01D6 402F              mov R20,R16
+ 01D8                   .dbline 171
+ 01D8           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x01));
+ 01D8 242F              mov R18,R20
+ 01DA 2295              swap R18
+ 01DC 2F70              andi R18,#0x0F
+ 01DE 2170              andi R18,1
  01E0 2063              ori R18,48
  01E2 0A2D              mov R16,R10
  01E4 0E940000          xcall _lcd_write_char_con
- 01E8                   .dbline 192
- 01E8           ;        lcd_write_char_con(y,' ');
- 01E8 20E2              ldi R18,32
- 01EA 0A2D              mov R16,R10
- 01EC 0E940000          xcall _lcd_write_char_con
- 01F0                   .dbline 194
- 01F0           ;       //时
- 01F0           ;       time_cacah=Read1307(0x02);
- 01F0 02E0              ldi R16,2
- 01F2 89DF              xcall _Read1307
- 01F4 C02E              mov R12,R16
- 01F6 4C2D              mov R20,R12
- 01F8                   .dbline 195
- 01F8           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x03));
- 01F8 242F              mov R18,R20
- 01FA 2295              swap R18
- 01FC 2F70              andi R18,#0x0F
- 01FE 2370              andi R18,3
- 0200 2063              ori R18,48
- 0202 0A2D              mov R16,R10
- 0204 0E940000          xcall _lcd_write_char_con
- 0208                   .dbline 196
- 0208           ;        lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
- 0208 242F              mov R18,R20
- 020A 2F70              andi R18,15
+ 01E8                   .dbline 172
+ 01E8           ;      lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
+ 01E8 242F              mov R18,R20
+ 01EA 2F70              andi R18,15
+ 01EC 2063              ori R18,48
+ 01EE 0A2D              mov R16,R10
+ 01F0 0E940000          xcall _lcd_write_char_con
+ 01F4                   .dbline 173
+ 01F4           ;        lcd_write_char_con(y,'-');
+ 01F4 2DE2              ldi R18,45
+ 01F6 0A2D              mov R16,R10
+ 01F8 0E940000          xcall _lcd_write_char_con
+ 01FC                   .dbline 175
+ 01FC           ;        //日
+ 01FC           ;        time_cacah=Read1307(0x04);
+ 01FC 04E0              ldi R16,4
+ 01FE 83DF              xcall _Read1307
+ 0200 6801              movw R12,R16
+ 0202 4C2D              mov R20,R12
+ 0204                   .dbline 176
+ 0204           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x03));
+ 0204 242F              mov R18,R20
+ 0206 2295              swap R18
+ 0208 2F70              andi R18,#0x0F
+ 020A 2370              andi R18,3
  020C 2063              ori R18,48
  020E 0A2D              mov R16,R10
  0210 0E940000          xcall _lcd_write_char_con
- 0214                   .dbline 197
- 0214           ;        lcd_write_char_con(y,':');
- 0214 2AE3              ldi R18,58
- 0216 0A2D              mov R16,R10
- 0218 0E940000          xcall _lcd_write_char_con
- 021C                   .dbline 199
- 021C           ;       //分
- 021C           ;       time_cacah=Read1307(0x01);
- 021C 01E0              ldi R16,1
- 021E 73DF              xcall _Read1307
- 0220 C02E              mov R12,R16
- 0222 4C2D              mov R20,R12
- 0224                   .dbline 200
- 0224           ;        lcd_write_char_con(y, 0x30|time_cacah>>4);
- 0224 242F              mov R18,R20
- 0226 2295              swap R18
- 0228 2F70              andi R18,#0x0F
- 022A 2063              ori R18,48
- 022C 0A2D              mov R16,R10
- 022E 0E940000          xcall _lcd_write_char_con
- 0232                   .dbline 201
- 0232           ;        lcd_write_char_con(y,0x30|(time_cacah&0x0F));
- 0232 242F              mov R18,R20
- 0234 2F70              andi R18,15
- 0236 2063              ori R18,48
- 0238 0A2D              mov R16,R10
- 023A 0E940000          xcall _lcd_write_char_con
- 023E                   .dbline 202
- 023E           ;        lcd_write_char_con(y,':');
- 023E 2AE3              ldi R18,58
- 0240 0A2D              mov R16,R10
- 0242 0E940000          xcall _lcd_write_char_con
- 0246                   .dbline 204
- 0246           ;       //秒
- 0246           ;       time_cacah=Read1307(0x00);
- 0246 0027              clr R16
- 0248 5EDF              xcall _Read1307
- 024A C02E              mov R12,R16
- 024C 4C2D              mov R20,R12
- 024E                   .dbline 205
- 024E           ;        lcd_write_char_con(y, 0x30|(time_cacah>>4));
- 024E 242F              mov R18,R20
- 0250 2295              swap R18
- 0252 2F70              andi R18,#0x0F
- 0254 2063              ori R18,48
- 0256 0A2D              mov R16,R10
- 0258 0E940000          xcall _lcd_write_char_con
- 025C                   .dbline 206
- 025C           ;        lcd_write_char_con(y,0x30|(time_cacah &0x0F));
+ 0214                   .dbline 177
+ 0214           ;      lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
+ 0214 242F              mov R18,R20
+ 0216 2F70              andi R18,15
+ 0218 2063              ori R18,48
+ 021A 0A2D              mov R16,R10
+ 021C 0E940000          xcall _lcd_write_char_con
+ 0220                   .dbline 178
+ 0220           ;        lcd_write_char_con(y,' ');
+ 0220 20E2              ldi R18,32
+ 0222 0A2D              mov R16,R10
+ 0224 0E940000          xcall _lcd_write_char_con
+ 0228                   .dbline 180
+ 0228           ;       //时
+ 0228           ;       time_cacah=Read1307(0x02);
+ 0228 02E0              ldi R16,2
+ 022A 6DDF              xcall _Read1307
+ 022C 6801              movw R12,R16
+ 022E 4C2D              mov R20,R12
+ 0230                   .dbline 181
+ 0230           ;        lcd_write_char_con(y, 0x30|((time_cacah>>4)&0x03));
+ 0230 242F              mov R18,R20
+ 0232 2295              swap R18
+ 0234 2F70              andi R18,#0x0F
+ 0236 2370              andi R18,3
+ 0238 2063              ori R18,48
+ 023A 0A2D              mov R16,R10
+ 023C 0E940000          xcall _lcd_write_char_con
+ 0240                   .dbline 182
+ 0240           ;        lcd_write_char_con(y,0x30|(time_cacah&0x0F)); 
+ 0240 242F              mov R18,R20
+ 0242 2F70              andi R18,15
+ 0244 2063              ori R18,48
+ 0246 0A2D              mov R16,R10
+ 0248 0E940000          xcall _lcd_write_char_con
+ 024C                   .dbline 183
+ 024C           ;        lcd_write_char_con(y,':');
+ 024C 2AE3              ldi R18,58
+ 024E 0A2D              mov R16,R10
+ 0250 0E940000          xcall _lcd_write_char_con
+ 0254                   .dbline 185
+ 0254           ;       //分
+ 0254           ;       time_cacah=Read1307(0x01);
+ 0254 01E0              ldi R16,1
+ 0256 57DF              xcall _Read1307
+ 0258 6801              movw R12,R16
+ 025A 4C2D              mov R20,R12
+ 025C                   .dbline 186
+ 025C           ;        lcd_write_char_con(y, 0x30|time_cacah>>4);
  025C 242F              mov R18,R20
- 025E 2F70              andi R18,15
- 0260 2063              ori R18,48
- 0262 0A2D              mov R16,R10
- 0264 0E940000          xcall _lcd_write_char_con
- 0268                   .dbline -2
- 0268           L32:
- 0268                   .dbline 0 ; func end
- 0268 0C940000          xjmp pop_xgset303C
- 026C                   .dbsym r time_cacah 20 c
- 026C                   .dbsym r y 10 i
- 026C                   .dbend
+ 025E 2295              swap R18
+ 0260 2F70              andi R18,#0x0F
+ 0262 2063              ori R18,48
+ 0264 0A2D              mov R16,R10
+ 0266 0E940000          xcall _lcd_write_char_con
+ 026A                   .dbline 187
+ 026A           ;        lcd_write_char_con(y,0x30|(time_cacah&0x0F));
+ 026A 242F              mov R18,R20
+ 026C 2F70              andi R18,15
+ 026E 2063              ori R18,48
+ 0270 0A2D              mov R16,R10
+ 0272 0E940000          xcall _lcd_write_char_con
+ 0276                   .dbline 188
+ 0276           ;        lcd_write_char_con(y,':');
+ 0276 2AE3              ldi R18,58
+ 0278 0A2D              mov R16,R10
+ 027A 0E940000          xcall _lcd_write_char_con
+ 027E                   .dbline 190
+ 027E           ;       //秒
+ 027E           ;       time_cacah=Read1307(0x00);
+ 027E 0027              clr R16
+ 0280 42DF              xcall _Read1307
+ 0282 6801              movw R12,R16
+ 0284 4C2D              mov R20,R12
+ 0286                   .dbline 191
+ 0286           ;        lcd_write_char_con(y, 0x30|(time_cacah>>4));
+ 0286 242F              mov R18,R20
+ 0288 2295              swap R18
+ 028A 2F70              andi R18,#0x0F
+ 028C 2063              ori R18,48
+ 028E 0A2D              mov R16,R10
+ 0290 0E940000          xcall _lcd_write_char_con
+ 0294                   .dbline 192
+ 0294           ;        lcd_write_char_con(y,0x30|(time_cacah &0x0F));
+ 0294 242F              mov R18,R20
+ 0296 2F70              andi R18,15
+ 0298 2063              ori R18,48
+ 029A 0A2D              mov R16,R10
+ 029C 0E940000          xcall _lcd_write_char_con
+ 02A0                   .dbline -2
+ 02A0           L25:
+ 02A0                   .dbline 0 ; func end
+ 02A0 0C940000          xjmp pop_xgset303C
+ 02A4                   .dbsym r time_cacah 20 c
+ 02A4                   .dbsym r y 10 i
+ 02A4                   .dbend
+                        .area vector(rom, abs)
+                        .org 12
+ 000C 0C945201          jmp _int_int2
+                        .area text(rom, con, rel)
+ 02A4                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
+ 02A4                   .dbfunc e int_int2 _int_int2 fV
+                        .even
+ 02A4           _int_int2::
+ 02A4 2A92              st -y,R2
+ 02A6 8A93              st -y,R24
+ 02A8 2FB6              IN R2,63
+ 02AA 2A92              st -y,R2
+ 02AC                   .dbline -1
+ 02AC                   .dbline 197
+ 02AC           ; }
+ 02AC           ; 
+ 02AC           ; //中断1s进入，使用int2。可以使用，但是买的这个DS1307，硬件电路问题不可以使用
+ 02AC           ; #pragma interrupt_handler int_int2:4
+ 02AC           ; void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
+ 02AC                   .dbline 199
+ 02AC           ; 
+ 02AC           ;   PORTE=~PORTE;
+ 02AC 23B0              in R2,0x3
+ 02AE 2094              com R2
+ 02B0 23B8              out 0x3,R2
+ 02B2                   .dbline 200
+ 02B2           ;   EIMSK &= ~(0x04);//关中断2
+ 02B2 89B7              in R24,0x39
+ 02B4 8B7F              andi R24,251
+ 02B6 89BF              out 0x39,R24
+ 02B8                   .dbline 202
+ 02B8           ;   
+ 02B8           ;   EIMSK |= 0x04;//开中断2  
+ 02B8 89B7              in R24,0x39
+ 02BA 8460              ori R24,4
+ 02BC 89BF              out 0x39,R24
+ 02BE                   .dbline -2
+ 02BE           L27:
+ 02BE                   .dbline 0 ; func end
+ 02BE 2990              ld R2,y+
+ 02C0 2FBE              OUT 63,R2
+ 02C2 8991              ld R24,y+
+ 02C4 2990              ld R2,y+
+ 02C6 1895              reti
+ 02C8                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
  0000           _BP::
@@ -814,23 +805,13 @@
  0001                   .dbsym e BP _BP c
                         .area data(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
- 0000           L33:
+ 0000           L26:
  0000                   .blkb 3
                         .area idata
  0000 323000            .byte 50,48,0
                         .area data(ram, con, rel)
  0003                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
  0003           ; }
- 0003           ; 
- 0003           ; /*中断1s进入，使用int1
- 0003           ; #pragma interrupt_handler int_int2:4
- 0003           ; void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
- 0003           ; 
- 0003           ;   PORTE=~PORTE;
- 0003           ;   EIMSK &= ~(0x04);//关中断2
- 0003           ;   
- 0003           ;   EIMSK |= 0x04;//开中断2  
- 0003           ; }*/
  0003           ; 
  0003           ; 
  0003           ; 

@@ -3,6 +3,9 @@
 #include "time.h"
 #include "lcd.h"
 #include "delay.h"
+#include "main.h"
+#include "temp.h"
+#include "out.h"
 unsigned char time_h_1, time_l_1,time_h_3, time_l_3,time_0, time_2,i;
 //************************************************
 //16位定时器，定时器1
@@ -40,7 +43,7 @@ void Timerinit_3(uchar time_h,uchar time_l){
 	//普通计数，1024分频
     TCCR3A=0x00;
     TCCR3B=0x05;
-	ETIMSK |=0x04;//开外部中断1
+	ETIMSK |=0x04;//开外部中断
 }
 //************************************************
 //8位定时器，定时器0
@@ -56,6 +59,7 @@ void Timerinit_0(uchar time){
     TCNT0=time;
 	TIMSK|=0x01;//开定时器0溢出中断,8位的
 	 TCCR0=0x07;//普通计数，1024分频
+	 
 }
 //************************************************
 //8位定时器，定时器2
@@ -75,24 +79,20 @@ void Timerinit_2(uchar time){
 #pragma interrupt_handler int_timer0:17
 void int_timer0(void){ 
 		TCCR0=0x00;
-		//adc_init_once();
-		for(i=0;i<5;i++){
-  		 lcd_write_char(0x01,3,0x30+i);	
-		 delay_ms(100);		
-        }
-		TCNT0=time_0;
-		TCCR0=0x07;
+		waitflag--;
+	lcd_write_char(10,0,0x30+(waitflag/100));
+	lcd_write_char(11,0,'s');	
+	if(waitflag>1){
+	   TCNT0=0x00;
+	   TCCR0=0x07;
+	 }
 		return;
 }
 //溢出中断。
 #pragma interrupt_handler int_timer1:15
 void int_timer1(void){
 		 TCCR1B=0x00;
-		//adc_init_once();
-		for(i=0;i<5;i++){
-  		 lcd_write_char(0x03,3,0x30+i);	
-		 delay_ms(100);		
-        }
+		 out_port();
 		TCNT1H=time_h_1;
          TCNT1L=time_l_1;
 		 TCCR1B=0x05;
@@ -113,12 +113,9 @@ void int_timer2(void){
 //16位定时器，定时器3溢出中断。
 #pragma interrupt_handler int_timer3:30
 void int_timer3(void){
-    TCCR1B=0x00;
-     for(i=0;i<5;i++){
-  		 lcd_write_char(0x02,3,0x30+i);	
-		 delay_ms(100);		
-        }
-	TCNT3H=time_h_3;
-    TCNT3L=time_l_3;
-	 TCCR1B=0x05;
+      TCCR3B=0x00;
+      tempcontrol();//执行温度调节
+	  TCNT3H=time_h_3;
+      TCNT3L=time_l_3;
+      TCCR3B=0x05;
 }

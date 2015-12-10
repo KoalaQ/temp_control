@@ -1,0 +1,4 @@
+                        .module pidcontrol.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile pidcontrol.c
+ 0000           ; #include<iom128v.h>

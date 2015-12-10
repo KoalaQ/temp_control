@@ -3,190 +3,230 @@ All other addresses (including ones in FLASH) are byte addresses
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                           idata   008C   0697 =   1687. bytes (rel,con,rom)
+                             lit   008C   0018 =     24. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       008C  __idata_start
-       0723  __idata_end
+       008C  __lit_start
+       00A4  __lit_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0724   3D62 =  15714. bytes (rel,con,rom)
+                           idata   00A4   075E =   1886. bytes (rel,con,rom)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0392  __start
-       0392  __text_start
-       03B4  _exit
-       03B5  _delay_us
-       03BF  _delay_ms
-       03CF  _delay_s
-       03DF  _KeyInit
-       03E0  _KeyScan
-       04AD  _KeyScan_once
-       04CC  _lcd_bz_1
-       04F2  _lcd_wcmd_1
-       0518  _lcd_wdat_1
-       053E  _lcd_clear_1
-       0544  _lcd_bz_2
-       056A  _lcd_wcmd_2
-       0590  _lcd_wdat_2
-       05B6  _lcd_clear_2
-       05B8  _lcd_write_char_con
-       05CC  _lcd_write_pos
-       05EA  _lcd_write_char
-       0610  _lcd_write_str
-       065A  _lcd_write_str_con
-       067D  _read_ac_1
-       06A2  _read_ac_2
-       06C7  _lcd_clear
-       06C9  _date_cmd_1
-       06ED  _date_cmd_2
-       0711  _read_data_xy
-       0746  _read_data_1
-       074D  _read_data_2
-       0754  _lcd_init
-       0781  _cur_set
-       07BD  _Set_Draw
-       07C1  _Set_UNDraw
-       07C5  _Set_White_off
-       0835  _Set_White
-       08A5  _Draw_Pic
-       08F6  _lcd_Desk
-       0928  _main
-       095A  _Timerinit_1
-       0969  _Timerinit_3
-       097F  _Timerinit_0
-       0988  _Timerinit_2
-       0991  _int_timer0
-       09DF  _int_timer1
-       0A30  _int_timer2
-       0A7E  _int_timer3
-       0AD1  _readTemp_1
-       0B33  _readTemp_2
-       0B95  _readTemp_3
-       0C11  _readTemp_4
-       0C8D  _readOC
-       0C93  _out_all
-       0C97  _out_port
-       0CBE  _read_port
-       0CCE  _init_USART1
-       0CDA  _put_c1
-       0CDE  _USART_Receive1
-       0CF3  _receiveStrfromCom
-       0D38  _outStrtoCom
-       0D4C  _MAC_CalCrc16
-       0D78  _MAC_CheckCrc16
-       0D9D  _ComSendResponse
-       0DD6  _EEPROM_write
-       0DED  _EEPROM_read
-       0E03  _pageTime
-       0E16  _pageTime2
-       0E1F  _page1
-       1199  _page2
-       126D  _page3
-       142F  _page4_data
-       15D3  _page4_ac
-       16AD  _page4
-       1975  _page5
-       1A9A  _page6
-       1ADB  _page7
-       1B7B  _page8
-       1D9E  _page9
-       1DD4  _dispatchPages
-       1E33  _tempdata_init
-       1E6A  _data_recover
-       1EBC  _set_temp_data
-       1F24  _reset_temp_data
-       1F73  _set_all_start
-       1FAF  _set_all_stop
-       1FEB  _set_start
-       201F  _set_stop
-       2053  _I2C_start
-       2060  _I2C_stop
-       206D  _I2C_send_ack
-       2075  _I2C_send_noack
-       207D  _I2C_write_byte
-       20AF  _I2C_read_byte
-       20C7  _Write1307
-       20D6  _Read1307
-       20E7  _getYear
-       20EA  _getMonth
-       20ED  _getDay
-       20F0  _getWeek
-       20F3  _getHour
-       20F6  _getMinute
-       20F9  _getSecond
-       20FC  _setTime
-       20FD  _Initial_time
-       2103  _showTime_page
-       2189  push_arg4
-       218B  push_arg2
-       218E  mod16u
-       2190  div16u
-       2191  xdiv16u
-       21AA  empy16s
-       21BA  pop_xgset003C
-       21BF  pop_xgset00FC
-       21C6  pop_xgsetF0FC
-       21D1  push_xgsetF0FC
-       21D3  push_xgset30FC
-       21D5  push_xgset00FC
-       21D7  push_xgset003C
-       21DC  push_xgset300C
-       21E1  pop_xgset300C
-       21E6  push_xgsetF000
-       21EB  pop_xgsetF000
-       21F0  push_xgsetF00C
-       21F7  pop_xgsetF00C
-       21FE  push_xgset303C
-       2205  pop_xgset303C
-       220C  push_xgsetF03C
-       2215  pop_xgsetF03C
-       221E  lsl16
-       2225  lsl8
-       222B  asgnblk
-       2243  __text_end
+       00A4  __idata_start
+       0802  __idata_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0100   0697 =   1687. bytes (rel,con,ram)
+                            text   0802   5080 =  20608. bytes (rel,con,rom)
+
+       Addr  Global Symbol
+      -----  --------------------------------
+       0401  __text_start
+       0401  __start
+       0423  _exit
+       0424  _delay_us
+       042E  _delay_ms
+       043E  _delay_s
+       044E  _KeyInit
+       044F  _KeyScan
+       051C  _KeyScan_once
+       053B  _lcd_bz_1
+       0561  _lcd_wcmd_1
+       0587  _lcd_wdat_1
+       05AD  _lcd_clear_1
+       05B3  _lcd_bz_2
+       05D9  _lcd_wcmd_2
+       05FF  _lcd_wdat_2
+       0625  _lcd_clear_2
+       0627  _lcd_write_char_con
+       063B  _lcd_write_pos
+       0659  _lcd_write_char
+       067F  _lcd_write_str
+       06C9  _lcd_write_str_con
+       06EC  _read_ac_1
+       0711  _read_ac_2
+       0736  _lcd_clear
+       0738  _date_cmd_1
+       075C  _date_cmd_2
+       0780  _read_data_xy
+       07B5  _read_data_1
+       07BC  _read_data_2
+       07C3  _lcd_init
+       07F0  _cur_set
+       082C  _Set_Draw
+       0830  _Set_UNDraw
+       0834  _Set_White_off
+       08A4  _Set_White
+       0914  _Draw_Pic
+       0965  _lcd_Desk
+       0997  _main
+       09DC  _Timerinit_1
+       09EB  _Timerinit_3
+       0A01  _Timerinit_0
+       0A0A  _Timerinit_2
+       0A13  _int_timer0
+       0A6C  _int_timer1
+       0AA5  _int_timer2
+       0AF3  _int_timer3
+       0B30  _readTemp_1
+       0BA1  _readTemp_2
+       0C1A  _readTemp_3
+       0CAB  _readTemp_4
+       0D52  _readTemp
+       0D7C  _out_port
+       0E28  _init_USART1
+       0E34  _put_c1
+       0E38  _USART_Receive1
+       0E4D  _receiveStrfromCom
+       0E92  _outStrtoCom
+       0EA6  _MAC_CalCrc16
+       0ED2  _MAC_CheckCrc16
+       0EF7  _ComSendResponse
+       0F30  _EEPROM_write
+       0F47  _EEPROM_read
+       0F5D  _pageTime
+       0F70  _pageTime2
+       0F79  _page1
+       1351  _page2
+       1475  _page3
+       16CA  _page4_data
+       186E  _page4_ac
+       1948  _page4
+       1C10  _page5
+       1D35  _page6
+       1D76  _page7
+       1E16  _page8
+       21B0  _page9
+       21EB  _dispatchPages
+       224B  _tempcontrol
+       2390  _tempdata_init
+       24A2  _data_recover
+       24F4  _set_temp_data
+       2540  _reset_temp_data
+       2585  _set_all_start
+       25B6  _set_all_stop
+       25E7  _set_start
+       2610  _set_stop
+       2639  _PID_realize
+       272F  _I2C_start
+       273C  _I2C_stop
+       2749  _I2C_send_ack
+       2751  _I2C_send_noack
+       2759  _I2C_write_byte
+       278B  _I2C_read_byte
+       27A3  _Write1307
+       27B2  _Read1307
+       27C6  _setTime
+       27EA  _Initial_time
+       27FB  _showTime_page
+       2881  _int_int2
+       2893  push_arg4
+       2895  push_arg2
+       2898  asr16
+       289F  mod16s
+       28A3  div16s
+       28BD  mod16u
+       28BF  div16u
+       28C0  xdiv16u
+       28D9  elpm32
+       28ED  empy16s
+       28FD  pop_xgset003C
+       2902  pop_xgset00FC
+       2909  pop_xgsetF0FC
+       2914  push_xgsetF0FC
+       2916  push_xgset30FC
+       2918  push_xgset00FC
+       291A  push_xgset003C
+       291F  push_xgset300C
+       2924  pop_xgset300C
+       2929  push_xgsetF000
+       292E  pop_xgsetF000
+       2933  push_xgsetF00C
+       293A  pop_xgsetF00C
+       2941  push_xgset303C
+       2948  pop_xgset303C
+       294F  push_xgsetF03C
+       2958  pop_xgsetF03C
+       2961  neg32
+       296A  lsl16
+       2971  lsl8
+       2977  asgnblk
+       298F  fpsub
+       2991  fpadd
+       2992  fpadd_alt
+       29F9  fpadd1x
+       2A06  fpadd2
+       2A11  fpsub1
+       2A1B  fpsub2
+       2A26  fpsub1x
+       2A33  fpint
+       2A65  uint2fp
+       2A67  int2fp
+       2A70  ulong2fp
+       2A72  long2fp
+       2A89  fpdiv1
+       2A92  fpdiv2
+       2A9C  fpdiv1x
+       2AA8  fpdiv2x
+       2B23  unpacks
+       2B2B  tstR16_R19
+       2B33  unpacku
+       2B4C  normalize_and_pack
+       2B81  pack
+       2B91  saveFPRegs
+       2BA0  restoreFPRegs
+       2BAF  fpmule
+       2C02  fpmule2
+       2C0D  fpmule1x
+       2C1A  fpmule2x
+       2C28  fpcmp
+       2C35  fpcmp2
+       2C41  __text_end
+
+Area                               Addr   Size   Decimal Bytes (Attributes)
+--------------------------------   ----   ----   ------- ----- ------------
+                            data   0100   075E =   1886. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0100  _key_value
        0100  __data_start
-       0110  _temp_h
-       0112  _temp_l
-       0114  _temps
-       0797  __data_end
+       0110  _waitflag
+       0112  _temp_h
+       0114  _temp_l
+       0116  _temps
+       05FE  _hz
+       085E  __data_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                             bss   0797   04CC =   1228. bytes (rel,con,ram)
+                             bss   085E   04CC =   1228. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0797  _receive_len
-       0797  __bss_start
-       0799  _send_len
-       079B  _receive_buf
-       09F3  _send_buf
-       0C4B  _prePageNum
-       0C4D  _pageParam
-       0C57  _pageNum
-       0C59  _i
-       0C5A  _time_2
-       0C5B  _time_0
-       0C5C  _time_l_3
-       0C5D  _time_h_3
-       0C5E  _time_l_1
-       0C5F  _time_h_1
-       0C60  _uart_timeout_flag2
-       0C61  _uart_timeout_flag1
-       0C62  _BP
-       0C63  __bss_end
+       085E  _receive_len
+       085E  __bss_start
+       0860  _send_len
+       0862  _receive_buf
+       0ABA  _send_buf
+       0D12  _prePageNum
+       0D14  _pageParam
+       0D1E  _pageNum
+       0D20  _i
+       0D21  _time_2
+       0D22  _time_0
+       0D23  _time_l_3
+       0D24  _time_h_3
+       0D25  _time_l_1
+       0D26  _time_h_1
+       0D27  _uart_timeout_flag2
+       0D28  _uart_timeout_flag1
+       0D29  _BP
+       0D2A  __bss_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -207,8 +247,10 @@ eeprom.o	[ eeprom.c ]
 pages.o	[ pages.c ]
 temp.o	[ temp.c ]
 time1307.o	[ time1307.c ]
-<library>	[ asave.s, div16u.s, emul16s.s, gpop2.s, gpop3.s, gpop5.s, gpush.s, gpushx.s, gpushy.s, gpushz.s, gpusha.s ]
-[ gpushb.s, lsl16.s, lsl8.s, struct.s ]
+<library>	[ asave.s, asr16.s, div16s.s, div16u.s, elpm32.s, emul16s.s, gpop2.s, gpop3.s, gpop5.s, gpush.s, gpushx.s ]
+[ gpushy.s, gpushz.s, gpusha.s, gpushb.s, lneg.s, lsl16.s, lsl8.s, struct.s, fpadd.s, fpadd1x.s, fpadd2.s ]
+[ fpsub1.s, fpsub2.s, fpsub1x.s, fpint.s, int2fp.s, fpdiv_new.s, fputil.s, fpmule.s, fpmule2.s, fpmule1x.s ]
+[ fpmule2x.s, fpcmp.s, fpcmp2.s ]
 
 User Global Definitions
 

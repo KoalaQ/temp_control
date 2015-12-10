@@ -1,0 +1,15 @@
+#include<iom128v.h>
+#include "out.h"
+uint i=100;
+
+//0、1的传入。port由0~7
+void out_port(){
+   i--;
+   if(i==0){
+     PORTE=~PORTE;
+	 i=100
+   }
+}
+uint read_port(uint port){
+  return PINC&(1<<port);
+}

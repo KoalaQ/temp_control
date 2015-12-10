@@ -10,8 +10,8 @@
 #include "pages.h"
 #include "temp.h"
 //const unsigned char nihao[1536]={};
-
-//下面两个要删掉，现在为编译暂时不删
+unsigned int waitflag=1000;//确认恢复的等待标记，初始为10，如果为0代表到时
+//下面两个继续使用。暂时保存数据使用
  unsigned int temp_h=0;
  unsigned int temp_l=0;
  //uart需要参数
@@ -47,9 +47,14 @@ uint i;
 	 Set_White_off(1,1,12);
 	 Set_White_off(1,2,12);
 	 Set_White_off(1,3,12);
-	 
+	 //测试使用
+	   temp_l=0x50;
+      temp_h=0x12;
 	  tempdata_init();//数据初始化，清空
-        Initial_time(); //初始化时间的
+      Initial_time(); //初始化时间的
+	  Timerinit_3(0xF0,0x00);//使用16位的定时器3来读取温度和pid算法
+	  Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
+	  
 	 while(1){
      dispatchPages();
   }

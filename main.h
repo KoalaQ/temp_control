@@ -6,6 +6,7 @@
 #define uint unsigned int
 extern  unsigned int temp_h;
 extern  unsigned int temp_l;
+extern  unsigned int waitflag;
 extern  unsigned int pageNum;
 extern  unsigned int pageParam[5];
 extern  unsigned int prePageNum;
@@ -19,8 +20,20 @@ extern  unsigned int prePageNum;
         unsigned int flag;
         unsigned int temp_data[132];  //阶段设置的参数
 		//当前运行的状态，0是阶段，1：温度，2、3、4 对应时分秒
-       // unsigned int status[4];
-		//unsigned int pid[4];  //PID 算法需要的参数
+        unsigned int status[4];
+		 unsigned int inc_temp;
+		 unsigned int now_need_temp;
+	  //PID 算法需要的参数
+	  float  settemp;
+	  float actualtemp;
+	  float err;
+	  float err_last;
+	  float err_next;
+	  float Kp;
+	  float Ki;
+	  float Kd;
+	  float incrementtemp;
+	  
 };
 //全局变量，温度
 extern struct temp temps[4];
