@@ -388,10 +388,12 @@ void page1(void){
  void page3(void){
   uint cur=0;
    uchar keyV;
+   uint timecache;
    lcd_write_str(0,0,"T");
     lcd_write_char_con(0,0x30 | (pageParam[0]+1));
 	lcd_write_char_con(0,':');
    lcd_write_str(1,1,"ÎÂ¶È:");
+   lcd_write_str(7,1,"Ä¿±ê:");
    lcd_write_str(1,2,"×´Ì¬:");
    lcd_write_str(0,3,"±à¼­");
    lcd_write_str(3,3,"ÔËÐÐ");
@@ -405,11 +407,6 @@ void page1(void){
 	//Ð´ÎÂ¶È
 	if(temps[pageParam[0]].flag!=2){
 	  lcd_write_pos(4,1);
-	  if(temps[pageParam[0]].actualtemp==0){
-	     PORTE=0x0a;
-	  }else{
-	    PORTE=0xa0;
-	  }
 	  lcd_write_char_con(1,0x30 | ((int)temps[pageParam[0]].actualtemp)/100);
 	  lcd_write_char_con(1,0x30 | (((int)temps[pageParam[0]].actualtemp)/10)%10);
 	  lcd_write_char_con(1,0x30 | ((int)temps[pageParam[0]].actualtemp)%10);
@@ -425,7 +422,48 @@ void page1(void){
 		   break;
 		 case 1:
 		   //Ð´×´Ì¬
-		   lcd_write_str_con(2,"Ð´×´Ì¬");
+		   lcd_write_str(9,1,"");
+		   lcd_write_char_con(1,0xA1);
+           lcd_write_char_con(1,0xE6);
+		   timecache=temps[pageParam[0]].status;
+		   if(timecache>18){
+		         lcd_write_char_con(2,0x30 | (((timecache-1)>>1)+1)/10);
+		         lcd_write_char_con(2,0x30 | (((timecache-1)>>1)+1)%10);
+		      }else{
+		         lcd_write_char_con(2,0x30 | (((timecache-1)>>1)+1));
+				  lcd_write_char_con(2,' ');
+		    }
+			 lcd_write_char_con(2,':');
+			 lcd_write_char_con(2,' ');
+		   if(timecache & 0x01){
+		       lcd_write_str_con(2,"ÉýÎÂ");
+                timecache=temps[pageParam[0]].p_settemp;
+		   }else{
+		       lcd_write_str_con(2,"ºãÎÂ");
+               timecache=temps[pageParam[0]].settemp;
+		   }
+		   lcd_write_char(9,1,0x30 | timecache/100);
+		   lcd_write_char_con(1,0x30 | (timecache/10)%10);
+		   lcd_write_char_con(1,0x30 | timecache%10);
+		   lcd_write_char_con(2,' ');
+		   lcd_write_char_con(1,0xA1);
+           lcd_write_char_con(1,0xE6);
+		   lcd_write_pos(8,2);
+		   timecache=temps[pageParam[0]].nowtime;
+		   timecache/=3600;
+		    lcd_write_char_con(2,0x30 | timecache/10);
+			lcd_write_char_con(2,0x30 | timecache%10);
+			lcd_write_char_con(2,':');
+			timecache=temps[pageParam[0]].nowtime;
+		    timecache/=60;
+			timecache%=60;
+			lcd_write_char_con(2,0x30 | timecache/10);
+			lcd_write_char_con(2,0x30 | timecache%10);
+		    lcd_write_char_con(2,':');
+			timecache=temps[pageParam[0]].nowtime;
+		    timecache%=60;
+			lcd_write_char_con(2,0x30 |  timecache/10);
+			lcd_write_char_con(2,0x30 |  timecache%10);
 		   break;
 		 case 2:
 		   lcd_write_str_con(2,"¹ÊÕÏ");
@@ -503,6 +541,7 @@ void page1(void){
 		     break;
 		   case 2:
 		     //ÔÝÍ£²Ù×÷
+			  lcd_write_str(4,2,"                ");
 			 set_stop(pageParam[0]);
 		     break;
 		  case 3:

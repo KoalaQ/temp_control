@@ -1,5 +1,5 @@
 XL
-H 5 areas 16 global symbols
+H 4 areas 15 global symbols
 M time1307.c
 S push_xgset303C Ref0000
 S push_xgsetF0FC Ref0000
@@ -10,7 +10,7 @@ S pop_xgset303C Ref0000
 S _delay_us Ref0000
 S _lcd_write_char_con Ref0000
 S pop_xgsetF0FC Ref0000
-A text size 2C8 flags 0
+A text size 2A4 flags 0
 dbfile time1307.c
 dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
 dbfunc e I2C_start 0 fV
@@ -197,27 +197,17 @@ dbline BF 286
 dbline C0 294
 dbline FFFFFFFE 2A0
 dbline 0 2A0
-dbfunc e int_int2 2A4 fV
-dbline FFFFFFFF 2AC
-dbline C5 2AC
-dbline C7 2AC
-dbline C8 2B2
-dbline CA 2B8
-dbline FFFFFFFE 2BE
-dbline 0 2BE
 S _I2C_read_byte Def00B8
 S _Write1307 Def00E8
 S _Initial_time Def0176
 S _setTime Def012E
 S _I2C_stop Def001A
-S _int_int2 Def02A4
 S _I2C_send_noack Def0044
 S _Read1307 Def0106
 S _I2C_start Def0000
 S _showTime_page Def0198
 S _I2C_send_ack Def0034
 S _I2C_write_byte Def0054
-A vector size 10 flags C
 A bss size 1 flags 20
 dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
 dbsym e BP 0 c
@@ -296,9 +286,9 @@ R 00 00 00 00
 T 92 01 80 93 6A 00 08 95
 R 00 00 00 00
 T 98 01 0E 94 00 00 58 01 06 E0 B2 DF 40 2F 20 E0
-R 00 00 00 00 12 04 00 00 20 0E 03 00 00 00
+R 00 00 00 00 12 04 00 00 20 0E 02 00 00 00
 T A6 01 30 E0 0A 2D 0E 94 00 00 24 2F 22 95 2F 70
-R 00 00 00 00 40 02 03 00 00 00 12 08 02 00
+R 00 00 00 00 40 02 02 00 00 00 12 08 02 00
 T B4 01 2F 70 20 63 0A 2D 0E 94 00 00 24 2F 2F 70
 R 00 00 00 00 12 0A 07 00
 T C2 01 20 63 0A 2D 0E 94 00 00 2D E2 0A 2D
@@ -335,13 +325,5 @@ T 8E 02 0A 2D 0E 94 00 00 24 2F 2F 70 20 63 0A 2D
 R 00 00 00 00 12 06 07 00
 T 9C 02 0E 94 00 00 0C 94 00 00
 R 00 00 00 00 12 04 07 00 12 08 05 00
-T 0C 00 0C 94 52 01
-R 00 00 01 00 10 04 00 00
-T A4 02 2A 92 8A 93 2F B6 2A 92 23 B0 20 94 23 B8
-R 00 00 00 00
-T B2 02 89 B7 8B 7F 89 BF 89 B7 84 60 89 BF 29 90
-R 00 00 00 00
-T C0 02 2F BE 89 91 29 90 18 95
-R 00 00 00 00
 T 00 00 32 30 00
-R 00 00 04 00
+R 00 00 03 00

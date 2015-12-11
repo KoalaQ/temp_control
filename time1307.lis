@@ -753,51 +753,6 @@
  02A4                   .dbsym r time_cacah 20 c
  02A4                   .dbsym r y 10 i
  02A4                   .dbend
-                        .area vector(rom, abs)
-                        .org 12
- 000C 0C945201          jmp _int_int2
-                        .area text(rom, con, rel)
- 02A4                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
- 02A4                   .dbfunc e int_int2 _int_int2 fV
-                        .even
- 02A4           _int_int2::
- 02A4 2A92              st -y,R2
- 02A6 8A93              st -y,R24
- 02A8 2FB6              IN R2,63
- 02AA 2A92              st -y,R2
- 02AC                   .dbline -1
- 02AC                   .dbline 197
- 02AC           ; }
- 02AC           ; 
- 02AC           ; //中断1s进入，使用int2。可以使用，但是买的这个DS1307，硬件电路问题不可以使用
- 02AC           ; #pragma interrupt_handler int_int2:4
- 02AC           ; void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
- 02AC                   .dbline 199
- 02AC           ; 
- 02AC           ;   PORTE=~PORTE;
- 02AC 23B0              in R2,0x3
- 02AE 2094              com R2
- 02B0 23B8              out 0x3,R2
- 02B2                   .dbline 200
- 02B2           ;   EIMSK &= ~(0x04);//关中断2
- 02B2 89B7              in R24,0x39
- 02B4 8B7F              andi R24,251
- 02B6 89BF              out 0x39,R24
- 02B8                   .dbline 202
- 02B8           ;   
- 02B8           ;   EIMSK |= 0x04;//开中断2  
- 02B8 89B7              in R24,0x39
- 02BA 8460              ori R24,4
- 02BC 89BF              out 0x39,R24
- 02BE                   .dbline -2
- 02BE           L27:
- 02BE                   .dbline 0 ; func end
- 02BE 2990              ld R2,y+
- 02C0 2FBE              OUT 63,R2
- 02C2 8991              ld R24,y+
- 02C4 2990              ld R2,y+
- 02C6 1895              reti
- 02C8                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\time1307.c
  0000           _BP::

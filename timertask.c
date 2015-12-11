@@ -6,6 +6,7 @@
 #include "main.h"
 #include "temp.h"
 #include "out.h"
+unsigned int secondflag=64;//8位定时器全计时64次为1s
 unsigned char time_h_1, time_l_1,time_h_3, time_l_3,time_0, time_2,i;
 //************************************************
 //16位定时器，定时器1
@@ -72,7 +73,7 @@ void Timerinit_2(uchar time){
     time_2=time;
 	//写入初值
     TCNT2=time;
-	TIMSK|=0x40;//开定时器0溢出中断,8位的
+	TIMSK|=0x40;//开定时器2溢出中断,8位的
 	//普通计数，1024分频
     TCCR2=0x05;
 }
@@ -102,12 +103,13 @@ void int_timer1(void){
 void int_timer2(void){
       //PORTE=~PORTE;
 		TCCR2=0x00;
-		for(i=0;i<5;i++){
-  		 lcd_write_char(0x00,3,0x30+i);	
-		 delay_ms(100);		
-        }
 		TCNT2=time_2;
 		TCCR2=0x05;
+		if(secondflag==0){
+		  secondflag=64;
+		  int_int2();
+		}
+		secondflag--;
 		return;
 }
 //16位定时器，定时器3溢出中断。

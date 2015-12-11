@@ -192,15 +192,5 @@ void showTime_page(uint y){
 	 lcd_write_char_con(y,0x30|(time_cacah &0x0F));
 }
 
-//中断1s进入，使用int2。可以使用，但是买的这个DS1307，硬件电路问题不可以使用
-#pragma interrupt_handler int_int2:4
-void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作
-
-  PORTE=~PORTE;
-  EIMSK &= ~(0x04);//关中断2
-  
-  EIMSK |= 0x04;//开中断2  
-}
-
 
 

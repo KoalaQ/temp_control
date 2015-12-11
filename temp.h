@@ -10,6 +10,6 @@ void set_all_stop(void);
 void set_start(uint t);
 void set_stop(uint t);
 void data_recover(void);
-
+void int_int2(void);
 void tempcontrol(void);
 #endif

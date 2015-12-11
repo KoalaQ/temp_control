@@ -140,7 +140,7 @@ void setTime(uint year,uint month,uint day,uint hour,uint minute,uint second){
    Write1307(0x05,month);//
    Write1307(0x06,year);
 }
-void Initial_time(void){
+void Initial_time(void){//初始化输出、方波、中断
    DDRD|=0x07;
    PORTD=0x00;
   /* Write1307(0x00,0X00);//
@@ -149,11 +149,11 @@ void Initial_time(void){
    Write1307(0x03,0X01);//
    Write1307(0x04,0X21);//
    Write1307(0x05,0X05);//
-   Write1307(0x06,0X15);//
+   Write1307(0x06,0X15);//*/
     Write1307(0x07,0x10);
    
    EIMSK |= 0x04;//开中断2
-   EICRA |=0x30;*/
+   EICRA |=0x30;
    
 }
 //显示时间，年月日时分秒，用于page调用。没有改变AC，会接着写

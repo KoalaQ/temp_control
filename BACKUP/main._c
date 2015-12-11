@@ -47,14 +47,14 @@ uint i;
 	 Set_White_off(1,1,12);
 	 Set_White_off(1,2,12);
 	 Set_White_off(1,3,12);
-	 
-	  tempdata_init();//数据初始化，清空
-      Initial_time(); //初始化时间的
-	  Timerinit_3(0xF0,0x00);//使用16位的定时器3来读取温度和pid算法
-	  Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
-	  //测试使用
+	 //测试使用
 	   temp_l=0x50;
       temp_h=0x12;
+	  tempdata_init();//数据初始化，清空
+      Initial_time(); //初始化时间的
+	  Timerinit_3(0xe0,0x00);//使用16位的定时器3来读取温度和pid算法
+	  Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
+	  //Timerinit_2(0x00);
 	 while(1){
      dispatchPages();
   }
