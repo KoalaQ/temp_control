@@ -32,8 +32,7 @@ struct temp temps[4]={{0},{0},{0},{0}};
 //*************************************************************************
 void main(void)
 { 
-uint i;
-  uchar data;
+
   DDRE=0xFF;
   PORTE=~0xaa;
   SREG|=0x80;//¿ªÖÐ¶Ï

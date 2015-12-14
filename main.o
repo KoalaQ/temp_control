@@ -14,31 +14,29 @@ A text size 90 flags 0
 dbfile main.c
 dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
 dbfunc e main 0 fV
-dbsym l data 2 c
-dbsym l i 2 i
 dbline FFFFFFFF 2
 dbline 22 2
-dbline 25 2
-dbline 26 6
-dbline 27 A
-dbline 28 C
-dbline 29 10
-dbline 2D 14
-dbline 2E 20
-dbline 2F 2C
-dbline 30 38
-dbline 31 44
-dbline 33 50
-dbline 34 5C
-dbline 35 66
-dbline 36 6A
-dbline 37 6E
-dbline 38 76
-dbline 39 7E
+dbline 24 2
+dbline 25 6
+dbline 26 A
+dbline 27 C
+dbline 28 10
+dbline 2C 14
+dbline 2D 20
+dbline 2E 2C
+dbline 2F 38
+dbline 30 44
+dbline 32 50
+dbline 33 5C
+dbline 34 66
+dbline 35 6A
+dbline 36 6E
+dbline 37 76
+dbline 38 7E
+dbline 39 86
 dbline 3A 86
-dbline 3B 86
-dbline 3C 8A
-dbline 3A 8A
+dbline 3B 8A
+dbline 39 8A
 dbline FFFFFFFE 8C
 dbline 0 8C
 S _main Def0000

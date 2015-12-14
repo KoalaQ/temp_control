@@ -54,7 +54,7 @@ uint i;
       Initial_time(); //初始化时间的
 	  Timerinit_3(0xe0,0x00);//使用16位的定时器3来读取温度和pid算法
 	  Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
-	  //Timerinit_2(0x00);
+	  Timerinit_2(0x00);
 	 while(1){
      dispatchPages();
   }

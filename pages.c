@@ -118,6 +118,9 @@ void page1(void){
 		 case 3:
 		   Set_White_off(7,2,8);
 		    break;
+		case 4:
+		    Set_White_off(2,3,3);
+		    break;
 		case 5:
 		    Set_White_off(6,3,7);
 		    break;
@@ -472,7 +475,9 @@ void page1(void){
 		   lcd_write_str_con(2,"暂停");
 		   break;
 		 case 4:
-		   lcd_write_str_con(2,"结束");
+		   lcd_write_str(9,1,"      ");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"结束");
 		   break;
 		 case 5:
 		   lcd_write_str_con(2,"等待");
@@ -610,21 +615,21 @@ void page1(void){
 		}else{
 		 lcd_write_char(3,i,0x30 | *(dataCach+(++beginCur)));
 		}
-        lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
+        lcd_write_char_con(i, 0x30 | *(dataCach+(++beginCur)));
 		 lcd_write_str_con(i,": ");
-	     lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
-		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
+	     lcd_write_char_con(i,0x30 |  *(dataCach+(++beginCur)));
+		 lcd_write_char_con(i,0x30 |  *(dataCach+(++beginCur)));
 		 
-		 lcd_write_char(7,i,0x30 | *(dataCach+(++beginCur)));
+		 lcd_write_char(7,i, 0x30 | *(dataCach+(++beginCur)));
 		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
 		  lcd_write_str_con(i,": ");
-		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
-		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
+		 lcd_write_char_con(i,0x30 |  *(dataCach+(++beginCur)));
+		 lcd_write_char_con(i, 0x30 | *(dataCach+(++beginCur)));
 		 
 		 lcd_write_str(10,i," ");
+		 lcd_write_char_con(i,0x30 |  *(dataCach+(++beginCur)));
 		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
-		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
-		 lcd_write_char_con(i,0x30 | *(dataCach+(++beginCur)));
+		 lcd_write_char_con(i, 0x30 | *(dataCach+(++beginCur)));
 	  }
 	  
  }
@@ -826,7 +831,7 @@ void page1(void){
 				}else{
 				  lcd_write_char_con(2,0x30 | keyV);
 				}
-				dataCach[cur]=keyV;
+				dataCach[cur]=keyV-48;
 				oldcur=cur;
 				if(cur<131)
 				{
@@ -1185,7 +1190,7 @@ void page9(void){//复用的方法
      lcd_write_str(4,1,"数据重置中。。。");
 	 reset_temp_data(pageParam[0]);
    }
-   delay_ms(500);
+   delay_ms(50);
    pageNum=prePageNum;
  }
 //分发Pages
