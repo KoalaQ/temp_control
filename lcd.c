@@ -27,6 +27,9 @@ uint lcd_bz_1(void){
 	ep1_l;
 	return result;
 }
+//***********************************
+//ÉÏ°ëÆÁÄ»Ğ´ÃüÁî
+//**********************************
 void lcd_wcmd_1(uchar cmd){
 	 while(lcd_bz_1());
 	 rs_l;
@@ -266,7 +269,9 @@ uchar read_ac_2(void){
 	ep2_l;
 	return result;
 }
-
+//***********************************
+//Çå³ıÆÁÄ»ÄÚÈİ
+//**********************************
 void lcd_clear(void){
    lcd_clear_1();
     lcd_clear_2();

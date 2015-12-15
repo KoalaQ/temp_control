@@ -2,8 +2,7 @@
 #include "delay.h"
 #include "lcd.h"
 uchar key_value='n';
-void KeyInit(void){
-}
+
 uchar KeyScan(void){
   //³õÊ¼»¯¶Ë¿Ú
    DDRC=0xE0;

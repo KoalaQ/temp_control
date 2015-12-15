@@ -73,13 +73,13 @@ uchar KeyScan_once(void){
 	  delay_ms(2);
 	  keyValue2=KeyScan();
 	 if(keyValue==keyValue2 && keyValue!='n'){//两次扫描，消除抖动
-	 	if(key_value==keyValue){//如果还是上一次保存的值则代表一直按着，返回‘n’
+	 	if(key_value==keyValue){
 		    return 'n';  
-	    }else{                  //松开后第一次按下，返回该键的值
+	    }else{
 		 key_value=keyValue;
 		  return keyValue;
 		}
-	 }else{                     //因为读取键盘的值会多次刷新，所以在松开按键时key_value重置
+	 }else{
 	   key_value='n';
 	   return 'n';
 	 }

@@ -571,7 +571,7 @@ void cur_set(uint type){
         }   
        lcd_wcmd_1(0x36);
 	   lcd_wcmd_2(0x36);
-	   delay_us(1);
+	   delay_us(100);
 	   lcd_wcmd_1(0x30);
 	   lcd_wcmd_2(0x30);
 	        

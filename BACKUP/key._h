@@ -9,5 +9,5 @@
 #define rw_h PORTA|=1<<PA4
 #define ep_l PORTA&=~(1<<PA3)
 #define ep_h PORTA|=1<<PA3
-uchar KeyScan_once(void);//加上延时抖动的读取。长按会读取一次然后不在读取
+uchar KeyScan_once(void);
 #endif

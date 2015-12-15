@@ -77,9 +77,9 @@
  004C 90930100          sts _second+1,R25
  0050 80930000          sts _second,R24
  0054                   .dbline 23
- 0054           ;   if(second>25){
- 0054 89E1              ldi R24,25
- 0056 90E0              ldi R25,0
+ 0054           ;   if(second>600){
+ 0054 88E5              ldi R24,600
+ 0056 92E0              ldi R25,2
  0058 20900000          lds R2,_second
  005C 30900100          lds R3,_second+1
  0060 8215              cp R24,R2

@@ -18,6 +18,8 @@ void out_port(void){
 	  }else {
 	    PORTE &=0xFE;
 	  }
+   }else{
+      PORTE &=0xFE;
    }
     if(temps[1].flag==1){
 	  if(temps[0].incrementtemp>=hz){
@@ -25,6 +27,8 @@ void out_port(void){
 	    }else {
 	      PORTE &=0xFD;
 	    }
+   }else{
+      PORTE &=0xFD;
    }
     if(temps[2].flag==1){
 	  if(temps[0].incrementtemp>=hz){
@@ -32,6 +36,8 @@ void out_port(void){
 	    }else {
 	      PORTE &=0xFB;
 	    }
+   }else{
+      PORTE &=0xFB;
    }
     if(temps[3].flag==1){
 	  if(temps[0].incrementtemp>=hz){
@@ -39,6 +45,8 @@ void out_port(void){
 	    }else {
 	      PORTE &=0xF7;
 	    }
+   }else{
+     PORTE &=0xF7;
    }
     hz++;
 }

@@ -25,7 +25,7 @@ void lcd_init(void);//初始化端口
 // 下半屏  4:关闭,5：开游标,6：游标反白,7：开游标、反白
 //************
 void cur_set(uint type);
-//void Set_Draw(void)  ;//开启
+//void Set_Draw(void)  ;
 //void Set_UNDraw(void) ; 
 void Set_White(uchar x,uchar y,uchar end_x)   ;
 void Set_White_off(uchar x,uchar y,uchar end_x)   ;
