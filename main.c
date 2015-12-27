@@ -9,13 +9,21 @@
 #include "eeprom.h"
 #include "pages.h"
 #include "temp.h"
+#include "uart.h"
+//串口发送数据需要
+unsigned int send_data_cache[150]={0x30};
+unsigned int send_data_length=0;//数据长度
+unsigned int send_data_cur=0;//当前发送到游标
+//定时器0复用参数。t0_fla0=0，开机等待；t0_fla0=1，温度计时
+unsigned int t0_flag =0;
 //const unsigned char nihao[1536]={};
-unsigned int waitflag=1000;//确认恢复的等待标记，初始为10，如果为0代表到时
+//确认恢复的等待标记，初始为1000，如果为0代表到时.在使用其当作温度计数的时候需要值为32
+unsigned int waitflag=1000;
 //下面两个继续使用。暂时保存数据使用
  unsigned int temp_h=0;
  unsigned int temp_l=0;
  //uart需要参数
- unsigned char send_buf[600];
+ unsigned char send_6buf[600];
  unsigned char receive_buf[600];
  unsigned int send_len;
  unsigned int receive_len;
@@ -32,7 +40,16 @@ struct temp temps[4]={{0},{0},{0},{0}};
 //*************************************************************************
 void main(void)
 { 
-
+  send_data_cache[0]=0x30;
+  send_data_cache[1]=0x31;
+  send_data_cache[2]=0x32;
+  send_data_cache[3]=0x33;
+  send_data_cache[4]=0x34;
+  send_data_cache[5]=0x35;
+  send_data_cache[6]=0x36;
+  send_data_cache[7]=0x37;
+  send_data_cache[8]=0x38;
+  send_data_cache[9]=0x39;
   DDRE=0xFF;
   PORTE=~0xaa;
   SREG|=0x80;//开中断
@@ -51,9 +68,10 @@ void main(void)
       temp_h=0x12;
 	  tempdata_init();//数据初始化，清空
       Initial_time(); //初始化时间的
-	  Timerinit_3(0xe0,0x00);//使用16位的定时器3来读取温度和pid算法
+	  Timerinit_3(0xc0,0x00);//使用16位的定时器3。发送串口数据，刚开始为初始化的时候可能数据都为空
 	  Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
-	  Timerinit_2(0x00);
+	  Timerinit_2(0x00);//1s计时模块
+	  uart0_init( );//初始化串口
 	 while(1){
      dispatchPages();
   }

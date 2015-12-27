@@ -2,690 +2,285 @@
                         .area text(rom, con, rel)
  0000                   .dbfile uart.c
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
- 0000                   .dbfunc e init_USART1 _init_USART1 fV
+ 0000                   .dbfunc e uart0_init _uart0_init fV
                         .even
- 0000           _init_USART1::
+ 0000           _uart0_init::
  0000                   .dbline -1
- 0000                   .dbline 22
+ 0000                   .dbline 9
  0000           ; #include <iom128v.h>
  0000           ; #include "uart.h"
+ 0000           ; #include "main.h"
+ 0000           ; #define fosc  800000  //晶振8MHZ
+ 0000           ; #define baud 9600  //波特率
  0000           ; 
- 0000           ; //常量定义
- 0000           ; #define BAUDRATE1       115200        //波特率
- 0000           ; //#define BAUDRATE2       9600        //波特率
- 0000           ; #define F_CPU         7372800//晶振频率
  0000           ; 
- 0000           ; //变量定义
- 0000           ; extern unsigned char send_buf[600];
- 0000           ; extern unsigned char receive_buf[600];
- 0000           ; extern unsigned int send_len;
- 0000           ; extern unsigned int receive_len;
- 0000           ; 
- 0000           ; unsigned char uart_timeout_flag1;
- 0000           ; unsigned char uart_timeout_flag2;
- 0000           ; 
- 0000           ; //串口1对应程序
- 0000           ; ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 0000           ; //USART 初始化
- 0000           ; void init_USART1(void)
+ 0000           ; void uart0_init(void)
  0000           ; {
- 0000                   .dbline 24
- 0000           ;     //USART 115200 8, n,1  PC上位机软件(超级终端等)也要设成同样的设置才能通讯
- 0000           ;     UCSR0C = (1<<USBS0)|(3<<UCSZ00);
- 0000 8EE0              ldi R24,14
- 0002 80939500          sts 149,R24
- 0006                   .dbline 28
- 0006           ;     
- 0006           ;   //异步，8位数据，无奇偶校验，一个停止位，无倍速   
- 0006           ;     //U2X=0时的公式计算
- 0006           ;     UBRR0L= (F_CPU/BAUDRATE1/16-1)%256;
- 0006 83E0              ldi R24,3
- 0008 89B9              out 0x9,R24
- 000A                   .dbline 29
- 000A           ;     UBRR0H= (F_CPU/BAUDRATE1/16-1)/256;
- 000A 2224              clr R2
- 000C 20929000          sts 144,R2
- 0010                   .dbline 31
- 0010           ; 
- 0010           ;     UCSR0A = 0x00;
- 0010 2BB8              out 0xb,R2
- 0012                   .dbline 34
- 0012           ; 
- 0012           ;     //使能接收中断，使能接收，使能发送
- 0012           ;     UCSR0B = (1<<RXEN0)|(1<<TXEN0);
- 0012 88E1              ldi R24,24
- 0014 8AB9              out 0xa,R24
- 0016                   .dbline -2
- 0016           L1:
- 0016                   .dbline 0 ; func end
- 0016 0895              ret
- 0018                   .dbend
- 0018                   .dbfunc e put_c1 _put_c1 fV
- 0018           ;              c -> R16
+ 0000                   .dbline 10
+ 0000           ; UCSR0B = 0x00; //关闭UART00
+ 0000 2224              clr R2
+ 0002 2AB8              out 0xa,R2
+ 0004                   .dbline 11
+ 0004           ; UCSR0A = 0x00; //不使用倍速发送（异步）
+ 0004 2BB8              out 0xb,R2
+ 0006                   .dbline 12
+ 0006           ; UCSR0C =(1<<UCSZ01)|(1<<UCSZ00); //数据位为8位
+ 0006 86E0              ldi R24,6
+ 0008 80939500          sts 149,R24
+ 000C                   .dbline 15
+ 000C           ; //UBRR0L=(fosc/16/(baud+1))%6; //异步正常情况下的计算公式
+ 000C           ; //UBRR0H=(fosc/16/(baud+1))/256;
+ 000C           ; UBRR0L=103; //异步正常情况下的计算公式.9600
+ 000C 87E6              ldi R24,103
+ 000E 89B9              out 0x9,R24
+ 0010                   .dbline 16
+ 0010           ; UBRR0H=0x00;
+ 0010 20929000          sts 144,R2
+ 0014                   .dbline 17
+ 0014           ; UCSR0B |=(1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); //接收使能和发送使能.接收终端打开
+ 0014 8AB1              in R24,0xa
+ 0016 8869              ori R24,152
+ 0018 8AB9              out 0xa,R24
+ 001A                   .dbline -2
+ 001A           L1:
+ 001A                   .dbline 0 ; func end
+ 001A 0895              ret
+ 001C                   .dbend
+ 001C                   .dbfunc e putchar0 _putchar0 fV
+ 001C           ;              c -> R16
                         .even
- 0018           _put_c1::
- 0018                   .dbline -1
- 0018                   .dbline 40
- 0018           ;     
- 0018           ; }
- 0018           ; 
- 0018           ; //向串口1写数
- 0018           ; void put_c1(unsigned char c)
- 0018           ; {
- 0018           L3:
- 0018                   .dbline 41
- 0018           ;       while( !(UCSR0A & (1<<UDRE0)) );
- 0018           L4:
- 0018                   .dbline 41
- 0018 5D9B              sbis 0xb,5
- 001A FECF              rjmp L3
- 001C           X0:
- 001C                   .dbline 42
- 001C           ;       UDR0=c; 
- 001C 0CB9              out 0xc,R16
- 001E                   .dbline -2
- 001E           L2:
- 001E                   .dbline 0 ; func end
- 001E 0895              ret
- 0020                   .dbsym r c 16 c
- 0020                   .dbend
- 0020                   .dbfunc e USART_Receive1 _USART_Receive1 fc
- 0020           ;              j -> R16,R17
+ 001C           _putchar0::
+ 001C                   .dbline -1
+ 001C                   .dbline 22
+ 001C           ; 
+ 001C           ; }
+ 001C           ; 
+ 001C           ; void putchar0(unsigned char c)
+ 001C           ; {
+ 001C           L3:
+ 001C                   .dbline 23
+ 001C           ; while (!(UCSR0A&(1<<UDRE0)));//表明发送器已经准备就绪
+ 001C           L4:
+ 001C                   .dbline 23
+ 001C 5D9B              sbis 0xb,5
+ 001E FECF              rjmp L3
+ 0020           X0:
+ 0020                   .dbline 24
+ 0020           ; UDR0=c; //将要发送的数据装入UDR0寄存器
+ 0020 0CB9              out 0xc,R16
+ 0022                   .dbline -2
+ 0022           L2:
+ 0022                   .dbline 0 ; func end
+ 0022 0895              ret
+ 0024                   .dbsym r c 16 c
+ 0024                   .dbend
+ 0024                   .dbfunc e getchar0 _getchar0 fc
                         .even
- 0020           _USART_Receive1::
- 0020                   .dbline -1
- 0020                   .dbline 47
- 0020           ; }
- 0020           ; 
- 0020           ; //从串口1读数
- 0020           ; unsigned char USART_Receive1( void )
- 0020           ; {
- 0020                   .dbline 48
- 0020           ;    unsigned int j=0;
- 0020 0027              clr R16
- 0022 1127              clr R17
- 0024                   .dbline 49
- 0024           ;    uart_timeout_flag1=0; 
- 0024 2224              clr R2
- 0026 20920100          sts _uart_timeout_flag1,R2
- 002A 0BC0              xjmp L8
- 002C           L7:
- 002C                   .dbline 51
- 002C           ;   //等待接受标志
- 002C           ;   while ( !(UCSR0A & (1<<RXC0)) ){
- 002C                   .dbline 52
- 002C           ;     if(j==32000) //判断超时，并设置标志
- 002C 0030              cpi R16,0
- 002E EDE7              ldi R30,125
- 0030 1E07              cpc R17,R30
- 0032 29F4              brne L10
- 0034           X1:
- 0034                   .dbline 53
- 0034           ;     { uart_timeout_flag1=1;   
- 0034                   .dbline 53
- 0034 81E0              ldi R24,1
- 0036 80930100          sts _uart_timeout_flag1,R24
- 003A                   .dbline 54
- 003A           ;     return FAILURE;}
- 003A 01E0              ldi R16,1
- 003C 05C0              xjmp L6
- 003E           L10:
- 003E                   .dbline 56
- 003E           ;       else 
- 003E           ;               j++;
- 003E 0F5F              subi R16,255  ; offset = 1
- 0040 1F4F              sbci R17,255
- 0042                   .dbline 57
- 0042           ;     ;}
- 0042                   .dbline 57
- 0042           L8:
- 0042                   .dbline 51
- 0042 5F9B              sbis 0xb,7
- 0044 F3CF              rjmp L7
- 0046           X2:
- 0046                   .dbline 59
- 0046           ;   //读接收数据  
- 0046           ;   return UDR0;
- 0046 0CB1              in R16,0xc
- 0048                   .dbline -2
- 0048           L6:
- 0048                   .dbline 0 ; func end
- 0048 0895              ret
- 004A                   .dbsym r j 16 i
- 004A                   .dbend
- 004A                   .dbfunc e receiveStrfromCom _receiveStrfromCom fc
- 004A           ;              k -> R20
+ 0024           _getchar0::
+ 0024                   .dbline -1
+ 0024                   .dbline 29
+ 0024           ; }
+ 0024           ; 
+ 0024           ; 
+ 0024           ; unsigned char getchar0(void)
+ 0024           ; {
+ 0024           L7:
+ 0024                   .dbline 30
+ 0024           ;   while(!(UCSR0A& (1<<RXC0)));//表明已经接收完毕
+ 0024           L8:
+ 0024                   .dbline 30
+ 0024 5F9B              sbis 0xb,7
+ 0026 FECF              rjmp L7
+ 0028           X1:
+ 0028                   .dbline 31
+ 0028           ;   return UDR0;
+ 0028 0CB1              in R16,0xc
+ 002A                   .dbline -2
+ 002A           L6:
+ 002A                   .dbline 0 ; func end
+ 002A 0895              ret
+ 002C                   .dbend
+                        .area vector(rom, abs)
+                        .org 72
+ 0048 0C941600          jmp _int_ruart0
+                        .area text(rom, con, rel)
+ 002C                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
+ 002C                   .dbfunc e int_ruart0 _int_ruart0 fV
+ 002C           ;           data -> R16
                         .even
- 004A           _receiveStrfromCom::
- 004A AA92              st -y,R10
- 004C 4A93              st -y,R20
- 004E                   .dbline -1
- 004E                   .dbline 64
- 004E           ; }
- 004E           ; 
- 004E           ; //从串口接收数据串
- 004E           ; unsigned char receiveStrfromCom(void)
- 004E           ; {
- 004E 3EC0              xjmp L14
- 0050           L13:
- 0050                   .dbline 68
- 0050           ;   unsigned char k;
- 0050           ; 
- 0050           ;   while(1)
- 0050           ;   {
- 0050                   .dbline 70
- 0050           ;     ///以下为从串口接收数据的过程
- 0050           ;     send_buf[0]=USART_Receive1();
- 0050 E7DF              xcall _USART_Receive1
- 0052 00930000          sts _send_buf,R16
- 0056                   .dbline 72
- 0056           ;     //若接收的不是命令头则继续等待
- 0056           ;     if(send_buf[0]!=0x02)continue;
- 0056 0230              cpi R16,2
- 0058 09F0              breq L16
- 005A           X3:
- 005A                   .dbline 72
- 005A 38C0              xjmp L14
- 005C           L16:
- 005C                   .dbline 74
- 005C           ;       
- 005C           ;     for(k=1;k<5;k++)
- 005C 41E0              ldi R20,1
- 005E 0FC0              xjmp L21
- 0060           L18:
- 0060                   .dbline 75
- 0060           ;     {
- 0060                   .dbline 76
- 0060           ;         send_buf[k]=USART_Receive1(); 
- 0060 DFDF              xcall _USART_Receive1
- 0062 80E0              ldi R24,<_send_buf
- 0064 90E0              ldi R25,>_send_buf
- 0066 E42F              mov R30,R20
- 0068 FF27              clr R31
- 006A E80F              add R30,R24
- 006C F91F              adc R31,R25
- 006E 0083              std z+0,R16
- 0070                   .dbline 77
- 0070           ;         if(uart_timeout_flag1==1)
- 0070 80910100          lds R24,_uart_timeout_flag1
- 0074 8130              cpi R24,1
- 0076 11F4              brne L22
- 0078           X4:
- 0078                   .dbline 78
- 0078           ;         {  
- 0078                   .dbline 80
- 0078           ; //          ComSendResponse(send_buf[3],EXE_TIME_OUT,1);
- 0078           ;           return FAILURE;
- 0078 01E0              ldi R16,1
- 007A 29C0              xjmp L12
- 007C           L22:
- 007C                   .dbline 82
- 007C           ;         }  
- 007C           ;     }
- 007C           L19:
- 007C                   .dbline 74
- 007C 4395              inc R20
- 007E           L21:
- 007E                   .dbline 74
- 007E 4530              cpi R20,5
- 0080 78F3              brlo L18
- 0082           X5:
- 0082                   .dbline 84
- 0082           ;     
- 0082           ;     send_len=send_buf[4];
- 0082 20900400          lds R2,_send_buf+4
- 0086 3324              clr R3
- 0088 30920100          sts _send_len+1,R3
- 008C 20920000          sts _send_len,R2
- 0090                   .dbline 86
- 0090           ;     
- 0090           ;     for(k=5;k<send_len+6;k++)
- 0090 45E0              ldi R20,5
- 0092 10C0              xjmp L28
- 0094           L25:
- 0094                   .dbline 87
- 0094           ;     {
- 0094                   .dbline 88
- 0094           ;         send_buf[k]=USART_Receive1(); 
- 0094 C5DF              xcall _USART_Receive1
- 0096 A02E              mov R10,R16
- 0098 80E0              ldi R24,<_send_buf
- 009A 90E0              ldi R25,>_send_buf
- 009C E42F              mov R30,R20
- 009E FF27              clr R31
- 00A0 E80F              add R30,R24
- 00A2 F91F              adc R31,R25
- 00A4 A082              std z+0,R10
- 00A6                   .dbline 89
- 00A6           ;         if(uart_timeout_flag1==1)
- 00A6 80910100          lds R24,_uart_timeout_flag1
- 00AA 8130              cpi R24,1
- 00AC 11F4              brne L29
- 00AE           X6:
- 00AE                   .dbline 90
- 00AE           ;         {  
- 00AE                   .dbline 92
- 00AE           ; //           ComSendResponse(send_buf[3],EXE_TIME_OUT,1);
- 00AE           ;            return FAILURE; 
- 00AE 01E0              ldi R16,1
- 00B0 0EC0              xjmp L12
- 00B2           L29:
- 00B2                   .dbline 94
- 00B2           ;         }  
- 00B2           ;     }  
- 00B2           L26:
- 00B2                   .dbline 86
- 00B2 4395              inc R20
- 00B4           L28:
- 00B4                   .dbline 86
- 00B4 80910000          lds R24,_send_len
- 00B8 90910100          lds R25,_send_len+1
- 00BC 0696              adiw R24,6
- 00BE 242E              mov R2,R20
- 00C0 3324              clr R3
- 00C2 2816              cp R2,R24
- 00C4 3906              cpc R3,R25
- 00C6 30F3              brlo L25
- 00C8           X7:
- 00C8                   .dbline 95
- 00C8           ;     return SUCCESS;
- 00C8 0027              clr R16
- 00CA 01C0              xjmp L12
- 00CC           L14:
- 00CC                   .dbline 67
- 00CC C1CF              xjmp L13
- 00CE           X8:
- 00CE                   .dbline -2
- 00CE           L12:
- 00CE                   .dbline 0 ; func end
- 00CE 4991              ld R20,y+
- 00D0 A990              ld R10,y+
- 00D2 0895              ret
- 00D4                   .dbsym r k 20 c
- 00D4                   .dbend
- 00D4                   .dbfunc e outStrtoCom _outStrtoCom fV
- 00D4           ;              i -> R10
- 00D4           ;         length -> R12,R13
- 00D4           ;          pData -> R14,R15
+ 002C           _int_ruart0::
+ 002C 0A93              st -y,R16
+ 002E 0FB7              IN R16,63
+ 0030 0A93              st -y,R16
+ 0032                   .dbline -1
+ 0032                   .dbline 35
+ 0032           ; }
+ 0032           ; //读取中断
+ 0032           ; #pragma interrupt_handler int_ruart0:19
+ 0032           ; void int_ruart0(void){
+ 0032                   .dbline 37
+ 0032           ;    uchar data;
+ 0032           ;    data=UDR0;
+ 0032 0CB1              in R16,0xc
+ 0034                   .dbline -2
+ 0034           L10:
+ 0034                   .dbline 0 ; func end
+ 0034 0991              ld R16,y+
+ 0036 0FBF              OUT 63,R16
+ 0038 0991              ld R16,y+
+ 003A 1895              reti
+ 003C                   .dbsym r data 16 c
+ 003C                   .dbend
+                        .area vector(rom, abs)
+                        .org 76
+ 004C 0C941E00          jmp _int_suart0
+                        .area text(rom, con, rel)
+ 003C                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
+ 003C                   .dbfunc e int_suart0 _int_suart0 fV
                         .even
- 00D4           _outStrtoCom::
- 00D4 0E940000          xcall push_xgset00FC
- 00D8 6901              movw R12,R18
- 00DA 7801              movw R14,R16
- 00DC                   .dbline -1
- 00DC                   .dbline 103
- 00DC           ; 
- 00DC           ;   }  
- 00DC           ;   return FAILURE;
- 00DC           ; } 
- 00DC           ; 
- 00DC           ; //向串口输出数据串
- 00DC           ; void outStrtoCom(unsigned char *pData,unsigned int length)
- 00DC           ; {
- 00DC                   .dbline 105
- 00DC           ;       unsigned char i;
- 00DC           ;       for(i=0;i<length;i++)
- 00DC AA24              clr R10
- 00DE 07C0              xjmp L35
- 00E0           L32:
- 00E0                   .dbline 106
- 00E0           ;               put_c1(pData[i]);
- 00E0 EA2D              mov R30,R10
- 00E2 FF27              clr R31
- 00E4 EE0D              add R30,R14
- 00E6 FF1D              adc R31,R15
- 00E8 0081              ldd R16,z+0
- 00EA 96DF              xcall _put_c1
- 00EC           L33:
- 00EC                   .dbline 105
- 00EC A394              inc R10
- 00EE           L35:
- 00EE                   .dbline 105
- 00EE 2A2C              mov R2,R10
- 00F0 3324              clr R3
- 00F2 2C14              cp R2,R12
- 00F4 3D04              cpc R3,R13
- 00F6 A0F3              brlo L32
- 00F8           X9:
- 00F8                   .dbline -2
- 00F8           L31:
- 00F8                   .dbline 0 ; func end
- 00F8 0C940000          xjmp pop_xgset00FC
- 00FC                   .dbsym r i 10 c
- 00FC                   .dbsym r length 12 i
- 00FC                   .dbsym r pData 14 pc
- 00FC                   .dbend
- 00FC                   .dbfunc e MAC_CalCrc16 _MAC_CalCrc16 fV
- 00FC           ;              i -> R10
- 00FC           ;              j -> R22
- 00FC           ;      value_CRC -> R20,R21
- 00FC           ;          ucLen -> R12
- 00FC           ;         pCrc16 -> R18,R19
- 00FC           ;         pInput -> R16,R17
+ 003C           _int_suart0::
+ 003C 1A92              st -y,R1
+ 003E 2A92              st -y,R2
+ 0040 3A92              st -y,R3
+ 0042 4A92              st -y,R4
+ 0044 5A92              st -y,R5
+ 0046 8A93              st -y,R24
+ 0048 9A93              st -y,R25
+ 004A EA93              st -y,R30
+ 004C FA93              st -y,R31
+ 004E 1FB6              IN R1,63
+ 0050 1A92              st -y,R1
+ 0052                   .dbline -1
+ 0052                   .dbline 42
+ 0052           ;    
+ 0052           ; }
+ 0052           ; //发送中断
+ 0052           ; #pragma interrupt_handler int_suart0:20
+ 0052           ; void int_suart0(void){
+ 0052                   .dbline 43
+ 0052           ;    UCSR0B &=~(1<<UDRIE0); //关中断
+ 0052 5598              cbi 0xa,5
+ 0054                   .dbline 44
+ 0054           ;    PORTE=~PORTE;
+ 0054 23B0              in R2,0x3
+ 0056 2094              com R2
+ 0058 23B8              out 0x3,R2
+ 005A                   .dbline 45
+ 005A           ;    if(send_data_cur<send_data_length){//还有数据存在，继续发送
+ 005A 20900000          lds R2,_send_data_length
+ 005E 30900100          lds R3,_send_data_length+1
+ 0062 40900000          lds R4,_send_data_cur
+ 0066 50900100          lds R5,_send_data_cur+1
+ 006A 4214              cp R4,R2
+ 006C 5304              cpc R5,R3
+ 006E 90F4              brsh L12
+ 0070           X2:
+ 0070                   .dbline 45
+ 0070                   .dbline 46
+ 0070           ;       UDR0=send_data_cache[send_data_cur];
+ 0070 80E0              ldi R24,<_send_data_cache
+ 0072 90E0              ldi R25,>_send_data_cache
+ 0074 F201              movw R30,R4
+ 0076 EE0F              lsl R30
+ 0078 FF1F              rol R31
+ 007A E80F              add R30,R24
+ 007C F91F              adc R31,R25
+ 007E 2080              ldd R2,z+0
+ 0080 3180              ldd R3,z+1
+ 0082 2CB8              out 0xc,R2
+ 0084                   .dbline 47
+ 0084           ;         send_data_cur++;
+ 0084 C201              movw R24,R4
+ 0086 0196              adiw R24,1
+ 0088 90930100          sts _send_data_cur+1,R25
+ 008C 80930000          sts _send_data_cur,R24
+ 0090                   .dbline 48
+ 0090           ;         UCSR0B |=(1<<UDRIE0); //开中断
+ 0090 559A              sbi 0xa,5
+ 0092                   .dbline 49
+ 0092           ;    }else{//没有数据啦，清空游标。关中断
+ 0092 0AC0              xjmp L13
+ 0094           L12:
+ 0094                   .dbline 49
+ 0094                   .dbline 50
+ 0094           ;     send_data_length=0;
+ 0094 2224              clr R2
+ 0096 3324              clr R3
+ 0098 30920100          sts _send_data_length+1,R3
+ 009C 20920000          sts _send_data_length,R2
+ 00A0                   .dbline 51
+ 00A0           ;     send_data_cur=0;
+ 00A0 30920100          sts _send_data_cur+1,R3
+ 00A4 20920000          sts _send_data_cur,R2
+ 00A8                   .dbline 52
+ 00A8           ;    } 
+ 00A8           L13:
+ 00A8                   .dbline -2
+ 00A8           L11:
+ 00A8                   .dbline 0 ; func end
+ 00A8 1990              ld R1,y+
+ 00AA 1FBE              OUT 63,R1
+ 00AC F991              ld R31,y+
+ 00AE E991              ld R30,y+
+ 00B0 9991              ld R25,y+
+ 00B2 8991              ld R24,y+
+ 00B4 5990              ld R5,y+
+ 00B6 4990              ld R4,y+
+ 00B8 3990              ld R3,y+
+ 00BA 2990              ld R2,y+
+ 00BC 1990              ld R1,y+
+ 00BE 1895              reti
+ 00C0                   .dbend
+ 00C0                   .dbfunc e puts0 _puts0 fV
+ 00C0           ;              s -> R20,R21
                         .even
- 00FC           _MAC_CalCrc16::
- 00FC 0E940000          xcall push_xgsetF03C
- 0100 C884              ldd R12,y+8
- 0102                   .dbline -1
- 0102                   .dbline 122
- 0102           ; }
- 0102           ; /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 0102           ; 
- 0102           ; /*-----------------------------------------------
- 0102           ; 函数名： 　MAC_CalCrc16
- 0102           ; 功  能：  以字节为单位计算len个数的CRC16校验和，首字节
- 0102           ;                 为pInput[0].
- 0102           ; 参  数：  pInput                      为需要计算CRC的数据的指针
- 0102           ;           pCrc16                      为指向存储CRC值的数组
- 0102           ;           ucLen                               为需要计算CRC的数据长度
- 0102           ; 返回值：　无　
- 0102           ; 作  者：　lz
- 0102           ; 日  期：  2008-06-18
- 0102           ; ------------------------------------------------*/
- 0102           ; void MAC_CalCrc16(unsigned char  *pInput, unsigned char * pCrc16, unsigned char ucLen)   
- 0102           ; {   
- 0102                   .dbline 123
- 0102           ;     unsigned int value_CRC=0xffff;
- 0102 4FEF              ldi R20,65535
- 0104 5FEF              ldi R21,255
- 0106                   .dbline 127
- 0106           ;     unsigned char i;
- 0106           ;     unsigned char j;
- 0106           ; 
- 0106           ;       for( i=0; i<ucLen; i++ )
- 0106 AA24              clr R10
- 0108 1BC0              xjmp L40
- 010A           L37:
- 010A                   .dbline 128
- 010A           ;       {       
- 010A                   .dbline 129
- 010A           ;               value_CRC = value_CRC ^((unsigned int)pInput[i]);
- 010A EA2D              mov R30,R10
- 010C FF27              clr R31
- 010E E00F              add R30,R16
- 0110 F11F              adc R31,R17
- 0112 2080              ldd R2,z+0
- 0114 3324              clr R3
- 0116 4225              eor R20,R2
- 0118 5325              eor R21,R3
- 011A                   .dbline 130
- 011A           ;               for (j = 0; j < 8; j++)
- 011A 6627              clr R22
- 011C 0EC0              xjmp L44
- 011E           L41:
- 011E                   .dbline 131
- 011E           ;               {
- 011E                   .dbline 132
- 011E           ;                       if (value_CRC & 0x0001)
- 011E 40FF              sbrs R20,0
- 0120 09C0              rjmp L45
- 0122           X10:
- 0122                   .dbline 133
- 0122           ;                       {
- 0122                   .dbline 134
- 0122           ;                               value_CRC = (value_CRC >> 1) ^ 0x8408;
- 0122 88E0              ldi R24,33800
- 0124 94E8              ldi R25,132
- 0126 1A01              movw R2,R20
- 0128 3694              lsr R3
- 012A 2794              ror R2
- 012C 2826              eor R2,R24
- 012E 3926              eor R3,R25
- 0130 A101              movw R20,R2
- 0132                   .dbline 135
- 0132           ;                       }
- 0132 02C0              xjmp L46
- 0134           L45:
- 0134                   .dbline 137
- 0134           ;                       else
- 0134           ;                       {
- 0134                   .dbline 138
- 0134           ;                               value_CRC = (value_CRC >> 1);
- 0134 5695              lsr R21
- 0136 4795              ror R20
- 0138                   .dbline 139
- 0138           ;                       }
- 0138           L46:
- 0138                   .dbline 140
- 0138           ;               }
- 0138           L42:
- 0138                   .dbline 130
- 0138 6395              inc R22
- 013A           L44:
- 013A                   .dbline 130
- 013A 6830              cpi R22,8
- 013C 80F3              brlo L41
- 013E           X11:
- 013E                   .dbline 141
- 013E           ;       }
- 013E           L38:
- 013E                   .dbline 127
- 013E A394              inc R10
- 0140           L40:
- 0140                   .dbline 127
- 0140 AC14              cp R10,R12
- 0142 18F3              brlo L37
- 0144           X12:
- 0144                   .dbline 143
- 0144           ;       
- 0144           ;       pCrc16[0] = (unsigned char)(value_CRC>>8);
- 0144 1A01              movw R2,R20
- 0146 232C              mov R2,R3
- 0148 3324              clr R3
- 014A F901              movw R30,R18
- 014C 2082              std z+0,R2
- 014E                   .dbline 144
- 014E           ;       pCrc16[1] = (unsigned char)(value_CRC);
- 014E 4183              std z+1,R20
- 0150                   .dbline 146
- 0150           ;       
- 0150           ;       return;
- 0150                   .dbline -2
- 0150           L36:
- 0150                   .dbline 0 ; func end
- 0150 0C940000          xjmp pop_xgsetF03C
- 0154                   .dbsym r i 10 c
- 0154                   .dbsym r j 22 c
- 0154                   .dbsym r value_CRC 20 i
- 0154                   .dbsym r ucLen 12 c
- 0154                   .dbsym r pCrc16 18 pc
- 0154                   .dbsym r pInput 16 pc
- 0154                   .dbend
- 0154                   .dbfunc e MAC_CheckCrc16 _MAC_CheckCrc16 fc
- 0154           ;         CrcChk -> y+1
- 0154           ;          ucLen -> R20
- 0154           ;         pInput -> R10,R11
-                        .even
- 0154           _MAC_CheckCrc16::
- 0154 0E940000          xcall push_xgset300C
- 0158 422F              mov R20,R18
- 015A 5801              movw R10,R16
- 015C 2397              sbiw R28,3
- 015E                   .dbline -1
- 015E                   .dbline 161
- 015E           ; }
- 015E           ; 
- 015E           ; 
- 015E           ; /*-----------------------------------------------
- 015E           ; 函数名：      MAC_CheckCrc16
- 015E           ; 功  能：  校验一帧长度为ucLen的数据，pInput[ucLen]
- 015E           ;           pInput[ucLen+1]是这帧数据的校验字节。
- 015E           ; 参  数：  pInput      校验帧的首地址
- 015E           ;           ucLen 　　　需校验的数据帧的长度 
- 015E           ; 返回值：　0表示校验通过，1表示校验失败　
- 015E           ; 作  者：　lz
- 015E           ; 日  期：  2008-06-18
- 015E           ; ------------------------------------------------*/
- 015E           ; unsigned char MAC_CheckCrc16(unsigned char * pInput, unsigned char ucLen)
- 015E           ; {
- 015E                   .dbline 164
- 015E           ;       unsigned char CrcChk[2];
- 015E           ; 
- 015E           ;       MAC_CalCrc16(pInput,CrcChk,ucLen-2);
- 015E 842F              mov R24,R20
- 0160 8250              subi R24,2
- 0162 8883              std y+0,R24
- 0164 9E01              movw R18,R28
- 0166 2F5F              subi R18,255  ; offset = 1
- 0168 3F4F              sbci R19,255
- 016A 8501              movw R16,R10
- 016C C7DF              xcall _MAC_CalCrc16
- 016E                   .dbline 166
- 016E           ; 
- 016E           ;       if (CrcChk[0]!=pInput[ucLen-2] || CrcChk[1]!=pInput[ucLen-1])
- 016E E42F              mov R30,R20
- 0170 FF27              clr R31
- 0172 3297              sbiw R30,2
- 0174 EA0D              add R30,R10
- 0176 FB1D              adc R31,R11
- 0178 2080              ldd R2,z+0
- 017A 3980              ldd R3,y+1
- 017C 3214              cp R3,R2
- 017E 49F4              brne L51
- 0180           X13:
- 0180 E42F              mov R30,R20
- 0182 FF27              clr R31
- 0184 3197              sbiw R30,1
- 0186 EA0D              add R30,R10
- 0188 FB1D              adc R31,R11
- 018A 2080              ldd R2,z+0
- 018C 3A80              ldd R3,y+2
- 018E 3214              cp R3,R2
- 0190 11F0              breq L48
- 0192           X14:
- 0192           L51:
- 0192                   .dbline 167
- 0192           ;       {
- 0192                   .dbline 168
- 0192           ;               return FAILURE; // crc16 fail!
- 0192 01E0              ldi R16,1
- 0194 01C0              xjmp L47
- 0196           L48:
- 0196                   .dbline 171
- 0196           ;       }
- 0196           ;       
- 0196           ;       return SUCCESS; // crc16 ok!
- 0196 0027              clr R16
- 0198                   .dbline -2
- 0198           L47:
- 0198                   .dbline 0 ; func end
- 0198 2396              adiw R28,3
- 019A 0C940000          xjmp pop_xgset300C
- 019E                   .dbsym l CrcChk 1 A[2:2]c
- 019E                   .dbsym r ucLen 20 c
- 019E                   .dbsym r pInput 10 pc
- 019E                   .dbend
- 019E                   .dbfunc e ComSendResponse _ComSendResponse fV
- 019E           ;        crc_buf -> y+1
- 019E           ;        LenData -> R20
- 019E           ;     statusdata -> R12
- 019E           ;        CmdData -> R10
-                        .even
- 019E           _ComSendResponse::
- 019E 0E940000          xcall push_xgset303C
- 01A2 C22E              mov R12,R18
- 01A4 A02E              mov R10,R16
- 01A6 2397              sbiw R28,3
- 01A8 4985              ldd R20,y+9
- 01AA                   .dbline -1
- 01AA                   .dbline 176
- 01AA           ; }
- 01AA           ; /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 01AA           ; //发送命令响应结果
- 01AA           ; void ComSendResponse(unsigned char CmdData,unsigned char statusdata,unsigned char LenData)
- 01AA           ; {
- 01AA                   .dbline 179
- 01AA           ;     unsigned char crc_buf[2];
- 01AA           ;     
- 01AA           ;     receive_buf[5]= statusdata;
- 01AA C0920500          sts _receive_buf+5,R12
- 01AE                   .dbline 181
- 01AE           ; 
- 01AE           ;     receive_buf[4]=LenData;
- 01AE 40930400          sts _receive_buf+4,R20
- 01B2                   .dbline 183
- 01B2           ; 
- 01B2           ;     receive_buf[3]=CmdData;
- 01B2 A0920300          sts _receive_buf+3,R10
- 01B6                   .dbline 185
- 01B6           ;     
- 01B6           ;     receive_buf[1]=0x00;receive_buf[2]=0x01;
- 01B6 2224              clr R2
- 01B8 20920100          sts _receive_buf+1,R2
- 01BC                   .dbline 185
- 01BC 81E0              ldi R24,1
- 01BE 80930200          sts _receive_buf+2,R24
- 01C2                   .dbline 187
- 01C2           ; 
- 01C2           ;     receive_buf[0]=0x02;
- 01C2 82E0              ldi R24,2
- 01C4 80930000          sts _receive_buf,R24
- 01C8                   .dbline 189
- 01C8           ;     
- 01C8           ;     MAC_CalCrc16(receive_buf, crc_buf,LenData+5); 
- 01C8 842F              mov R24,R20
- 01CA 8B5F              subi R24,251    ; addi 5
- 01CC 8883              std y+0,R24
- 01CE 9E01              movw R18,R28
- 01D0 2F5F              subi R18,255  ; offset = 1
- 01D2 3F4F              sbci R19,255
- 01D4 00E0              ldi R16,<_receive_buf
- 01D6 10E0              ldi R17,>_receive_buf
- 01D8 91DF              xcall _MAC_CalCrc16
- 01DA                   .dbline 191
- 01DA           ;     
- 01DA           ;     receive_buf[LenData+5]=crc_buf[0];
- 01DA 80E0              ldi R24,<_receive_buf+5
- 01DC 90E0              ldi R25,>_receive_buf+5
- 01DE E42F              mov R30,R20
- 01E0 FF27              clr R31
- 01E2 E80F              add R30,R24
- 01E4 F91F              adc R31,R25
- 01E6 2980              ldd R2,y+1
- 01E8 2082              std z+0,R2
- 01EA                   .dbline 193
- 01EA           ;     
- 01EA           ;     receive_buf[LenData+6]=crc_buf[1];//数据包尾 
- 01EA 80E0              ldi R24,<_receive_buf+6
- 01EC 90E0              ldi R25,>_receive_buf+6
- 01EE E42F              mov R30,R20
- 01F0 FF27              clr R31
- 01F2 E80F              add R30,R24
- 01F4 F91F              adc R31,R25
- 01F6 2A80              ldd R2,y+2
- 01F8 2082              std z+0,R2
- 01FA                   .dbline 195
- 01FA           ;     
- 01FA           ;     init_USART1(); 
- 01FA 02DF              xcall _init_USART1
- 01FC                   .dbline 196
- 01FC           ;     outStrtoCom(receive_buf,LenData+7); 
- 01FC 242F              mov R18,R20
- 01FE 3327              clr R19
- 0200 295F              subi R18,249  ; offset = 7
- 0202 3F4F              sbci R19,255
- 0204 00E0              ldi R16,<_receive_buf
- 0206 10E0              ldi R17,>_receive_buf
- 0208 65DF              xcall _outStrtoCom
- 020A                   .dbline 198
- 020A           ;    
- 020A           ;     return;
- 020A                   .dbline -2
- 020A           L52:
- 020A                   .dbline 0 ; func end
- 020A 2396              adiw R28,3
- 020C 0C940000          xjmp pop_xgset303C
- 0210                   .dbsym l crc_buf 1 A[2:2]c
- 0210                   .dbsym r LenData 20 c
- 0210                   .dbsym r statusdata 12 c
- 0210                   .dbsym r CmdData 10 c
- 0210                   .dbend
-                        .area bss(ram, con, rel)
- 0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
- 0000           _uart_timeout_flag2::
- 0000                   .blkb 1
- 0001                   .dbsym e uart_timeout_flag2 _uart_timeout_flag2 c
- 0001           _uart_timeout_flag1::
- 0001                   .blkb 1
- 0002                   .dbsym e uart_timeout_flag1 _uart_timeout_flag1 c
- 0002           ; }
+ 00C0           _puts0::
+ 00C0 4A93              st -y,R20
+ 00C2 5A93              st -y,R21
+ 00C4 A801              movw R20,R16
+ 00C6                   .dbline -1
+ 00C6                   .dbline 57
+ 00C6           ;   
+ 00C6           ; }
+ 00C6           ; 
+ 00C6           ; void puts0(char *s)
+ 00C6           ; {
+ 00C6 05C0              xjmp L16
+ 00C8           L15:
+ 00C8                   .dbline 59
+ 00C8           ;   while (*s)
+ 00C8           ;   {
+ 00C8                   .dbline 60
+ 00C8           ;     putchar0(*s);
+ 00C8 FA01              movw R30,R20
+ 00CA 0081              ldd R16,z+0
+ 00CC A7DF              xcall _putchar0
+ 00CE                   .dbline 61
+ 00CE           ;     s++;
+ 00CE 4F5F              subi R20,255  ; offset = 1
+ 00D0 5F4F              sbci R21,255
+ 00D2                   .dbline 62
+ 00D2           ;   }
+ 00D2           L16:
+ 00D2                   .dbline 58
+ 00D2 FA01              movw R30,R20
+ 00D4 2080              ldd R2,z+0
+ 00D6 2220              tst R2
+ 00D8 B9F7              brne L15
+ 00DA           X3:
+ 00DA                   .dbline 63
+ 00DA           ;   putchar0(0x0a);//回车换行
+ 00DA 0AE0              ldi R16,10
+ 00DC 9FDF              xcall _putchar0
+ 00DE                   .dbline -2
+ 00DE           L14:
+ 00DE                   .dbline 0 ; func end
+ 00DE 5991              ld R21,y+
+ 00E0 4991              ld R20,y+
+ 00E2 0895              ret
+ 00E4                   .dbsym r s 20 pc
+ 00E4                   .dbend
+ 00E4           ; //putchar0(0x0d);
+ 00E4           ; }
+ 00E4           ; 
+ 00E4           ; 

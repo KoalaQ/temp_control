@@ -19,10 +19,11 @@
                         .even
  0000           _Timerinit_1::
  0000                   .dbline -1
- 0000                   .dbline 18
+ 0000                   .dbline 19
  0000           ; #include<iom128v.h>
  0000           ; #include "timertask.h"
  0000           ; #include "time.h"
+ 0000           ; #include "main.h"
  0000           ; #include "lcd.h"
  0000           ; #include "delay.h"
  0000           ; #include "main.h"
@@ -38,32 +39,32 @@
  0000           ;   自行计算时间传入。传入高低八位
  0000           ; */
  0000           ; void Timerinit_1(uchar time_h,uchar time_l){
- 0000                   .dbline 19
+ 0000                   .dbline 20
  0000           ;     time_h_1=time_h;
  0000 00930600          sts _time_h_1,R16
- 0004                   .dbline 20
+ 0004                   .dbline 21
  0004           ;       time_l_1=time_l;
  0004 20930500          sts _time_l_1,R18
- 0008                   .dbline 21
+ 0008                   .dbline 22
  0008           ;        TCCR1B=0x00;
  0008 2224              clr R2
  000A 2EBC              out 0x2e,R2
- 000C                   .dbline 23
+ 000C                   .dbline 24
  000C           ;       //写入初值
  000C           ;     TCNT1H=time_h;
  000C 0DBD              out 0x2d,R16
- 000E                   .dbline 24
+ 000E                   .dbline 25
  000E           ;     TCNT1L=time_l;
  000E 2CBD              out 0x2c,R18
- 0010                   .dbline 26
+ 0010                   .dbline 27
  0010           ;       //普通计数，1024分频
  0010           ;     TCCR1A=0x00;
  0010 2FBC              out 0x2f,R2
- 0012                   .dbline 27
+ 0012                   .dbline 28
  0012           ;     TCCR1B=0x05;
  0012 85E0              ldi R24,5
  0014 8EBD              out 0x2e,R24
- 0016                   .dbline 28
+ 0016                   .dbline 29
  0016           ;        TIMSK|=0x04;//开定时器1溢出中断,16位的
  0016 87B7              in R24,0x37
  0018 8460              ori R24,4
@@ -81,7 +82,7 @@
                         .even
  001E           _Timerinit_3::
  001E                   .dbline -1
- 001E                   .dbline 37
+ 001E                   .dbline 38
  001E           ; }
  001E           ; //************************************************
  001E           ; //16位定时器，定时器3
@@ -91,32 +92,32 @@
  001E           ;   自行计算时间传入。传入高低八位
  001E           ; */
  001E           ; void Timerinit_3(uchar time_h,uchar time_l){
- 001E                   .dbline 38
+ 001E                   .dbline 39
  001E           ;       time_h_3=time_h;
  001E 00930400          sts _time_h_3,R16
- 0022                   .dbline 39
+ 0022                   .dbline 40
  0022           ;       time_l_3=time_l;
  0022 20930300          sts _time_l_3,R18
- 0026                   .dbline 41
+ 0026                   .dbline 42
  0026           ;       //写入初值
  0026           ;        TCCR3B=0x00;
  0026 2224              clr R2
  0028 20928A00          sts 138,R2
- 002C                   .dbline 42
+ 002C                   .dbline 43
  002C           ;     TCNT3H=time_h;
  002C 00938900          sts 137,R16
- 0030                   .dbline 43
+ 0030                   .dbline 44
  0030           ;     TCNT3L=time_l;
  0030 20938800          sts 136,R18
- 0034                   .dbline 45
+ 0034                   .dbline 46
  0034           ;       //普通计数，1024分频
  0034           ;     TCCR3A=0x00;
  0034 20928B00          sts 139,R2
- 0038                   .dbline 46
+ 0038                   .dbline 47
  0038           ;     TCCR3B=0x05;
  0038 85E0              ldi R24,5
  003A 80938A00          sts 138,R24
- 003E                   .dbline 47
+ 003E                   .dbline 48
  003E           ;       ETIMSK |=0x04;//开外部中断
  003E 80917D00          lds R24,125
  0042 8460              ori R24,4
@@ -133,7 +134,7 @@
                         .even
  004A           _Timerinit_0::
  004A                   .dbline -1
- 004A                   .dbline 57
+ 004A                   .dbline 58
  004A           ; }
  004A           ; //************************************************
  004A           ; //8位定时器，定时器0
@@ -144,19 +145,19 @@
  004A           ;   自行计算时间传入。
  004A           ; */
  004A           ; void Timerinit_0(uchar time){
- 004A                   .dbline 58
+ 004A                   .dbline 59
  004A           ;     time_0=time;
  004A 00930200          sts _time_0,R16
- 004E                   .dbline 60
+ 004E                   .dbline 61
  004E           ;       //写入初值
  004E           ;     TCNT0=time;
  004E 02BF              out 0x32,R16
- 0050                   .dbline 61
+ 0050                   .dbline 62
  0050           ;       TIMSK|=0x01;//开定时器0溢出中断,8位的
  0050 87B7              in R24,0x37
  0052 8160              ori R24,1
  0054 87BF              out 0x37,R24
- 0056                   .dbline 62
+ 0056                   .dbline 63
  0056           ;        TCCR0=0x07;//普通计数，1024分频
  0056 87E0              ldi R24,7
  0058 83BF              out 0x33,R24
@@ -171,7 +172,7 @@
                         .even
  005C           _Timerinit_2::
  005C                   .dbline -1
- 005C                   .dbline 72
+ 005C                   .dbline 73
  005C           ;        
  005C           ; }
  005C           ; //************************************************
@@ -182,19 +183,19 @@
  005C           ;   自行计算时间传入。
  005C           ; */
  005C           ; void Timerinit_2(uchar time){
- 005C                   .dbline 73
+ 005C                   .dbline 74
  005C           ;     time_2=time;
  005C 00930100          sts _time_2,R16
- 0060                   .dbline 75
+ 0060                   .dbline 76
  0060           ;       //写入初值
  0060           ;     TCNT2=time;
  0060 04BD              out 0x24,R16
- 0062                   .dbline 76
+ 0062                   .dbline 77
  0062           ;       TIMSK|=0x40;//开定时器2溢出中断,8位的
  0062 87B7              in R24,0x37
  0064 8064              ori R24,64
  0066 87BF              out 0x37,R24
- 0068                   .dbline 78
+ 0068                   .dbline 79
  0068           ;       //普通计数，1024分频
  0068           ;     TCCR2=0x05;
  0068 85E0              ldi R24,5
@@ -237,363 +238,673 @@
  0098 0A92              st -y,R0
  009A 2197              sbiw R28,1
  009C                   .dbline -1
- 009C                   .dbline 81
+ 009C                   .dbline 82
  009C           ; }
  009C           ; #pragma interrupt_handler int_timer0:17
  009C           ; void int_timer0(void){ 
- 009C                   .dbline 82
+ 009C                   .dbline 83
  009C           ;               TCCR0=0x00;
  009C 2224              clr R2
  009E 23BE              out 0x33,R2
- 00A0                   .dbline 83
- 00A0           ;               waitflag--;
- 00A0 80910000          lds R24,_waitflag
- 00A4 90910100          lds R25,_waitflag+1
- 00A8 0197              sbiw R24,1
- 00AA 90930100          sts _waitflag+1,R25
- 00AE 80930000          sts _waitflag,R24
- 00B2                   .dbline 84
- 00B2           ;       lcd_write_char(10,0,0x30+(waitflag/100));
- 00B2 24E6              ldi R18,100
- 00B4 30E0              ldi R19,0
- 00B6 8C01              movw R16,R24
- 00B8 0E940000          xcall div16u
- 00BC C801              movw R24,R16
- 00BE C096              adiw R24,48
- 00C0 8883              std y+0,R24
- 00C2 2227              clr R18
- 00C4 0AE0              ldi R16,10
- 00C6 0E940000          xcall _lcd_write_char
- 00CA                   .dbline 85
- 00CA           ;       lcd_write_char(11,0,'s');       
- 00CA 83E7              ldi R24,115
- 00CC 8883              std y+0,R24
- 00CE 2227              clr R18
- 00D0 0BE0              ldi R16,11
- 00D2 0E940000          xcall _lcd_write_char
- 00D6                   .dbline 86
- 00D6           ;       if(waitflag>1){
- 00D6 81E0              ldi R24,1
- 00D8 90E0              ldi R25,0
- 00DA 20900000          lds R2,_waitflag
- 00DE 30900100          lds R3,_waitflag+1
- 00E2 8215              cp R24,R2
- 00E4 9305              cpc R25,R3
- 00E6 20F4              brsh L5
- 00E8           X0:
- 00E8                   .dbline 86
- 00E8                   .dbline 87
- 00E8           ;          TCNT0=0x00;
- 00E8 2224              clr R2
- 00EA 22BE              out 0x32,R2
- 00EC                   .dbline 88
- 00EC           ;          TCCR0=0x07;
- 00EC 87E0              ldi R24,7
- 00EE 83BF              out 0x33,R24
- 00F0                   .dbline 89
- 00F0           ;        }
- 00F0                   .dbline 90
- 00F0           ;               return;
- 00F0                   .dbline -2
- 00F0           L5:
- 00F0                   .dbline 0 ; func end
- 00F0 2196              adiw R28,1
- 00F2 0990              ld R0,y+
- 00F4 0FBE              OUT 63,R0
- 00F6 F991              ld R31,y+
- 00F8 E991              ld R30,y+
- 00FA B991              ld R27,y+
- 00FC A991              ld R26,y+
- 00FE 9991              ld R25,y+
- 0100 8991              ld R24,y+
- 0102 3991              ld R19,y+
- 0104 2991              ld R18,y+
- 0106 1991              ld R17,y+
- 0108 0991              ld R16,y+
- 010A 9990              ld R9,y+
- 010C 8990              ld R8,y+
- 010E 7990              ld R7,y+
- 0110 6990              ld R6,y+
- 0112 5990              ld R5,y+
- 0114 4990              ld R4,y+
- 0116 3990              ld R3,y+
- 0118 2990              ld R2,y+
- 011A 1990              ld R1,y+
- 011C 0990              ld R0,y+
- 011E 1895              reti
- 0120                   .dbend
+ 00A0                   .dbline 84
+ 00A0           ;   if(t0_flag==0){
+ 00A0 20900000          lds R2,_t0_flag
+ 00A4 30900100          lds R3,_t0_flag+1
+ 00A8 2220              tst R2
+ 00AA 59F5              brne L6
+ 00AC 3320              tst R3
+ 00AE 49F5              brne L6
+ 00B0           X0:
+ 00B0                   .dbline 84
+ 00B0                   .dbline 85
+ 00B0           ;               waitflag--;
+ 00B0 80910000          lds R24,_waitflag
+ 00B4 90910100          lds R25,_waitflag+1
+ 00B8 0197              sbiw R24,1
+ 00BA 90930100          sts _waitflag+1,R25
+ 00BE 80930000          sts _waitflag,R24
+ 00C2                   .dbline 86
+ 00C2           ;           lcd_write_char(10,0,0x30+(waitflag/100));
+ 00C2 24E6              ldi R18,100
+ 00C4 30E0              ldi R19,0
+ 00C6 8C01              movw R16,R24
+ 00C8 0E940000          xcall div16u
+ 00CC C801              movw R24,R16
+ 00CE C096              adiw R24,48
+ 00D0 8883              std y+0,R24
+ 00D2 2227              clr R18
+ 00D4 0AE0              ldi R16,10
+ 00D6 0E940000          xcall _lcd_write_char
+ 00DA                   .dbline 87
+ 00DA           ;           lcd_write_char(11,0,'s');   
+ 00DA 83E7              ldi R24,115
+ 00DC 8883              std y+0,R24
+ 00DE 2227              clr R18
+ 00E0 0BE0              ldi R16,11
+ 00E2 0E940000          xcall _lcd_write_char
+ 00E6                   .dbline 88
+ 00E6           ;           if(waitflag>1){
+ 00E6 81E0              ldi R24,1
+ 00E8 90E0              ldi R25,0
+ 00EA 20900000          lds R2,_waitflag
+ 00EE 30900100          lds R3,_waitflag+1
+ 00F2 8215              cp R24,R2
+ 00F4 9305              cpc R25,R3
+ 00F6 F0F4              brsh L5
+ 00F8           X1:
+ 00F8                   .dbline 88
+ 00F8                   .dbline 89
+ 00F8           ;             TCNT0=0x00;
+ 00F8 2224              clr R2
+ 00FA 22BE              out 0x32,R2
+ 00FC                   .dbline 90
+ 00FC           ;             TCCR0=0x07;
+ 00FC 87E0              ldi R24,7
+ 00FE 83BF              out 0x33,R24
+ 0100                   .dbline 91
+ 0100           ;           }
+ 0100                   .dbline 92
+ 0100           ;       }else{
+ 0100 19C0              xjmp L5
+ 0102           L6:
+ 0102                   .dbline 92
+ 0102                   .dbline 93
+ 0102           ;         waitflag--;
+ 0102 80910000          lds R24,_waitflag
+ 0106 90910100          lds R25,_waitflag+1
+ 010A 0197              sbiw R24,1
+ 010C 90930100          sts _waitflag+1,R25
+ 0110 80930000          sts _waitflag,R24
+ 0114                   .dbline 94
+ 0114           ;           if(waitflag==1){
+ 0114 8130              cpi R24,1
+ 0116 E0E0              ldi R30,0
+ 0118 9E07              cpc R25,R30
+ 011A 41F4              brne L10
+ 011C           X2:
+ 011C                   .dbline 94
+ 011C                   .dbline 95
+ 011C           ;                 waitflag=32;
+ 011C 80E2              ldi R24,32
+ 011E 90E0              ldi R25,0
+ 0120 90930100          sts _waitflag+1,R25
+ 0124 80930000          sts _waitflag,R24
+ 0128                   .dbline 96
+ 0128           ;             tempcontrol();//执行温度调节
+ 0128 0E940000          xcall _tempcontrol
+ 012C                   .dbline 97
+ 012C           ;           }
+ 012C           L10:
+ 012C                   .dbline 98
+ 012C           ;          TCNT0=0x00;
+ 012C 2224              clr R2
+ 012E 22BE              out 0x32,R2
+ 0130                   .dbline 99
+ 0130           ;          TCCR0=0x07;
+ 0130 87E0              ldi R24,7
+ 0132 83BF              out 0x33,R24
+ 0134                   .dbline 100
+ 0134           ;       }
+ 0134                   .dbline 101
+ 0134           ;               return;
+ 0134                   .dbline -2
+ 0134           L5:
+ 0134                   .dbline 0 ; func end
+ 0134 2196              adiw R28,1
+ 0136 0990              ld R0,y+
+ 0138 0FBE              OUT 63,R0
+ 013A F991              ld R31,y+
+ 013C E991              ld R30,y+
+ 013E B991              ld R27,y+
+ 0140 A991              ld R26,y+
+ 0142 9991              ld R25,y+
+ 0144 8991              ld R24,y+
+ 0146 3991              ld R19,y+
+ 0148 2991              ld R18,y+
+ 014A 1991              ld R17,y+
+ 014C 0991              ld R16,y+
+ 014E 9990              ld R9,y+
+ 0150 8990              ld R8,y+
+ 0152 7990              ld R7,y+
+ 0154 6990              ld R6,y+
+ 0156 5990              ld R5,y+
+ 0158 4990              ld R4,y+
+ 015A 3990              ld R3,y+
+ 015C 2990              ld R2,y+
+ 015E 1990              ld R1,y+
+ 0160 0990              ld R0,y+
+ 0162 1895              reti
+ 0164                   .dbend
                         .area vector(rom, abs)
                         .org 56
- 0038 0C949000          jmp _int_timer1
+ 0038 0C94B200          jmp _int_timer1
                         .area text(rom, con, rel)
- 0120                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
- 0120                   .dbfunc e int_timer1 _int_timer1 fV
+ 0164                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 0164                   .dbfunc e int_timer1 _int_timer1 fV
                         .even
- 0120           _int_timer1::
- 0120 0A92              st -y,R0
- 0122 1A92              st -y,R1
- 0124 2A92              st -y,R2
- 0126 3A92              st -y,R3
- 0128 4A92              st -y,R4
- 012A 5A92              st -y,R5
- 012C 6A92              st -y,R6
- 012E 7A92              st -y,R7
- 0130 8A92              st -y,R8
- 0132 9A92              st -y,R9
- 0134 0A93              st -y,R16
- 0136 1A93              st -y,R17
- 0138 2A93              st -y,R18
- 013A 3A93              st -y,R19
- 013C 8A93              st -y,R24
- 013E 9A93              st -y,R25
- 0140 AA93              st -y,R26
- 0142 BA93              st -y,R27
- 0144 EA93              st -y,R30
- 0146 FA93              st -y,R31
- 0148 0FB6              IN R0,63
- 014A 0A92              st -y,R0
- 014C                   .dbline -1
- 014C                   .dbline 94
- 014C           ; }
- 014C           ; //溢出中断。
- 014C           ; #pragma interrupt_handler int_timer1:15
- 014C           ; void int_timer1(void){
- 014C                   .dbline 95
- 014C           ;                TCCR1B=0x00;
- 014C 2224              clr R2
- 014E 2EBC              out 0x2e,R2
- 0150                   .dbline 96
- 0150           ;                out_port();
- 0150 0E940000          xcall _out_port
- 0154                   .dbline 97
- 0154           ;               TCNT1H=time_h_1;
- 0154 20900600          lds R2,_time_h_1
- 0158 2DBC              out 0x2d,R2
- 015A                   .dbline 98
- 015A           ;          TCNT1L=time_l_1;
- 015A 20900500          lds R2,_time_l_1
- 015E 2CBC              out 0x2c,R2
- 0160                   .dbline 99
- 0160           ;                TCCR1B=0x05;
- 0160 85E0              ldi R24,5
- 0162 8EBD              out 0x2e,R24
- 0164                   .dbline 100
- 0164           ;               return;
- 0164                   .dbline -2
- 0164           L8:
- 0164                   .dbline 0 ; func end
- 0164 0990              ld R0,y+
- 0166 0FBE              OUT 63,R0
- 0168 F991              ld R31,y+
- 016A E991              ld R30,y+
- 016C B991              ld R27,y+
- 016E A991              ld R26,y+
- 0170 9991              ld R25,y+
- 0172 8991              ld R24,y+
- 0174 3991              ld R19,y+
- 0176 2991              ld R18,y+
- 0178 1991              ld R17,y+
- 017A 0991              ld R16,y+
- 017C 9990              ld R9,y+
- 017E 8990              ld R8,y+
- 0180 7990              ld R7,y+
- 0182 6990              ld R6,y+
- 0184 5990              ld R5,y+
- 0186 4990              ld R4,y+
- 0188 3990              ld R3,y+
- 018A 2990              ld R2,y+
- 018C 1990              ld R1,y+
- 018E 0990              ld R0,y+
- 0190 1895              reti
- 0192                   .dbend
+ 0164           _int_timer1::
+ 0164 0A92              st -y,R0
+ 0166 1A92              st -y,R1
+ 0168 2A92              st -y,R2
+ 016A 3A92              st -y,R3
+ 016C 4A92              st -y,R4
+ 016E 5A92              st -y,R5
+ 0170 6A92              st -y,R6
+ 0172 7A92              st -y,R7
+ 0174 8A92              st -y,R8
+ 0176 9A92              st -y,R9
+ 0178 0A93              st -y,R16
+ 017A 1A93              st -y,R17
+ 017C 2A93              st -y,R18
+ 017E 3A93              st -y,R19
+ 0180 8A93              st -y,R24
+ 0182 9A93              st -y,R25
+ 0184 AA93              st -y,R26
+ 0186 BA93              st -y,R27
+ 0188 EA93              st -y,R30
+ 018A FA93              st -y,R31
+ 018C 0FB6              IN R0,63
+ 018E 0A92              st -y,R0
+ 0190                   .dbline -1
+ 0190                   .dbline 105
+ 0190           ; }
+ 0190           ; //溢出中断。
+ 0190           ; #pragma interrupt_handler int_timer1:15
+ 0190           ; void int_timer1(void){
+ 0190                   .dbline 106
+ 0190           ;                TCCR1B=0x00;
+ 0190 2224              clr R2
+ 0192 2EBC              out 0x2e,R2
+ 0194                   .dbline 107
+ 0194           ;                out_port();
+ 0194 0E940000          xcall _out_port
+ 0198                   .dbline 108
+ 0198           ;               TCNT1H=time_h_1;
+ 0198 20900600          lds R2,_time_h_1
+ 019C 2DBC              out 0x2d,R2
+ 019E                   .dbline 109
+ 019E           ;          TCNT1L=time_l_1;
+ 019E 20900500          lds R2,_time_l_1
+ 01A2 2CBC              out 0x2c,R2
+ 01A4                   .dbline 110
+ 01A4           ;                TCCR1B=0x05;
+ 01A4 85E0              ldi R24,5
+ 01A6 8EBD              out 0x2e,R24
+ 01A8                   .dbline 111
+ 01A8           ;               return;
+ 01A8                   .dbline -2
+ 01A8           L12:
+ 01A8                   .dbline 0 ; func end
+ 01A8 0990              ld R0,y+
+ 01AA 0FBE              OUT 63,R0
+ 01AC F991              ld R31,y+
+ 01AE E991              ld R30,y+
+ 01B0 B991              ld R27,y+
+ 01B2 A991              ld R26,y+
+ 01B4 9991              ld R25,y+
+ 01B6 8991              ld R24,y+
+ 01B8 3991              ld R19,y+
+ 01BA 2991              ld R18,y+
+ 01BC 1991              ld R17,y+
+ 01BE 0991              ld R16,y+
+ 01C0 9990              ld R9,y+
+ 01C2 8990              ld R8,y+
+ 01C4 7990              ld R7,y+
+ 01C6 6990              ld R6,y+
+ 01C8 5990              ld R5,y+
+ 01CA 4990              ld R4,y+
+ 01CC 3990              ld R3,y+
+ 01CE 2990              ld R2,y+
+ 01D0 1990              ld R1,y+
+ 01D2 0990              ld R0,y+
+ 01D4 1895              reti
+ 01D6                   .dbend
                         .area vector(rom, abs)
                         .org 40
- 0028 0C94C900          jmp _int_timer2
+ 0028 0C94EB00          jmp _int_timer2
                         .area text(rom, con, rel)
- 0192                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
- 0192                   .dbfunc e int_timer2 _int_timer2 fV
+ 01D6                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 01D6                   .dbfunc e int_timer2 _int_timer2 fV
                         .even
- 0192           _int_timer2::
- 0192 0A92              st -y,R0
- 0194 1A92              st -y,R1
- 0196 2A92              st -y,R2
- 0198 3A92              st -y,R3
- 019A 4A92              st -y,R4
- 019C 5A92              st -y,R5
- 019E 6A92              st -y,R6
- 01A0 7A92              st -y,R7
- 01A2 8A92              st -y,R8
- 01A4 9A92              st -y,R9
- 01A6 0A93              st -y,R16
- 01A8 1A93              st -y,R17
- 01AA 2A93              st -y,R18
- 01AC 3A93              st -y,R19
- 01AE 8A93              st -y,R24
- 01B0 9A93              st -y,R25
- 01B2 AA93              st -y,R26
- 01B4 BA93              st -y,R27
- 01B6 EA93              st -y,R30
- 01B8 FA93              st -y,R31
- 01BA 0FB6              IN R0,63
- 01BC 0A92              st -y,R0
- 01BE                   .dbline -1
- 01BE                   .dbline 103
- 01BE           ; }
- 01BE           ; #pragma interrupt_handler int_timer2:11
- 01BE           ; void int_timer2(void){
- 01BE                   .dbline 105
- 01BE           ;       //PORTE=~PORTE;
- 01BE           ;               TCCR2=0x00;
- 01BE 2224              clr R2
- 01C0 25BC              out 0x25,R2
- 01C2                   .dbline 106
- 01C2           ;               TCNT2=time_2;
- 01C2 20900100          lds R2,_time_2
- 01C6 24BC              out 0x24,R2
- 01C8                   .dbline 107
- 01C8           ;               TCCR2=0x05;
- 01C8 85E0              ldi R24,5
- 01CA 85BD              out 0x25,R24
- 01CC                   .dbline 108
- 01CC           ;               if(secondflag==0){
- 01CC 20900000          lds R2,_secondflag
- 01D0 30900100          lds R3,_secondflag+1
- 01D4 2220              tst R2
- 01D6 51F4              brne L10
- 01D8 3320              tst R3
- 01DA 41F4              brne L10
- 01DC           X1:
- 01DC                   .dbline 108
- 01DC                   .dbline 109
- 01DC           ;                 secondflag=64;
- 01DC 80E4              ldi R24,64
- 01DE 90E0              ldi R25,0
- 01E0 90930100          sts _secondflag+1,R25
- 01E4 80930000          sts _secondflag,R24
- 01E8                   .dbline 110
- 01E8           ;                 int_int2();
- 01E8 0E940000          xcall _int_int2
- 01EC                   .dbline 111
- 01EC           ;               }
- 01EC           L10:
- 01EC                   .dbline 112
- 01EC           ;               secondflag--;
- 01EC 80910000          lds R24,_secondflag
- 01F0 90910100          lds R25,_secondflag+1
- 01F4 0197              sbiw R24,1
- 01F6 90930100          sts _secondflag+1,R25
- 01FA 80930000          sts _secondflag,R24
- 01FE                   .dbline 113
- 01FE           ;               return;
- 01FE                   .dbline -2
- 01FE           L9:
- 01FE                   .dbline 0 ; func end
- 01FE 0990              ld R0,y+
- 0200 0FBE              OUT 63,R0
- 0202 F991              ld R31,y+
- 0204 E991              ld R30,y+
- 0206 B991              ld R27,y+
- 0208 A991              ld R26,y+
- 020A 9991              ld R25,y+
- 020C 8991              ld R24,y+
- 020E 3991              ld R19,y+
- 0210 2991              ld R18,y+
- 0212 1991              ld R17,y+
- 0214 0991              ld R16,y+
- 0216 9990              ld R9,y+
- 0218 8990              ld R8,y+
- 021A 7990              ld R7,y+
- 021C 6990              ld R6,y+
- 021E 5990              ld R5,y+
- 0220 4990              ld R4,y+
- 0222 3990              ld R3,y+
- 0224 2990              ld R2,y+
- 0226 1990              ld R1,y+
- 0228 0990              ld R0,y+
- 022A 1895              reti
- 022C                   .dbend
+ 01D6           _int_timer2::
+ 01D6 0A92              st -y,R0
+ 01D8 1A92              st -y,R1
+ 01DA 2A92              st -y,R2
+ 01DC 3A92              st -y,R3
+ 01DE 4A92              st -y,R4
+ 01E0 5A92              st -y,R5
+ 01E2 6A92              st -y,R6
+ 01E4 7A92              st -y,R7
+ 01E6 8A92              st -y,R8
+ 01E8 9A92              st -y,R9
+ 01EA 0A93              st -y,R16
+ 01EC 1A93              st -y,R17
+ 01EE 2A93              st -y,R18
+ 01F0 3A93              st -y,R19
+ 01F2 8A93              st -y,R24
+ 01F4 9A93              st -y,R25
+ 01F6 AA93              st -y,R26
+ 01F8 BA93              st -y,R27
+ 01FA EA93              st -y,R30
+ 01FC FA93              st -y,R31
+ 01FE 0FB6              IN R0,63
+ 0200 0A92              st -y,R0
+ 0202                   .dbline -1
+ 0202                   .dbline 114
+ 0202           ; }
+ 0202           ; #pragma interrupt_handler int_timer2:11
+ 0202           ; void int_timer2(void){
+ 0202                   .dbline 116
+ 0202           ;       //PORTE=~PORTE;
+ 0202           ;               TCCR2=0x00;
+ 0202 2224              clr R2
+ 0204 25BC              out 0x25,R2
+ 0206                   .dbline 117
+ 0206           ;               if(secondflag==0){
+ 0206 20900000          lds R2,_secondflag
+ 020A 30900100          lds R3,_secondflag+1
+ 020E 2220              tst R2
+ 0210 51F4              brne L14
+ 0212 3320              tst R3
+ 0214 41F4              brne L14
+ 0216           X3:
+ 0216                   .dbline 117
+ 0216                   .dbline 118
+ 0216           ;                 secondflag=64;
+ 0216 80E4              ldi R24,64
+ 0218 90E0              ldi R25,0
+ 021A 90930100          sts _secondflag+1,R25
+ 021E 80930000          sts _secondflag,R24
+ 0222                   .dbline 119
+ 0222           ;                 int_int2();
+ 0222 0E940000          xcall _int_int2
+ 0226                   .dbline 120
+ 0226           ;               }
+ 0226           L14:
+ 0226                   .dbline 121
+ 0226           ;               secondflag--;
+ 0226 80910000          lds R24,_secondflag
+ 022A 90910100          lds R25,_secondflag+1
+ 022E 0197              sbiw R24,1
+ 0230 90930100          sts _secondflag+1,R25
+ 0234 80930000          sts _secondflag,R24
+ 0238                   .dbline 122
+ 0238           ;               TCNT2=time_2;
+ 0238 20900100          lds R2,_time_2
+ 023C 24BC              out 0x24,R2
+ 023E                   .dbline 123
+ 023E           ;               TCCR2=0x05;
+ 023E 85E0              ldi R24,5
+ 0240 85BD              out 0x25,R24
+ 0242                   .dbline 124
+ 0242           ;               return;
+ 0242                   .dbline -2
+ 0242           L13:
+ 0242                   .dbline 0 ; func end
+ 0242 0990              ld R0,y+
+ 0244 0FBE              OUT 63,R0
+ 0246 F991              ld R31,y+
+ 0248 E991              ld R30,y+
+ 024A B991              ld R27,y+
+ 024C A991              ld R26,y+
+ 024E 9991              ld R25,y+
+ 0250 8991              ld R24,y+
+ 0252 3991              ld R19,y+
+ 0254 2991              ld R18,y+
+ 0256 1991              ld R17,y+
+ 0258 0991              ld R16,y+
+ 025A 9990              ld R9,y+
+ 025C 8990              ld R8,y+
+ 025E 7990              ld R7,y+
+ 0260 6990              ld R6,y+
+ 0262 5990              ld R5,y+
+ 0264 4990              ld R4,y+
+ 0266 3990              ld R3,y+
+ 0268 2990              ld R2,y+
+ 026A 1990              ld R1,y+
+ 026C 0990              ld R0,y+
+ 026E 1895              reti
+ 0270                   .dbend
                         .area vector(rom, abs)
                         .org 116
- 0074 0C941601          jmp _int_timer3
+ 0074 0C943801          jmp _int_timer3
                         .area text(rom, con, rel)
- 022C                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
- 022C                   .dbfunc e int_timer3 _int_timer3 fV
+ 0270                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
+ 0270                   .dbfunc e int_timer3 _int_timer3 fV
                         .even
- 022C           _int_timer3::
- 022C 0A92              st -y,R0
- 022E 1A92              st -y,R1
- 0230 2A92              st -y,R2
- 0232 3A92              st -y,R3
- 0234 4A92              st -y,R4
- 0236 5A92              st -y,R5
- 0238 6A92              st -y,R6
- 023A 7A92              st -y,R7
- 023C 8A92              st -y,R8
- 023E 9A92              st -y,R9
- 0240 0A93              st -y,R16
- 0242 1A93              st -y,R17
- 0244 2A93              st -y,R18
- 0246 3A93              st -y,R19
- 0248 8A93              st -y,R24
- 024A 9A93              st -y,R25
- 024C AA93              st -y,R26
- 024E BA93              st -y,R27
- 0250 EA93              st -y,R30
- 0252 FA93              st -y,R31
- 0254 0FB6              IN R0,63
- 0256 0A92              st -y,R0
- 0258                   .dbline -1
- 0258                   .dbline 117
- 0258           ; }
- 0258           ; //16位定时器，定时器3溢出中断。
- 0258           ; #pragma interrupt_handler int_timer3:30
- 0258           ; void int_timer3(void){
- 0258                   .dbline 118
- 0258           ;       TCCR3B=0x00;
- 0258 2224              clr R2
- 025A 20928A00          sts 138,R2
- 025E                   .dbline 119
- 025E           ;       tempcontrol();//执行温度调节
- 025E 0E940000          xcall _tempcontrol
- 0262                   .dbline 120
- 0262           ;         TCNT3H=time_h_3;
- 0262 20900400          lds R2,_time_h_3
- 0266 20928900          sts 137,R2
- 026A                   .dbline 121
- 026A           ;       TCNT3L=time_l_3;
- 026A 20900300          lds R2,_time_l_3
- 026E 20928800          sts 136,R2
- 0272                   .dbline 122
- 0272           ;       TCCR3B=0x05;
- 0272 85E0              ldi R24,5
- 0274 80938A00          sts 138,R24
- 0278                   .dbline -2
- 0278           L12:
- 0278                   .dbline 0 ; func end
- 0278 0990              ld R0,y+
- 027A 0FBE              OUT 63,R0
- 027C F991              ld R31,y+
- 027E E991              ld R30,y+
- 0280 B991              ld R27,y+
- 0282 A991              ld R26,y+
- 0284 9991              ld R25,y+
- 0286 8991              ld R24,y+
- 0288 3991              ld R19,y+
- 028A 2991              ld R18,y+
- 028C 1991              ld R17,y+
- 028E 0991              ld R16,y+
- 0290 9990              ld R9,y+
- 0292 8990              ld R8,y+
- 0294 7990              ld R7,y+
- 0296 6990              ld R6,y+
- 0298 5990              ld R5,y+
- 029A 4990              ld R4,y+
- 029C 3990              ld R3,y+
- 029E 2990              ld R2,y+
- 02A0 1990              ld R1,y+
- 02A2 0990              ld R0,y+
- 02A4 1895              reti
- 02A6                   .dbend
+ 0270           _int_timer3::
+ 0270 0A92              st -y,R0
+ 0272 1A92              st -y,R1
+ 0274 2A92              st -y,R2
+ 0276 3A92              st -y,R3
+ 0278 8A92              st -y,R8
+ 027A 9A92              st -y,R9
+ 027C 0A93              st -y,R16
+ 027E 1A93              st -y,R17
+ 0280 2A93              st -y,R18
+ 0282 3A93              st -y,R19
+ 0284 8A93              st -y,R24
+ 0286 9A93              st -y,R25
+ 0288 AA93              st -y,R26
+ 028A BA93              st -y,R27
+ 028C 0FB6              IN R0,63
+ 028E 0A92              st -y,R0
+ 0290 AA92              st -y,R10
+ 0292 BA92              st -y,R11
+ 0294                   .dbline -1
+ 0294                   .dbline 128
+ 0294           ; }
+ 0294           ; //16位定时器，定时器3溢出中断。
+ 0294           ; #pragma interrupt_handler int_timer3:30
+ 0294           ; void int_timer3(void){
+ 0294                   .dbline 129
+ 0294           ;      TCCR3B=0x00;
+ 0294 2224              clr R2
+ 0296 20928A00          sts 138,R2
+ 029A                   .dbline 131
+ 029A           ;        
+ 029A           ;      send_data_cache[0]=0x65;//e
+ 029A 85E6              ldi R24,101
+ 029C 90E0              ldi R25,0
+ 029E 90930100          sts _send_data_cache+1,R25
+ 02A2 80930000          sts _send_data_cache,R24
+ 02A6                   .dbline 132
+ 02A6           ;        send_data_cache[1]=temps[0].flag;//标志位
+ 02A6 20900000          lds R2,_temps
+ 02AA 30900100          lds R3,_temps+1
+ 02AE 30920300          sts _send_data_cache+2+1,R3
+ 02B2 20920200          sts _send_data_cache+2,R2
+ 02B6                   .dbline 133
+ 02B6           ;        send_data_cache[2]=temps[0].status;//状态
+ 02B6 20900A01          lds R2,_temps+266
+ 02BA 30900B01          lds R3,_temps+266+1
+ 02BE 30920500          sts _send_data_cache+4+1,R3
+ 02C2 20920400          sts _send_data_cache+4,R2
+ 02C6                   .dbline 134
+ 02C6           ;        send_data_cache[3]=((int)temps[0].actualtemp)>>8;//温度
+ 02C6 20912601          lds R18,_temps+292+2
+ 02CA 30912701          lds R19,_temps+292+2+1
+ 02CE 00912401          lds R16,_temps+292
+ 02D2 10912501          lds R17,_temps+292+1
+ 02D6 0E940000          xcall fpint
+ 02DA 1801              movw R2,R16
+ 02DC 232C              mov R2,R3
+ 02DE 3324              clr R3
+ 02E0 27FC              sbrc R2,7
+ 02E2 3094              com R3
+ 02E4 30920700          sts _send_data_cache+6+1,R3
+ 02E8 20920600          sts _send_data_cache+6,R2
+ 02EC                   .dbline 135
+ 02EC           ;        send_data_cache[4]=((int)temps[0].actualtemp)&0xFF;
+ 02EC 20912601          lds R18,_temps+292+2
+ 02F0 30912701          lds R19,_temps+292+2+1
+ 02F4 00912401          lds R16,_temps+292
+ 02F8 10912501          lds R17,_temps+292+1
+ 02FC 0E940000          xcall fpint
+ 0300 C801              movw R24,R16
+ 0302 9070              andi R25,0
+ 0304 90930900          sts _send_data_cache+8+1,R25
+ 0308 80930800          sts _send_data_cache+8,R24
+ 030C                   .dbline 136
+ 030C           ;        send_data_cache[5]=temps[0].nowtime>>8;
+ 030C 20900E01          lds R2,_temps+270
+ 0310 30900F01          lds R3,_temps+270+1
+ 0314 232C              mov R2,R3
+ 0316 3324              clr R3
+ 0318 30920B00          sts _send_data_cache+10+1,R3
+ 031C 20920A00          sts _send_data_cache+10,R2
+ 0320                   .dbline 137
+ 0320           ;        send_data_cache[6]=temps[0].nowtime&0xFF;
+ 0320 80910E01          lds R24,_temps+270
+ 0324 90910F01          lds R25,_temps+270+1
+ 0328 9070              andi R25,0
+ 032A 90930D00          sts _send_data_cache+12+1,R25
+ 032E 80930C00          sts _send_data_cache+12,R24
+ 0332                   .dbline 138
+ 0332           ;        send_data_cache[7]=0x65;//e
+ 0332 85E6              ldi R24,101
+ 0334 90E0              ldi R25,0
+ 0336 90930F00          sts _send_data_cache+14+1,R25
+ 033A 80930E00          sts _send_data_cache+14,R24
+ 033E                   .dbline 140
+ 033E           ;        
+ 033E           ;        send_data_cache[8]=0x66;//f
+ 033E 86E6              ldi R24,102
+ 0340 90931100          sts _send_data_cache+16+1,R25
+ 0344 80931000          sts _send_data_cache+16,R24
+ 0348                   .dbline 141
+ 0348           ;        send_data_cache[9]=temps[1].flag;//标志位
+ 0348 20904401          lds R2,_temps+324
+ 034C 30904501          lds R3,_temps+324+1
+ 0350 30921300          sts _send_data_cache+18+1,R3
+ 0354 20921200          sts _send_data_cache+18,R2
+ 0358                   .dbline 142
+ 0358           ;        send_data_cache[10]=temps[1].status ;//状态
+ 0358 20904E02          lds R2,_temps+324+266
+ 035C 30904F02          lds R3,_temps+324+266+1
+ 0360 30921500          sts _send_data_cache+20+1,R3
+ 0364 20921400          sts _send_data_cache+20,R2
+ 0368                   .dbline 143
+ 0368           ;        send_data_cache[11]=((int)temps[1].actualtemp)>>8;//温度
+ 0368 20916A02          lds R18,_temps+324+292+2
+ 036C 30916B02          lds R19,_temps+324+292+2+1
+ 0370 00916802          lds R16,_temps+324+292
+ 0374 10916902          lds R17,_temps+324+292+1
+ 0378 0E940000          xcall fpint
+ 037C 1801              movw R2,R16
+ 037E 232C              mov R2,R3
+ 0380 3324              clr R3
+ 0382 27FC              sbrc R2,7
+ 0384 3094              com R3
+ 0386 30921700          sts _send_data_cache+22+1,R3
+ 038A 20921600          sts _send_data_cache+22,R2
+ 038E                   .dbline 144
+ 038E           ;        send_data_cache[12]=((int)temps[1].actualtemp)&0xFF;
+ 038E 20916A02          lds R18,_temps+324+292+2
+ 0392 30916B02          lds R19,_temps+324+292+2+1
+ 0396 00916802          lds R16,_temps+324+292
+ 039A 10916902          lds R17,_temps+324+292+1
+ 039E 0E940000          xcall fpint
+ 03A2 C801              movw R24,R16
+ 03A4 9070              andi R25,0
+ 03A6 90931900          sts _send_data_cache+24+1,R25
+ 03AA 80931800          sts _send_data_cache+24,R24
+ 03AE                   .dbline 145
+ 03AE           ;        send_data_cache[13]=temps[1].nowtime>>8;
+ 03AE 20905202          lds R2,_temps+324+270
+ 03B2 30905302          lds R3,_temps+324+270+1
+ 03B6 232C              mov R2,R3
+ 03B8 3324              clr R3
+ 03BA 30921B00          sts _send_data_cache+26+1,R3
+ 03BE 20921A00          sts _send_data_cache+26,R2
+ 03C2                   .dbline 146
+ 03C2           ;        send_data_cache[14]=temps[1].nowtime&0xFF;
+ 03C2 80915202          lds R24,_temps+324+270
+ 03C6 90915302          lds R25,_temps+324+270+1
+ 03CA 9070              andi R25,0
+ 03CC 90931D00          sts _send_data_cache+28+1,R25
+ 03D0 80931C00          sts _send_data_cache+28,R24
+ 03D4                   .dbline 147
+ 03D4           ;        send_data_cache[15]=0x66;//f
+ 03D4 86E6              ldi R24,102
+ 03D6 90E0              ldi R25,0
+ 03D8 90931F00          sts _send_data_cache+30+1,R25
+ 03DC 80931E00          sts _send_data_cache+30,R24
+ 03E0                   .dbline 149
+ 03E0           ;        
+ 03E0           ;        send_data_cache[16]=0x67;//g
+ 03E0 87E6              ldi R24,103
+ 03E2 90932100          sts _send_data_cache+32+1,R25
+ 03E6 80932000          sts _send_data_cache+32,R24
+ 03EA                   .dbline 150
+ 03EA           ;        send_data_cache[17]=temps[2].flag;//标志位
+ 03EA 20908802          lds R2,_temps+648
+ 03EE 30908902          lds R3,_temps+648+1
+ 03F2 30922300          sts _send_data_cache+34+1,R3
+ 03F6 20922200          sts _send_data_cache+34,R2
+ 03FA                   .dbline 151
+ 03FA           ;        send_data_cache[18]=temps[2].status;//状态
+ 03FA 20909203          lds R2,_temps+648+266
+ 03FE 30909303          lds R3,_temps+648+266+1
+ 0402 30922500          sts _send_data_cache+36+1,R3
+ 0406 20922400          sts _send_data_cache+36,R2
+ 040A                   .dbline 152
+ 040A           ;        send_data_cache[19]=((int)temps[2].actualtemp)>>8;//温度
+ 040A 2091AE03          lds R18,_temps+648+292+2
+ 040E 3091AF03          lds R19,_temps+648+292+2+1
+ 0412 0091AC03          lds R16,_temps+648+292
+ 0416 1091AD03          lds R17,_temps+648+292+1
+ 041A 0E940000          xcall fpint
+ 041E 1801              movw R2,R16
+ 0420 232C              mov R2,R3
+ 0422 3324              clr R3
+ 0424 27FC              sbrc R2,7
+ 0426 3094              com R3
+ 0428 30922700          sts _send_data_cache+38+1,R3
+ 042C 20922600          sts _send_data_cache+38,R2
+ 0430                   .dbline 153
+ 0430           ;        send_data_cache[20]=((int)temps[2].actualtemp)&0xFF;
+ 0430 2091AE03          lds R18,_temps+648+292+2
+ 0434 3091AF03          lds R19,_temps+648+292+2+1
+ 0438 0091AC03          lds R16,_temps+648+292
+ 043C 1091AD03          lds R17,_temps+648+292+1
+ 0440 0E940000          xcall fpint
+ 0444 C801              movw R24,R16
+ 0446 9070              andi R25,0
+ 0448 90932900          sts _send_data_cache+40+1,R25
+ 044C 80932800          sts _send_data_cache+40,R24
+ 0450                   .dbline 154
+ 0450           ;        send_data_cache[21]=temps[2].nowtime>>8;
+ 0450 20909603          lds R2,_temps+648+270
+ 0454 30909703          lds R3,_temps+648+270+1
+ 0458 232C              mov R2,R3
+ 045A 3324              clr R3
+ 045C 30922B00          sts _send_data_cache+42+1,R3
+ 0460 20922A00          sts _send_data_cache+42,R2
+ 0464                   .dbline 155
+ 0464           ;        send_data_cache[22]=temps[2].nowtime&0xFF;
+ 0464 80919603          lds R24,_temps+648+270
+ 0468 90919703          lds R25,_temps+648+270+1
+ 046C 9070              andi R25,0
+ 046E 90932D00          sts _send_data_cache+44+1,R25
+ 0472 80932C00          sts _send_data_cache+44,R24
+ 0476                   .dbline 156
+ 0476           ;        send_data_cache[23]=0x67;//g
+ 0476 87E6              ldi R24,103
+ 0478 90E0              ldi R25,0
+ 047A 90932F00          sts _send_data_cache+46+1,R25
+ 047E 80932E00          sts _send_data_cache+46,R24
+ 0482                   .dbline 158
+ 0482           ;        
+ 0482           ;        send_data_cache[24]=0x68;//h
+ 0482 88E6              ldi R24,104
+ 0484 90933100          sts _send_data_cache+48+1,R25
+ 0488 80933000          sts _send_data_cache+48,R24
+ 048C                   .dbline 159
+ 048C           ;        send_data_cache[25]=temps[3].flag ;//标志位
+ 048C 2090CC03          lds R2,_temps+972
+ 0490 3090CD03          lds R3,_temps+972+1
+ 0494 30923300          sts _send_data_cache+50+1,R3
+ 0498 20923200          sts _send_data_cache+50,R2
+ 049C                   .dbline 160
+ 049C           ;        send_data_cache[26]=temps[3].status ;//状态
+ 049C 2090D604          lds R2,_temps+972+266
+ 04A0 3090D704          lds R3,_temps+972+266+1
+ 04A4 30923500          sts _send_data_cache+52+1,R3
+ 04A8 20923400          sts _send_data_cache+52,R2
+ 04AC                   .dbline 161
+ 04AC           ;        send_data_cache[27]=((int)temps[3].actualtemp)>>8;//温度
+ 04AC 2091F204          lds R18,_temps+972+292+2
+ 04B0 3091F304          lds R19,_temps+972+292+2+1
+ 04B4 0091F004          lds R16,_temps+972+292
+ 04B8 1091F104          lds R17,_temps+972+292+1
+ 04BC 0E940000          xcall fpint
+ 04C0 1801              movw R2,R16
+ 04C2 232C              mov R2,R3
+ 04C4 3324              clr R3
+ 04C6 27FC              sbrc R2,7
+ 04C8 3094              com R3
+ 04CA 30923700          sts _send_data_cache+54+1,R3
+ 04CE 20923600          sts _send_data_cache+54,R2
+ 04D2                   .dbline 162
+ 04D2           ;        send_data_cache[28]=((int)temps[3].actualtemp)&0xFF;
+ 04D2 2091F204          lds R18,_temps+972+292+2
+ 04D6 3091F304          lds R19,_temps+972+292+2+1
+ 04DA 0091F004          lds R16,_temps+972+292
+ 04DE 1091F104          lds R17,_temps+972+292+1
+ 04E2 0E940000          xcall fpint
+ 04E6 C801              movw R24,R16
+ 04E8 9070              andi R25,0
+ 04EA 90933900          sts _send_data_cache+56+1,R25
+ 04EE 80933800          sts _send_data_cache+56,R24
+ 04F2                   .dbline 163
+ 04F2           ;        send_data_cache[29]=temps[3].nowtime>>8;
+ 04F2 2090DA04          lds R2,_temps+972+270
+ 04F6 3090DB04          lds R3,_temps+972+270+1
+ 04FA 232C              mov R2,R3
+ 04FC 3324              clr R3
+ 04FE 30923B00          sts _send_data_cache+58+1,R3
+ 0502 20923A00          sts _send_data_cache+58,R2
+ 0506                   .dbline 164
+ 0506           ;        send_data_cache[30]=temps[3].nowtime&0xFF;
+ 0506 8091DA04          lds R24,_temps+972+270
+ 050A 9091DB04          lds R25,_temps+972+270+1
+ 050E 9070              andi R25,0
+ 0510 90933D00          sts _send_data_cache+60+1,R25
+ 0514 80933C00          sts _send_data_cache+60,R24
+ 0518                   .dbline 165
+ 0518           ;        send_data_cache[31]=0x68;//h
+ 0518 88E6              ldi R24,104
+ 051A 90E0              ldi R25,0
+ 051C 90933F00          sts _send_data_cache+62+1,R25
+ 0520 80933E00          sts _send_data_cache+62,R24
+ 0524                   .dbline 168
+ 0524           ;        
+ 0524           ;        
+ 0524           ;        send_data_length=32;
+ 0524 80E2              ldi R24,32
+ 0526 90930100          sts _send_data_length+1,R25
+ 052A 80930000          sts _send_data_length,R24
+ 052E                   .dbline 169
+ 052E           ;        UCSR0B |=(1<<UDRIE0); //发送使能。测试使用
+ 052E 559A              sbi 0xa,5
+ 0530                   .dbline 170
+ 0530           ;         TCNT3H=time_h_3;
+ 0530 20900400          lds R2,_time_h_3
+ 0534 20928900          sts 137,R2
+ 0538                   .dbline 171
+ 0538           ;       TCNT3L=time_l_3;
+ 0538 20900300          lds R2,_time_l_3
+ 053C 20928800          sts 136,R2
+ 0540                   .dbline 172
+ 0540           ;       TCCR3B=0x05;
+ 0540 85E0              ldi R24,5
+ 0542 80938A00          sts 138,R24
+ 0546                   .dbline 173
+ 0546           ;         return;                                
+ 0546                   .dbline -2
+ 0546           L16:
+ 0546                   .dbline 0 ; func end
+ 0546 B990              ld R11,y+
+ 0548 A990              ld R10,y+
+ 054A 0990              ld R0,y+
+ 054C 0FBE              OUT 63,R0
+ 054E B991              ld R27,y+
+ 0550 A991              ld R26,y+
+ 0552 9991              ld R25,y+
+ 0554 8991              ld R24,y+
+ 0556 3991              ld R19,y+
+ 0558 2991              ld R18,y+
+ 055A 1991              ld R17,y+
+ 055C 0991              ld R16,y+
+ 055E 9990              ld R9,y+
+ 0560 8990              ld R8,y+
+ 0562 3990              ld R3,y+
+ 0564 2990              ld R2,y+
+ 0566 1990              ld R1,y+
+ 0568 0990              ld R0,y+
+ 056A 1895              reti
+ 056C                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
  0000           _i::

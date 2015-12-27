@@ -4,6 +4,7 @@
 #include "eeprom.h"
 #include "lcd.h"
 #include "max6675.h"
+#include "delay.h"
 uint second;
 void PID_realize(uint temp_n);
 void set_start_real(uint t);
@@ -20,7 +21,7 @@ void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作.中断优先级较高
   TIMSK&=0xBF;//关定时器2溢出中断,8位的
   //10分钟计时
   second++;
-  if(second>25){
+  if(second>600){
      //保存状态。保存flag、status、nowtime就行，下面需加上判断
 	 second=0;
 	  EEPROM_write(1,133,temps[0].flag);
@@ -288,6 +289,7 @@ void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作.中断优先级较高
 }
  //执行温度控制数据更新操作，读取温度更新输出参数.会对温度数据故障更新
  //定时器控制，0.5s进入一次
+ //在这里发送串口数据，上位机读取。和读取温度同步
 void tempcontrol(void){
    uint i,j;
       temp_l=0x00;
@@ -347,7 +349,7 @@ void tempdata_init(void){
 	temps[i].p_Ki=0;//升温阶段控制使用
     temps[i].p_err_last=0;
 	temps[i].settemp=0;
-	temps[i].actualtemp=0;
+	temps[i].actualtemp=0.0;
 	temps[i].err=0;
 	 temps[i].err_last=0;
 	 temps[i].err_next=0;
@@ -380,16 +382,64 @@ void data_recover(void){
  } 
 }
 
-//设置指定的数据,保存相关标志位
+//设置指定的数据,保存相关标志位。会将设置的我温度参数发送到串口
 void set_temp_data(uint t,uint* dataCach){
     uint j;
+	uint  head;
+	TCCR3B=0x00;//关闭计时器
+	UCSR0B &=~(1<<UDRIE0);//关中断
+	send_data_length=134;
+	send_data_cur=0;
+	if(t==0){
+	  head=0x61;//a
+	}else if(t==1){
+	  head=0x62;//b
+	}else if(t==2){
+	  head=0x63;//c
+	}else if(t==3){
+	  head=0x64;//d 
+	}
+	send_data_cache[0]=head;
 	temps[t].flag=6;
 	EEPROM_write(t+1,0,0x01);
 	EEPROM_write(t+1,133,6);
     for(j=0;j<132;j++){
 	   temps[t].temp_data[j]=*(dataCach+j);
+	   send_data_cache[j+1]=temps[t].temp_data[j] | 0x30;
 	   EEPROM_write(t+1,j+1,temps[t].temp_data[j]);//这里要保存的
 	}
+	send_data_cache[133]=head;
+	UCSR0B |=(1<<UDRIE0); //发送使中断能。
+	delay_us(10);
+	TCCR3B=0x05;//打开计时器
+	return;
+}
+//发送指定温度参数到串口。由上位机请求发送
+void send_temp_data(uint t){
+    uint j;
+	uint  head;
+	TCCR3B=0x00;//关闭计时器
+	UCSR0B &=~(1<<UDRIE0);//关中断
+	send_data_length=134;
+	send_data_cur=0;
+	if(t==0){
+	  head=0x61;//a
+	}else if(t==1){
+	  head=0x62;//b
+	}else if(t==2){
+	  head=0x63;//c
+	}else if(t==3){
+	  head=0x64;//d 
+	}
+	send_data_cache[0]=head;
+    for(j=0;j<132;j++){
+	   send_data_cache[j+1]= temps[t].temp_data[j] | 0x30;
+	}
+	send_data_cache[133]=head;
+	UCSR0B |=(1<<UDRIE0); //发送使中断能。
+	delay_us(10);
+	TCCR3B=0x05;//打开计时器
+	return;
 }
 
 //重置指定的数据,保存相关标志位

@@ -1,0 +1,10 @@
+#ifndef __UART_H__
+#define __UART_H__
+#define uchar unsigned char
+#define uint unsigned int
+#define SUCCESS 0
+#define FAILURE 1
+void uart0_init(void);
+
+
+#endif

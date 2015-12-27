@@ -343,6 +343,9 @@ void page1(void){
 			  delay_ms(200);
 			}
 		  pageNum=1;
+		  t0_flag=1;
+		  waitflag=32;
+		  Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
 		  return;
 	  }
       keyV=KeyScan_once();
@@ -380,11 +383,17 @@ void page1(void){
 			  delay_ms(200);
 			}
 		  pageNum=1;
+		  t0_flag=1;
+		  waitflag=32;
+		  Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
 		  return;
 	  }
 	}
   }else{
      pageNum=1;
+	 t0_flag=1;
+	 waitflag=32;
+	 Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
      return;
   }
  }
@@ -955,7 +964,7 @@ void page1(void){
    }else if(pageParam[1]==2){
      lcd_write_str(4,1,"温度保存失败！");
    }
-   delay_ms(500);
+   delay_ms(100);
    pageNum=prePageNum;
  }
  void page7(void){

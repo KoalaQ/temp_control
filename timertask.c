@@ -1,6 +1,7 @@
 #include<iom128v.h>
 #include "timertask.h"
 #include "time.h"
+#include "main.h"
 #include "lcd.h"
 #include "delay.h"
 #include "main.h"
@@ -80,13 +81,23 @@ void Timerinit_2(uchar time){
 #pragma interrupt_handler int_timer0:17
 void int_timer0(void){ 
 		TCCR0=0x00;
+  if(t0_flag==0){
 		waitflag--;
-	lcd_write_char(10,0,0x30+(waitflag/100));
-	lcd_write_char(11,0,'s');	
-	if(waitflag>1){
+	    lcd_write_char(10,0,0x30+(waitflag/100));
+	    lcd_write_char(11,0,'s');	
+	    if(waitflag>1){
+	      TCNT0=0x00;
+	      TCCR0=0x07;
+	    }
+	}else{
+	  waitflag--;
+	    if(waitflag==1){
+		  waitflag=32;
+	      tempcontrol();//执行温度调节
+	    }
 	   TCNT0=0x00;
 	   TCCR0=0x07;
-	 }
+	}
 		return;
 }
 //溢出中断。
@@ -103,21 +114,61 @@ void int_timer1(void){
 void int_timer2(void){
       //PORTE=~PORTE;
 		TCCR2=0x00;
-		TCNT2=time_2;
-		TCCR2=0x05;
 		if(secondflag==0){
 		  secondflag=64;
 		  int_int2();
 		}
 		secondflag--;
+		TCNT2=time_2;
+		TCCR2=0x05;
 		return;
 }
 //16位定时器，定时器3溢出中断。
 #pragma interrupt_handler int_timer3:30
 void int_timer3(void){
-      TCCR3B=0x00;
-      tempcontrol();//执行温度调节
+     TCCR3B=0x00;
+	 
+     send_data_cache[0]=0x65;//e
+	 send_data_cache[1]=temps[0].flag;//标志位
+	 send_data_cache[2]=temps[0].status;//状态
+	 send_data_cache[3]=((int)temps[0].actualtemp)>>8;//温度
+	 send_data_cache[4]=((int)temps[0].actualtemp)&0xFF;
+	 send_data_cache[5]=temps[0].nowtime>>8;
+	 send_data_cache[6]=temps[0].nowtime&0xFF;
+	 send_data_cache[7]=0x65;//e
+	 
+	 send_data_cache[8]=0x66;//f
+	 send_data_cache[9]=temps[1].flag;//标志位
+	 send_data_cache[10]=temps[1].status ;//状态
+	 send_data_cache[11]=((int)temps[1].actualtemp)>>8;//温度
+	 send_data_cache[12]=((int)temps[1].actualtemp)&0xFF;
+	 send_data_cache[13]=temps[1].nowtime>>8;
+	 send_data_cache[14]=temps[1].nowtime&0xFF;
+	 send_data_cache[15]=0x66;//f
+	 
+	 send_data_cache[16]=0x67;//g
+	 send_data_cache[17]=temps[2].flag;//标志位
+	 send_data_cache[18]=temps[2].status;//状态
+	 send_data_cache[19]=((int)temps[2].actualtemp)>>8;//温度
+	 send_data_cache[20]=((int)temps[2].actualtemp)&0xFF;
+	 send_data_cache[21]=temps[2].nowtime>>8;
+	 send_data_cache[22]=temps[2].nowtime&0xFF;
+	 send_data_cache[23]=0x67;//g
+	 
+	 send_data_cache[24]=0x68;//h
+	 send_data_cache[25]=temps[3].flag ;//标志位
+	 send_data_cache[26]=temps[3].status ;//状态
+	 send_data_cache[27]=((int)temps[3].actualtemp)>>8;//温度
+	 send_data_cache[28]=((int)temps[3].actualtemp)&0xFF;
+	 send_data_cache[29]=temps[3].nowtime>>8;
+	 send_data_cache[30]=temps[3].nowtime&0xFF;
+	 send_data_cache[31]=0x68;//h
+	 
+	 
+	 send_data_length=32;
+	 UCSR0B |=(1<<UDRIE0); //发送使能。测试使用
 	  TCNT3H=time_h_3;
       TCNT3L=time_l_3;
       TCCR3B=0x05;
+	  return;                                
 }

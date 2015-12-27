@@ -118,6 +118,9 @@ void page1(void){
 		 case 3:
 		   Set_White_off(7,2,8);
 		    break;
+		case 4:
+		    Set_White_off(2,3,3);
+		    break;
 		case 5:
 		    Set_White_off(6,3,7);
 		    break;
@@ -340,6 +343,9 @@ void page1(void){
 			  delay_ms(200);
 			}
 		  pageNum=1;
+		  t0_flag=1;
+		  waitflag=32;
+		  Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
 		  return;
 	  }
       keyV=KeyScan_once();
@@ -377,11 +383,17 @@ void page1(void){
 			  delay_ms(200);
 			}
 		  pageNum=1;
+		  t0_flag=1;
+		  waitflag=32;
+		  Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
 		  return;
 	  }
 	}
   }else{
      pageNum=1;
+	 t0_flag=1;
+	 waitflag=32;
+	 Timerinit_0(0x00);//计时器功能改变，用作读取温度使用.32次计数完成0.5s
      return;
   }
  }
