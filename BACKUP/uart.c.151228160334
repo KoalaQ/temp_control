@@ -1,0 +1,151 @@
+#include <iom128v.h>
+#include "uart.h"
+#include "temp.h"
+#include "main.h"
+#define fosc  800000  //æß’Ò8MHZ
+#define baud 9600  //≤®Ãÿ¬ 
+void read_cmd(void);
+
+void uart0_init(void)
+{
+UCSR0B = 0x00; //πÿ±’UART00
+UCSR0A = 0x00; //≤ª π”√±∂ÀŸ∑¢ÀÕ£®“Ï≤Ω£©
+UCSR0C =(1<<UCSZ01)|(1<<UCSZ00); // ˝æ›ŒªŒ™8Œª
+//UBRR0L=(fosc/16/(baud+1))%6; //“Ï≤Ω’˝≥£«Èøˆœ¬µƒº∆À„π´ Ω
+//UBRR0H=(fosc/16/(baud+1))/256;
+UBRR0L=103; //“Ï≤Ω’˝≥£«Èøˆœ¬µƒº∆À„π´ Ω.9600
+UBRR0H=0x00;
+UCSR0B |=(1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0); //Ω” ’ πƒ‹∫Õ∑¢ÀÕ πƒ‹.Ω” ’÷’∂À¥Úø™
+
+}
+
+void putchar0(unsigned char c)
+{
+while (!(UCSR0A&(1<<UDRE0)));//±Ì√˜∑¢ÀÕ∆˜“—æ≠◊º±∏æÕ–˜
+UDR0=c; //Ω´“™∑¢ÀÕµƒ ˝æ›◊∞»ÎUDR0ºƒ¥Ê∆˜
+}
+
+
+unsigned char getchar0(void)
+{
+  while(!(UCSR0A& (1<<RXC0)));//±Ì√˜“—æ≠Ω” ’ÕÍ±œ
+  return UDR0;
+}
+//∂¡»°÷–∂œ
+#pragma interrupt_handler int_ruart0:19
+void int_ruart0(void){
+   uchar data;
+   UCSR0B &=~(1<<RXCIE0); //πÿ÷–∂œ
+   data=UDR0;
+   if(read_data_cmd=='z'){//ø’÷∏¡Ó
+     if(data>='a' && data<='i'){//÷∏¡Ó£¨º«¬º÷∏¡Ó
+	   read_data_cmd=data;
+	 }//∆‰À˚≤ª¥¶¿Ì£¨∂™∆˙
+	 
+   }else{
+      if(data==read_data_cmd){//÷∏¡Ó£¨µ±«∞÷∏¡Óƒ⁄»›∑¢ÀÕÕÍ±œ
+	    read_cmd();//÷¥––ªÒµ√ ˝æ›µƒ∑Ω∑®
+		read_data_cur=0;
+	   read_data_cmd='z';
+	 }else if(data>='0' && data<='9'){// ˝◊÷≤Œ ˝£¨Ω” ’°£ π”√¥Æø⁄π§æﬂ£¨∑¢ÀÕµƒ «ascii¬¬Î
+	    read_data_cache[read_data_cur]=data-0x30;
+		read_data_cur++;
+		if(read_data_cur>131){//∑¢ÀÕ ˝æ›ª∫¥Ê“Á≥ˆ°£…œŒªª˙∑¢ÀÕ ˝æ›≤ª∂‘°£∂™∆˙À˘”–
+		  read_data_cur=0;
+	      read_data_cmd='z';
+		}
+	 }else if(data>='a' && data<='i'){
+	  //Œ™∆‰À˚√¸¡Ó◊÷£¨º«¬º°£…œŒªª˙∑˚∫œπÊ∑∂∑¢ÀÕ≤ªª·≥ˆœ÷¥À«Èøˆ°£
+	  //‘§∑¿”≤º˛∑¢ÀÕ ˝æ›≈‹∆´£¨∂™∆˙…œ“ª√¸¡Ó◊÷£¨∞¥–¬√¸¡Ó◊÷‘À––
+	   read_data_cur=0;
+	   read_data_cmd=data;
+	 }else{//Ω” ’≥ˆ¥Ì£¨∏¸∏ƒ÷∏¡Ó◊÷Œ™ø’£¨≈◊∆˙µ±«∞ ˝æ› 
+	   read_data_cur=0;
+	   read_data_cmd='z';
+	 }
+   }
+   UCSR0B |=1<<RXCIE0; //ø™÷–∂œ
+}
+//∑¢ÀÕ÷–∂œ
+#pragma interrupt_handler int_suart0:20
+void int_suart0(void){
+   UCSR0B &=~(1<<UDRIE0); //πÿ÷–∂œ
+   if(send_data_cur<send_data_length){//ªπ”– ˝æ›¥Ê‘⁄£¨ºÃ–¯∑¢ÀÕ
+      UDR0=send_data_cache[send_data_cur];
+	  send_data_cur++;
+	  UCSR0B |=(1<<UDRIE0); //ø™÷–∂œ
+   }else{//√ª”– ˝æ›¿≤£¨«Âø’”Œ±Í°£πÿ÷–∂œ
+    send_data_length=0;
+    send_data_cur=0;
+   } 
+  
+}
+
+void puts0(char *s)
+{
+  while (*s)
+  {
+    putchar0(*s);
+    s++;
+  }
+  putchar0(0x0a);//ªÿ≥µªª––
+//putchar0(0x0d);
+}
+void cmd_oper(uint t){
+   switch(read_data_cache[0]){
+	  case 0://ø™ º
+	    set_start(t);
+	    break;
+	  case 1://Õ£÷π
+	    set_stop(t);
+	    break;
+	  case 2://÷ÿ÷√
+	    reset_temp_data(t);
+	    break;
+	}
+	
+}
+void read_cmd(void){
+    PORTE=~PORTE;
+    switch(read_data_cmd){
+	  case 'a':
+	    cmd_oper(0);
+	    break;
+	  case 'b':
+	    cmd_oper(1);
+	    break;
+	 case 'c':
+	    cmd_oper(2);
+	    break;
+	 case 'd':
+	    cmd_oper(3);
+	    break;
+     case 'e':
+	    break;
+	 case 'f':
+	    break;
+	 case 'g':
+	    break;
+	 case 'h':
+	    break;
+	 case 'i':
+	 switch(read_data_cache[0]){
+	  case 0://ø™ º
+	     set_all_start();
+	     break;
+	   case 1://Õ£÷π
+	     set_all_stop();
+	     break;
+	   case 2://÷ÿ÷√
+	     reset_temp_data(0);
+		 reset_temp_data(1);
+		 reset_temp_data(2);
+		 reset_temp_data(3);
+	     break;
+	  }
+	    break;
+	 default :
+	  break;
+	}
+}
+

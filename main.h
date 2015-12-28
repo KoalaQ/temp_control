@@ -5,10 +5,13 @@
 #define uchar unsigned char
 #define uint unsigned int
 //串口发送数据需要
-extern  unsigned int send_data_cache[150];
+extern  unsigned int send_data_cache[135];
 extern  unsigned int send_data_length;//数据长度
 extern  unsigned int send_data_cur;//当前发送到游标 
-
+//串口接收需要
+extern unsigned int read_data_cur;
+extern  unsigned int  read_data_cache[132];
+extern  unsigned char read_data_cmd;//字母表示。如果是z表示空指令
 //定时器功能转换需求
 extern  unsigned int t0_flag;
 //温度读取需要

@@ -1,4 +1,3 @@
-
 #include<iom128v.h>
 #include "main.h"
 #include "lcd.h"
@@ -10,8 +9,11 @@
 #include "pages.h"
 #include "temp.h"
 #include "uart.h"
+//串口接收数据需要
+unsigned int read_data_cache[132]={0};
+unsigned char read_data_cmd='z';//字母表示。如果是z表示空指令
 //串口发送数据需要
-unsigned int send_data_cache[200]={0x30};
+unsigned int send_data_cache[135]={0x30};
 unsigned int send_data_length=0;//数据长度
 unsigned int send_data_cur=0;//当前发送到游标
 //定时器0复用参数。t0_fla0=0，开机等待；t0_fla0=1，温度计时
@@ -22,11 +24,6 @@ unsigned int waitflag=1000;
 //下面两个继续使用。暂时保存数据使用
  unsigned int temp_h=0;
  unsigned int temp_l=0;
- //uart需要参数
- unsigned char send_6buf[600];
- unsigned char receive_buf[600];
- unsigned int send_len;
- unsigned int receive_len;
  //界面需要参数
  unsigned int pageNum;//当前页面，如需跳转改变这个值就行
  unsigned int pageParam[5];//传递参数。界面间参数暂存

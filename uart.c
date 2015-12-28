@@ -1,9 +1,10 @@
 #include <iom128v.h>
 #include "uart.h"
+#include "temp.h"
 #include "main.h"
 #define fosc  800000  //¾§Õñ8MHZ
 #define baud 9600  //²¨ÌØÂÊ
-
+void read_cmd(void);
 
 void uart0_init(void)
 {
@@ -34,14 +35,41 @@ unsigned char getchar0(void)
 #pragma interrupt_handler int_ruart0:19
 void int_ruart0(void){
    uchar data;
+   UCSR0B &=~(1<<RXCIE0); //¹ØÖĞ¶Ï
    data=UDR0;
-   
+   if(read_data_cmd=='z'){//¿ÕÖ¸Áî
+     if(data>='a' && data<='i'){//Ö¸Áî£¬¼ÇÂ¼Ö¸Áî
+	   read_data_cmd=data;
+	 }//ÆäËû²»´¦Àí£¬¶ªÆú
+	 
+   }else{
+      if(data==read_data_cmd){//Ö¸Áî£¬µ±Ç°Ö¸ÁîÄÚÈİ·¢ËÍÍê±Ï
+	    read_cmd();//Ö´ĞĞ»ñµÃÊı¾İµÄ·½·¨
+		read_data_cur=0;
+	   read_data_cmd='z';
+	 }else if(data>='0' && data<='9'){//Êı×Ö²ÎÊı£¬½ÓÊÕ¡£Ê¹ÓÃ´®¿Ú¹¤¾ß£¬·¢ËÍµÄÊÇasciiÂÂë
+	    read_data_cache[read_data_cur]=data-0x30;
+		read_data_cur++;
+		if(read_data_cur>131){//·¢ËÍÊı¾İ»º´æÒç³ö¡£ÉÏÎ»»ú·¢ËÍÊı¾İ²»¶Ô¡£¶ªÆúËùÓĞ
+		  read_data_cur=0;
+	      read_data_cmd='z';
+		}
+	 }else if(data>='a' && data<='i'){
+	  //ÎªÆäËûÃüÁî×Ö£¬¼ÇÂ¼¡£ÉÏÎ»»ú·ûºÏ¹æ·¶·¢ËÍ²»»á³öÏÖ´ËÇé¿ö¡£
+	  //Ô¤·ÀÓ²¼ş·¢ËÍÊı¾İÅÜÆ«£¬¶ªÆúÉÏÒ»ÃüÁî×Ö£¬°´ĞÂÃüÁî×ÖÔËĞĞ
+	   read_data_cur=0;
+	   read_data_cmd=data;
+	 }else{//½ÓÊÕ³ö´í£¬¸ü¸ÄÖ¸Áî×ÖÎª¿Õ£¬Å×Æúµ±Ç°Êı¾İ 
+	   read_data_cur=0;
+	   read_data_cmd='z';
+	 }
+   }
+   UCSR0B |=1<<RXCIE0; //¿ªÖĞ¶Ï
 }
 //·¢ËÍÖĞ¶Ï
 #pragma interrupt_handler int_suart0:20
 void int_suart0(void){
    UCSR0B &=~(1<<UDRIE0); //¹ØÖĞ¶Ï
-   PORTE=~PORTE;
    if(send_data_cur<send_data_length){//»¹ÓĞÊı¾İ´æÔÚ£¬¼ÌĞø·¢ËÍ
       UDR0=send_data_cache[send_data_cur];
 	  send_data_cur++;
@@ -63,5 +91,67 @@ void puts0(char *s)
   putchar0(0x0a);//»Ø³µ»»ĞĞ
 //putchar0(0x0d);
 }
-
+void cmd_oper(uint t){
+   switch(read_data_cache[0]){
+	  case 0://¿ªÊ¼
+	    set_start(t);
+	    break;
+	  case 1://Í£Ö¹
+	    set_stop(t);
+	    break;
+	  case 2://ÖØÖÃ
+	    reset_temp_data(t);
+	  case 3://·¢ËÍÎÂ¶È²ÎÊıµ½´®¿Ú
+	    send_temp_data(t);
+	    break;
+	}
+	
+}
+void read_cmd(void){
+    PORTE=~PORTE;
+    switch(read_data_cmd){
+	  case 'a':
+	    cmd_oper(0);
+	    break;
+	  case 'b':
+	    cmd_oper(1);
+	    break;
+	 case 'c':
+	    cmd_oper(2);
+	    break;
+	 case 'd':
+	    cmd_oper(3);
+	    break;
+     case 'e':
+	    set_temp_data(0,read_data_cache);
+	    break;
+	 case 'f':
+	    set_temp_data(1,read_data_cache);
+	    break;
+	 case 'g':
+	    set_temp_data(2,read_data_cache);
+	    break;
+	 case 'h':
+	    set_temp_data(3,read_data_cache);
+	    break;
+	 case 'i':
+	 switch(read_data_cache[0]){
+	  case 0://È«²¿¿ªÊ¼
+	     set_all_start();
+	     break;
+	   case 1://È«²¿Í£Ö¹
+	     set_all_stop();
+	     break;
+	   case 2://È«²¿ÖØÖÃ
+	     reset_temp_data(0);
+		 reset_temp_data(1);
+		 reset_temp_data(2);
+		 reset_temp_data(3);
+	     break;
+	  }
+	    break;
+	 default :
+	  break;
+	}
+}
 

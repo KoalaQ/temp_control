@@ -28,7 +28,7 @@ max6675.o:	max6675.c
 out.o: D:\iccv7avr\include\iom128v.h .\out.h .\lcd.h .\main.h
 out.o:	out.c
 	$(CC) -c $(CFLAGS) out.c
-uart.o: D:\iccv7avr\include\iom128v.h .\uart.h .\main.h
+uart.o: D:\iccv7avr\include\iom128v.h .\uart.h .\temp.h .\main.h
 uart.o:	uart.c
 	$(CC) -c $(CFLAGS) uart.c
 eeprom.o: D:\iccv7avr\include\iom128v.h .\eeprom.h .\delay.h

@@ -430,7 +430,9 @@ void page1(void){
 	lcd_write_pos(4,2);
 	switch(temps[pageParam[0]].flag){
 	     case 0: 
-		   lcd_write_str_con(2,"Í£Ö¹");
+		   lcd_write_str(9,1,"      ");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"Í£Ö¹");
 		   break;
 		 case 1:
 		   //Ð´×´Ì¬
@@ -478,10 +480,13 @@ void page1(void){
 			lcd_write_char_con(2,0x30 |  timecache%10);
 		   break;
 		 case 2:
-		   lcd_write_str_con(2,"¹ÊÕÏ");
+		   lcd_write_str(9,1,"      ");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"¹ÊÕÏ");
 		   break;
 		 case 3:
-		   lcd_write_str_con(2,"ÔÝÍ£");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"ÔÝÍ£");
 		   break;
 		 case 4:
 		   lcd_write_str(9,1,"      ");
@@ -489,10 +494,14 @@ void page1(void){
 		   lcd_write_str(4,2,"½áÊø");
 		   break;
 		 case 5:
-		   lcd_write_str_con(2,"µÈ´ý");
+		   lcd_write_str(9,1,"      ");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"µÈ´ý");
 		   break;
 		 case 6:
-		   lcd_write_str_con(2,"ÔÝÍ£");
+		   lcd_write_str(9,1,"      ");
+		   lcd_write_str(4,2,"                ");
+		   lcd_write_str(4,2,"ÔÝÍ£");
 		   break;
 		   break;
 		 default:

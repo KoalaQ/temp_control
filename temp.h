@@ -12,4 +12,5 @@ void set_stop(uint t);
 void data_recover(void);
 void int_int2(void);
 void tempcontrol(void);
+void send_temp_data(uint t);//发送温度数据到串口
 #endif
