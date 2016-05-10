@@ -127,53 +127,56 @@ void int_timer2(void){
 #pragma interrupt_handler int_timer3:30
 void int_timer3(void){
      TCCR3B=0x00;
+	 send_data_cache[0]=0x00;
+     send_data_cache[1]=0xFF;//A
+	 send_data_cache[2]=0xFF;//A
 	 
-     send_data_cache[0]=0x65;//e
-	 send_data_cache[1]=temps[0].flag;//标志位
-	 send_data_cache[2]=temps[0].status;//状态
 	 send_data_cache[3]=((int)temps[0].actualtemp)>>8;//温度
 	 send_data_cache[4]=((int)temps[0].actualtemp)&0xFF;
-	 send_data_cache[5]=temps[0].needtime>>8;//需要时间
-	 send_data_cache[6]=temps[0].needtime&8;
-	 send_data_cache[7]=temps[0].nowtime>>8;//已运行时间
-	 send_data_cache[8]=temps[0].nowtime&0xFF;
-	 send_data_cache[9]=0x65;//e
+	 send_data_cache[5]=temps[0].flag;//标志位
+	 send_data_cache[6]=temps[0].needtime>>8;//需要时间
+	 send_data_cache[7]=temps[0].needtime&8;
+	 send_data_cache[8]=temps[0].status;//状态
+	 send_data_cache[9]=temps[0].nowtime>>8;//已运行时间
+	 send_data_cache[10]=temps[0].nowtime&0xFF;	 
+     
 	 
-	 send_data_cache[10]=0x66;//f
-	 send_data_cache[11]=temps[1].flag;//标志位
-	 send_data_cache[12]=temps[1].status ;//状态
-	 send_data_cache[13]=((int)temps[1].actualtemp)>>8;//温度
-	 send_data_cache[14]=((int)temps[1].actualtemp)&0xFF;
-	 send_data_cache[15]=temps[0].needtime>>8;//需要时间
-	 send_data_cache[16]=temps[0].needtime&8;
+	 send_data_cache[11]=((int)temps[1].actualtemp)>>8;//温度
+	 send_data_cache[12]=((int)temps[1].actualtemp)&0xFF;
+	 send_data_cache[13]=temps[1].flag;//标志位
+	 send_data_cache[14]=temps[1].needtime>>8;//需要时间
+	 send_data_cache[15]=temps[1].needtime&8;
+	 send_data_cache[16]=temps[1].status;//状态
 	 send_data_cache[17]=temps[1].nowtime>>8;//已运行时间
-	 send_data_cache[18]=temps[1].nowtime&0xFF;
-	 send_data_cache[19]=0x66;//f
-	 
-	 send_data_cache[20]=0x67;//g
+	 send_data_cache[18]=temps[1].nowtime&0xFF;	 
+     
+
+	 send_data_cache[19]=((int)temps[2].actualtemp)>>8;//温度
+	 send_data_cache[20]=((int)temps[2].actualtemp)&0xFF;
 	 send_data_cache[21]=temps[2].flag;//标志位
-	 send_data_cache[22]=temps[2].status;//状态
-	 send_data_cache[23]=((int)temps[2].actualtemp)>>8;//温度
-	 send_data_cache[24]=((int)temps[2].actualtemp)&0xFF;
-	 send_data_cache[25]=temps[0].needtime>>8;//需要时间
-	 send_data_cache[26]=temps[0].needtime&8;
-	 send_data_cache[27]=temps[2].nowtime>>8;//已运行时间
-	 send_data_cache[28]=temps[2].nowtime&0xFF;
-	 send_data_cache[29]=0x67;//g
+	 send_data_cache[22]=temps[2].needtime>>8;//需要时间
+	 send_data_cache[23]=temps[2].needtime&8;
+	 send_data_cache[24]=temps[2].status;//状态
+	 send_data_cache[25]=temps[2].nowtime>>8;//已运行时间
+	 send_data_cache[26]=temps[2].nowtime&0xFF;	 
+     
+	
+	 send_data_cache[27]=((int)temps[3].actualtemp)>>8;//温度
+	 send_data_cache[28]=((int)temps[3].actualtemp)&0xFF;
+	 send_data_cache[29]=temps[3].flag;//标志位
+	 send_data_cache[30]=temps[3].needtime>>8;//需要时间
+	 send_data_cache[31]=temps[3].needtime&8;
+	 send_data_cache[32]=temps[3].status;//状态
+	 send_data_cache[33]=temps[3].nowtime>>8;//已运行时间
+	 send_data_cache[34]=temps[3].nowtime&0xFF;	 
+     
+	 send_data_cache[35]=0x00;//状态
+	
+	 send_data_cache[36]=0xFE;//A
+	 send_data_cache[37]=0xFE;//A
 	 
-	 send_data_cache[30]=0x68;//h
-	 send_data_cache[31]=temps[3].flag ;//标志位
-	 send_data_cache[32]=temps[3].status ;//状态
-	 send_data_cache[33]=((int)temps[3].actualtemp)>>8;//温度
-	 send_data_cache[34]=((int)temps[3].actualtemp)&0xFF;
-	 send_data_cache[35]=temps[0].needtime>>8;//需要时间
-	 send_data_cache[36]=temps[0].needtime&8;
-	 send_data_cache[37]=temps[3].nowtime>>8;//已运行时间
-	 send_data_cache[38]=temps[3].nowtime&0xFF;
-	 send_data_cache[39]=0x68;//h
 	 
-	 
-	 send_data_length=40;
+	 send_data_length=38;
 	 UCSR0B |=(1<<UDRIE0); //发送使能。测试使用
 	  TCNT3H=time_h_3;
       TCNT3L=time_l_3;

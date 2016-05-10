@@ -789,85 +789,67 @@
  044A           ; //传入的int：0、1、2、3对应温度的读取
  044A           ; void readTemp(uint n){
  044A                   .dbline 154
- 044A           ;   DDRE=0xDA;
- 044A 8AED              ldi R24,218
- 044C 82B9              out 0x2,R24
- 044E                   .dbline 155
- 044E           ;   DDRF=0xF6;
- 044E 86EF              ldi R24,246
- 0450 80936100          sts 97,R24
- 0454                   .dbline 156
- 0454           ;   PORTE |=0xFC;
- 0454 83B1              in R24,0x3
- 0456 8C6F              ori R24,252
- 0458 83B9              out 0x3,R24
- 045A                   .dbline 157
- 045A           ;   PORTF |= 0xFF;
- 045A 80916200          lds R24,98
- 045E 8F6F              ori R24,255
- 0460 80936200          sts 98,R24
- 0464                   .dbline 158
- 0464           ;    switch(n){
- 0464 4030              cpi R20,0
- 0466 4507              cpc R20,R21
- 0468 69F0              breq L40
- 046A           X8:
- 046A 4130              cpi R20,1
- 046C E0E0              ldi R30,0
- 046E 5E07              cpc R21,R30
- 0470 59F0              breq L41
- 0472           X9:
- 0472 4230              cpi R20,2
- 0474 E0E0              ldi R30,0
- 0476 5E07              cpc R21,R30
- 0478 49F0              breq L42
- 047A           X10:
- 047A 4330              cpi R20,3
- 047C E0E0              ldi R30,0
- 047E 5E07              cpc R21,R30
- 0480 39F0              breq L43
- 0482           X11:
- 0482 07C0              xjmp L38
- 0484           L40:
- 0484                   .dbline 160
- 0484           ;     case 0:
- 0484           ;         readTemp_1();
- 0484 BDDD              xcall _readTemp_1
- 0486                   .dbline 161
- 0486           ;         break;
- 0486 05C0              xjmp L39
- 0488           L41:
- 0488                   .dbline 163
- 0488           ;       case 1:
- 0488           ;         readTemp_2();
- 0488 2CDE              xcall _readTemp_2
- 048A                   .dbline 164
- 048A           ;         break;
- 048A 03C0              xjmp L39
- 048C           L42:
- 048C                   .dbline 166
- 048C           ;       case 2:
- 048C           ;         readTemp_3();
- 048C A3DE              xcall _readTemp_3
- 048E                   .dbline 167
- 048E           ;         break;
- 048E 01C0              xjmp L39
- 0490           L43:
- 0490                   .dbline 169
- 0490           ;       case 3:
- 0490           ;         readTemp_4();
- 0490 32DF              xcall _readTemp_4
- 0492                   .dbline 170
- 0492           ;         break;
- 0492           L38:
- 0492           L39:
- 0492                   .dbline -2
- 0492           L37:
- 0492                   .dbline 0 ; func end
- 0492 5991              ld R21,y+
- 0494 4991              ld R20,y+
- 0496 0895              ret
- 0498                   .dbsym r n 20 i
- 0498                   .dbend
- 0498           ;    }
- 0498           ; }
+ 044A           ;    switch(n){
+ 044A 4030              cpi R20,0
+ 044C 4507              cpc R20,R21
+ 044E 69F0              breq L40
+ 0450           X8:
+ 0450 4130              cpi R20,1
+ 0452 E0E0              ldi R30,0
+ 0454 5E07              cpc R21,R30
+ 0456 59F0              breq L41
+ 0458           X9:
+ 0458 4230              cpi R20,2
+ 045A E0E0              ldi R30,0
+ 045C 5E07              cpc R21,R30
+ 045E 49F0              breq L42
+ 0460           X10:
+ 0460 4330              cpi R20,3
+ 0462 E0E0              ldi R30,0
+ 0464 5E07              cpc R21,R30
+ 0466 39F0              breq L43
+ 0468           X11:
+ 0468 07C0              xjmp L38
+ 046A           L40:
+ 046A                   .dbline 156
+ 046A           ;     case 0:
+ 046A           ;         readTemp_1();
+ 046A CADD              xcall _readTemp_1
+ 046C                   .dbline 157
+ 046C           ;         break;
+ 046C 05C0              xjmp L39
+ 046E           L41:
+ 046E                   .dbline 159
+ 046E           ;       case 1:
+ 046E           ;         readTemp_2();
+ 046E 39DE              xcall _readTemp_2
+ 0470                   .dbline 160
+ 0470           ;         break;
+ 0470 03C0              xjmp L39
+ 0472           L42:
+ 0472                   .dbline 162
+ 0472           ;       case 2:
+ 0472           ;         readTemp_3();
+ 0472 B0DE              xcall _readTemp_3
+ 0474                   .dbline 163
+ 0474           ;         break;
+ 0474 01C0              xjmp L39
+ 0476           L43:
+ 0476                   .dbline 165
+ 0476           ;       case 3:
+ 0476           ;         readTemp_4();
+ 0476 3FDF              xcall _readTemp_4
+ 0478                   .dbline 166
+ 0478           ;         break;
+ 0478           L38:
+ 0478           L39:
+ 0478                   .dbline -2
+ 0478           L37:
+ 0478                   .dbline 0 ; func end
+ 0478 5991              ld R21,y+
+ 047A 4991              ld R20,y+
+ 047C 0895              ret
+ 047E                   .dbsym r n 20 i
+ 047E                   .dbend
+ 047E           ;    }
+ 047E           ; }

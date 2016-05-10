@@ -5,7 +5,7 @@
 #define uchar unsigned char
 #define uint unsigned int
 //串口发送数据需要
-extern  unsigned int send_data_cache[135];
+extern  unsigned int send_data_cache[139];
 extern  unsigned int send_data_length;//数据长度
 extern  unsigned int send_data_cur;//当前发送到游标 
 //串口接收需要
@@ -46,15 +46,15 @@ extern  unsigned int prePageNum;
 		unsigned int p_Ki;//升温阶段控制使用
 		unsigned int p_err_last;
 	  //PID 算法需要的参数
-	  float  settemp;
-	  float actualtemp;
-	  float err;
-	  float err_last;
-	  float err_next;
-	  float Kp;
-	  float Ki;
-	  float Kd;
-	  float incrementtemp;
+	  int  settemp;
+	  int actualtemp;
+	  int err;
+	  int err_last;
+	  int err_next;
+	  int Kp;
+	  int Ki;
+	  int Kd;
+	  int incrementtemp;
 	  
 };
 //全局变量，温度

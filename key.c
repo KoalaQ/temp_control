@@ -1,6 +1,9 @@
 #include<iom128v.h>
 #include "delay.h"
 #include "lcd.h"
+/*
+  按键未正确修改。但是应该不影响正常使用
+*/
 uchar key_value='n';
 
 uchar KeyScan(void){

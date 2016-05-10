@@ -157,13 +157,13 @@
  0066           ;      if(data>='a' && data<='i'){//Ö¸Áî£¬¼ÇÂ¼Ö¸Áî
  0066 4136              cpi R20,97
  0068 08F4              brsh X11
- 006A 5DC0              xjmp L12
+ 006A 5CC0              xjmp L12
  006C           X11:
  006C           X3:
  006C 89E6              ldi R24,105
  006E 8417              cp R24,R20
  0070 08F4              brsh X12
- 0072 59C0              xjmp L12
+ 0072 58C0              xjmp L12
  0074           X12:
  0074           X4:
  0074                   .dbline 41
@@ -175,7 +175,7 @@
  0078                   .dbline 45
  0078           ;        
  0078           ;    }else{
- 0078 56C0              xjmp L12
+ 0078 55C0              xjmp L12
  007A           L11:
  007A                   .dbline 45
  007A                   .dbline 46
@@ -187,7 +187,7 @@
  0082                   .dbline 46
  0082                   .dbline 47
  0082           ;           read_cmd();//Ö´ÐÐ»ñµÃÊý¾ÝµÄ·½·¨
- 0082 E2D0              xcall _read_cmd
+ 0082 E1D0              xcall _read_cmd
  0084                   .dbline 48
  0084           ;               read_data_cur=0;
  0084 2224              clr R2
@@ -199,20 +199,20 @@
  0090 8AE7              ldi R24,122
  0092 80930000          sts _read_data_cmd,R24
  0096                   .dbline 50
- 0096           ;        }else if(data>='0' && data<='9'){//Êý×Ö²ÎÊý£¬½ÓÊÕ¡£Ê¹ÓÃ´®¿Ú¹¤¾ß£¬·¢ËÍµÄÊÇasciiÂÂë
- 0096 47C0              xjmp L16
+ 0096           ;        }else if(data>=0 && data<=9){//Êý×Ö²ÎÊý£¬½ÓÊÕ¡£Ê¹ÓÃ´®¿Ú¹¤¾ß£¬
+ 0096 46C0              xjmp L16
  0098           L15:
  0098                   .dbline 50
- 0098 4033              cpi R20,48
- 009A 70F1              brlo L17
+ 0098 4030              cpi R20,0
+ 009A 68F1              brlo L17
  009C           X6:
- 009C 89E3              ldi R24,57
+ 009C 89E0              ldi R24,9
  009E 8417              cp R24,R20
- 00A0 58F1              brlo L17
+ 00A0 50F1              brlo L17
  00A2           X7:
  00A2                   .dbline 50
  00A2                   .dbline 51
- 00A2           ;           read_data_cache[read_data_cur]=data-0x30;
+ 00A2           ;           read_data_cache[read_data_cur]=data;
  00A2 80E0              ldi R24,<_read_data_cache
  00A4 90E0              ldi R25,>_read_data_cache
  00A6 E0910000          lds R30,_read_data_cur
@@ -221,567 +221,562 @@
  00B0 FF1F              rol R31
  00B2 E80F              add R30,R24
  00B4 F91F              adc R31,R25
- 00B6 842F              mov R24,R20
- 00B8 9927              clr R25
- 00BA C097              sbiw R24,48
- 00BC 9183              std z+1,R25
- 00BE 8083              std z+0,R24
- 00C0                   .dbline 52
- 00C0           ;               read_data_cur++;
- 00C0 80910000          lds R24,_read_data_cur
- 00C4 90910100          lds R25,_read_data_cur+1
- 00C8 0196              adiw R24,1
- 00CA 90930100          sts _read_data_cur+1,R25
- 00CE 80930000          sts _read_data_cur,R24
- 00D2                   .dbline 53
- 00D2           ;               if(read_data_cur>131){//·¢ËÍÊý¾Ý»º´æÒç³ö¡£ÉÏÎ»»ú·¢ËÍÊý¾Ý²»¶Ô¡£¶ªÆúËùÓÐ
- 00D2 83E8              ldi R24,131
- 00D4 90E0              ldi R25,0
- 00D6 20900000          lds R2,_read_data_cur
- 00DA 30900100          lds R3,_read_data_cur+1
- 00DE 8215              cp R24,R2
- 00E0 9305              cpc R25,R3
- 00E2 08F5              brsh L18
- 00E4           X8:
- 00E4                   .dbline 53
- 00E4                   .dbline 54
- 00E4           ;                 read_data_cur=0;
- 00E4 2224              clr R2
- 00E6 3324              clr R3
- 00E8 30920100          sts _read_data_cur+1,R3
- 00EC 20920000          sts _read_data_cur,R2
- 00F0                   .dbline 55
- 00F0           ;             read_data_cmd='z';
- 00F0 8AE7              ldi R24,122
- 00F2 80930000          sts _read_data_cmd,R24
- 00F6                   .dbline 56
- 00F6           ;               }
+ 00B6 242E              mov R2,R20
+ 00B8 3324              clr R3
+ 00BA 3182              std z+1,R3
+ 00BC 2082              std z+0,R2
+ 00BE                   .dbline 52
+ 00BE           ;               read_data_cur++;
+ 00BE 80910000          lds R24,_read_data_cur
+ 00C2 90910100          lds R25,_read_data_cur+1
+ 00C6 0196              adiw R24,1
+ 00C8 90930100          sts _read_data_cur+1,R25
+ 00CC 80930000          sts _read_data_cur,R24
+ 00D0                   .dbline 53
+ 00D0           ;               if(read_data_cur>131){//·¢ËÍÊý¾Ý»º´æÒç³ö¡£ÉÏÎ»»ú·¢ËÍÊý¾Ý²»¶Ô¡£¶ªÆúËùÓÐ
+ 00D0 83E8              ldi R24,131
+ 00D2 90E0              ldi R25,0
+ 00D4 20900000          lds R2,_read_data_cur
+ 00D8 30900100          lds R3,_read_data_cur+1
+ 00DC 8215              cp R24,R2
+ 00DE 9305              cpc R25,R3
+ 00E0 08F5              brsh L18
+ 00E2           X8:
+ 00E2                   .dbline 53
+ 00E2                   .dbline 54
+ 00E2           ;                 read_data_cur=0;
+ 00E2 2224              clr R2
+ 00E4 3324              clr R3
+ 00E6 30920100          sts _read_data_cur+1,R3
+ 00EA 20920000          sts _read_data_cur,R2
+ 00EE                   .dbline 55
+ 00EE           ;             read_data_cmd='z';
+ 00EE 8AE7              ldi R24,122
+ 00F0 80930000          sts _read_data_cmd,R24
+ 00F4                   .dbline 56
+ 00F4           ;               }
+ 00F4                   .dbline 57
+ 00F4           ;        }else if(data>='a' && data<='i'){
+ 00F4 17C0              xjmp L18
+ 00F6           L17:
  00F6                   .dbline 57
- 00F6           ;        }else if(data>='a' && data<='i'){
- 00F6 17C0              xjmp L18
- 00F8           L17:
- 00F8                   .dbline 57
- 00F8 4136              cpi R20,97
- 00FA 60F0              brlo L21
- 00FC           X9:
- 00FC 89E6              ldi R24,105
- 00FE 8417              cp R24,R20
- 0100 48F0              brlo L21
- 0102           X10:
- 0102                   .dbline 57
- 0102                   .dbline 60
- 0102           ;         //ÎªÆäËûÃüÁî×Ö£¬¼ÇÂ¼¡£ÉÏÎ»»ú·ûºÏ¹æ·¶·¢ËÍ²»»á³öÏÖ´ËÇé¿ö¡£
- 0102           ;         //Ô¤·ÀÓ²¼þ·¢ËÍÊý¾ÝÅÜÆ«£¬¶ªÆúÉÏÒ»ÃüÁî×Ö£¬°´ÐÂÃüÁî×ÖÔËÐÐ
- 0102           ;          read_data_cur=0;
- 0102 2224              clr R2
- 0104 3324              clr R3
- 0106 30920100          sts _read_data_cur+1,R3
- 010A 20920000          sts _read_data_cur,R2
- 010E                   .dbline 61
- 010E           ;          read_data_cmd=data;
- 010E 40930000          sts _read_data_cmd,R20
+ 00F6 4136              cpi R20,97
+ 00F8 60F0              brlo L21
+ 00FA           X9:
+ 00FA 89E6              ldi R24,105
+ 00FC 8417              cp R24,R20
+ 00FE 48F0              brlo L21
+ 0100           X10:
+ 0100                   .dbline 57
+ 0100                   .dbline 60
+ 0100           ;         //ÎªÆäËûÃüÁî×Ö£¬¼ÇÂ¼¡£ÉÏÎ»»ú·ûºÏ¹æ·¶·¢ËÍ²»»á³öÏÖ´ËÇé¿ö¡£
+ 0100           ;         //Ô¤·ÀÓ²¼þ·¢ËÍÊý¾ÝÅÜÆ«£¬¶ªÆúÉÏÒ»ÃüÁî×Ö£¬°´ÐÂÃüÁî×ÖÔËÐÐ
+ 0100           ;          read_data_cur=0;
+ 0100 2224              clr R2
+ 0102 3324              clr R3
+ 0104 30920100          sts _read_data_cur+1,R3
+ 0108 20920000          sts _read_data_cur,R2
+ 010C                   .dbline 61
+ 010C           ;          read_data_cmd=data;
+ 010C 40930000          sts _read_data_cmd,R20
+ 0110                   .dbline 62
+ 0110           ;        }else{//½ÓÊÕ³ö´í£¬¸ü¸ÄÖ¸Áî×ÖÎª¿Õ£¬Å×Æúµ±Ç°Êý¾Ý 
+ 0110 09C0              xjmp L22
+ 0112           L21:
  0112                   .dbline 62
- 0112           ;        }else{//½ÓÊÕ³ö´í£¬¸ü¸ÄÖ¸Áî×ÖÎª¿Õ£¬Å×Æúµ±Ç°Êý¾Ý 
- 0112 09C0              xjmp L22
- 0114           L21:
- 0114                   .dbline 62
- 0114                   .dbline 63
- 0114           ;          read_data_cur=0;
- 0114 2224              clr R2
- 0116 3324              clr R3
- 0118 30920100          sts _read_data_cur+1,R3
- 011C 20920000          sts _read_data_cur,R2
- 0120                   .dbline 64
- 0120           ;          read_data_cmd='z';
- 0120 8AE7              ldi R24,122
- 0122 80930000          sts _read_data_cmd,R24
- 0126                   .dbline 65
- 0126           ;        }
- 0126           L22:
- 0126           L18:
- 0126           L16:
- 0126                   .dbline 66
- 0126           ;    }
- 0126           L12:
- 0126                   .dbline 67
- 0126           ;    UCSR0B |=1<<RXCIE0; //¿ªÖÐ¶Ï
- 0126 579A              sbi 0xa,7
- 0128                   .dbline -2
- 0128           L10:
- 0128                   .dbline 0 ; func end
- 0128 4991              ld R20,y+
- 012A 0990              ld R0,y+
- 012C 0FBE              OUT 63,R0
- 012E F991              ld R31,y+
- 0130 E991              ld R30,y+
- 0132 B991              ld R27,y+
- 0134 A991              ld R26,y+
- 0136 9991              ld R25,y+
- 0138 8991              ld R24,y+
- 013A 3991              ld R19,y+
- 013C 2991              ld R18,y+
- 013E 1991              ld R17,y+
- 0140 0991              ld R16,y+
- 0142 9990              ld R9,y+
- 0144 8990              ld R8,y+
- 0146 7990              ld R7,y+
- 0148 6990              ld R6,y+
- 014A 5990              ld R5,y+
- 014C 4990              ld R4,y+
- 014E 3990              ld R3,y+
- 0150 2990              ld R2,y+
- 0152 1990              ld R1,y+
- 0154 0990              ld R0,y+
- 0156 1895              reti
- 0158                   .dbsym r data 20 c
- 0158                   .dbend
+ 0112                   .dbline 63
+ 0112           ;          read_data_cur=0;
+ 0112 2224              clr R2
+ 0114 3324              clr R3
+ 0116 30920100          sts _read_data_cur+1,R3
+ 011A 20920000          sts _read_data_cur,R2
+ 011E                   .dbline 64
+ 011E           ;          read_data_cmd='z';
+ 011E 8AE7              ldi R24,122
+ 0120 80930000          sts _read_data_cmd,R24
+ 0124                   .dbline 65
+ 0124           ;        }
+ 0124           L22:
+ 0124           L18:
+ 0124           L16:
+ 0124                   .dbline 66
+ 0124           ;    }
+ 0124           L12:
+ 0124                   .dbline 67
+ 0124           ;    UCSR0B |=1<<RXCIE0; //¿ªÖÐ¶Ï
+ 0124 579A              sbi 0xa,7
+ 0126                   .dbline -2
+ 0126           L10:
+ 0126                   .dbline 0 ; func end
+ 0126 4991              ld R20,y+
+ 0128 0990              ld R0,y+
+ 012A 0FBE              OUT 63,R0
+ 012C F991              ld R31,y+
+ 012E E991              ld R30,y+
+ 0130 B991              ld R27,y+
+ 0132 A991              ld R26,y+
+ 0134 9991              ld R25,y+
+ 0136 8991              ld R24,y+
+ 0138 3991              ld R19,y+
+ 013A 2991              ld R18,y+
+ 013C 1991              ld R17,y+
+ 013E 0991              ld R16,y+
+ 0140 9990              ld R9,y+
+ 0142 8990              ld R8,y+
+ 0144 7990              ld R7,y+
+ 0146 6990              ld R6,y+
+ 0148 5990              ld R5,y+
+ 014A 4990              ld R4,y+
+ 014C 3990              ld R3,y+
+ 014E 2990              ld R2,y+
+ 0150 1990              ld R1,y+
+ 0152 0990              ld R0,y+
+ 0154 1895              reti
+ 0156                   .dbsym r data 20 c
+ 0156                   .dbend
                         .area vector(rom, abs)
                         .org 76
- 004C 0C94AC00          jmp _int_suart0
+ 004C 0C94AB00          jmp _int_suart0
                         .area text(rom, con, rel)
- 0158                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
- 0158                   .dbfunc e int_suart0 _int_suart0 fV
+ 0156                   .dbfile E:\ICCDemo\Temp_Control\temp_control\uart.c
+ 0156                   .dbfunc e int_suart0 _int_suart0 fV
                         .even
- 0158           _int_suart0::
- 0158 1A92              st -y,R1
- 015A 2A92              st -y,R2
- 015C 3A92              st -y,R3
- 015E 4A92              st -y,R4
- 0160 5A92              st -y,R5
- 0162 8A93              st -y,R24
- 0164 9A93              st -y,R25
- 0166 EA93              st -y,R30
- 0168 FA93              st -y,R31
- 016A 1FB6              IN R1,63
- 016C 1A92              st -y,R1
- 016E                   .dbline -1
- 016E                   .dbline 71
- 016E           ; }
- 016E           ; //·¢ËÍÖÐ¶Ï
- 016E           ; #pragma interrupt_handler int_suart0:20
- 016E           ; void int_suart0(void){
- 016E                   .dbline 72
- 016E           ;    UCSR0B &=~(1<<UDRIE0); //¹ØÖÐ¶Ï
- 016E 5598              cbi 0xa,5
- 0170                   .dbline 73
- 0170           ;    if(send_data_cur<send_data_length){//»¹ÓÐÊý¾Ý´æÔÚ£¬¼ÌÐø·¢ËÍ
- 0170 20900000          lds R2,_send_data_length
- 0174 30900100          lds R3,_send_data_length+1
- 0178 40900000          lds R4,_send_data_cur
- 017C 50900100          lds R5,_send_data_cur+1
- 0180 4214              cp R4,R2
- 0182 5304              cpc R5,R3
- 0184 90F4              brsh L24
- 0186           X13:
- 0186                   .dbline 73
- 0186                   .dbline 74
- 0186           ;       UDR0=send_data_cache[send_data_cur];
- 0186 80E0              ldi R24,<_send_data_cache
- 0188 90E0              ldi R25,>_send_data_cache
- 018A F201              movw R30,R4
- 018C EE0F              lsl R30
- 018E FF1F              rol R31
- 0190 E80F              add R30,R24
- 0192 F91F              adc R31,R25
- 0194 2080              ldd R2,z+0
- 0196 3180              ldd R3,z+1
- 0198 2CB8              out 0xc,R2
- 019A                   .dbline 75
- 019A           ;         send_data_cur++;
- 019A C201              movw R24,R4
- 019C 0196              adiw R24,1
- 019E 90930100          sts _send_data_cur+1,R25
- 01A2 80930000          sts _send_data_cur,R24
- 01A6                   .dbline 76
- 01A6           ;         UCSR0B |=(1<<UDRIE0); //¿ªÖÐ¶Ï
- 01A6 559A              sbi 0xa,5
+ 0156           _int_suart0::
+ 0156 1A92              st -y,R1
+ 0158 2A92              st -y,R2
+ 015A 3A92              st -y,R3
+ 015C 4A92              st -y,R4
+ 015E 5A92              st -y,R5
+ 0160 8A93              st -y,R24
+ 0162 9A93              st -y,R25
+ 0164 EA93              st -y,R30
+ 0166 FA93              st -y,R31
+ 0168 1FB6              IN R1,63
+ 016A 1A92              st -y,R1
+ 016C                   .dbline -1
+ 016C                   .dbline 71
+ 016C           ; }
+ 016C           ; //·¢ËÍÖÐ¶Ï
+ 016C           ; #pragma interrupt_handler int_suart0:20
+ 016C           ; void int_suart0(void){
+ 016C                   .dbline 72
+ 016C           ;    UCSR0B &=~(1<<UDRIE0); //¹ØÖÐ¶Ï
+ 016C 5598              cbi 0xa,5
+ 016E                   .dbline 73
+ 016E           ;    if(send_data_cur<send_data_length){//»¹ÓÐÊý¾Ý´æÔÚ£¬¼ÌÐø·¢ËÍ
+ 016E 20900000          lds R2,_send_data_length
+ 0172 30900100          lds R3,_send_data_length+1
+ 0176 40900000          lds R4,_send_data_cur
+ 017A 50900100          lds R5,_send_data_cur+1
+ 017E 4214              cp R4,R2
+ 0180 5304              cpc R5,R3
+ 0182 90F4              brsh L24
+ 0184           X13:
+ 0184                   .dbline 73
+ 0184                   .dbline 74
+ 0184           ;       UDR0=send_data_cache[send_data_cur];
+ 0184 80E0              ldi R24,<_send_data_cache
+ 0186 90E0              ldi R25,>_send_data_cache
+ 0188 F201              movw R30,R4
+ 018A EE0F              lsl R30
+ 018C FF1F              rol R31
+ 018E E80F              add R30,R24
+ 0190 F91F              adc R31,R25
+ 0192 2080              ldd R2,z+0
+ 0194 3180              ldd R3,z+1
+ 0196 2CB8              out 0xc,R2
+ 0198                   .dbline 75
+ 0198           ;         send_data_cur++;
+ 0198 C201              movw R24,R4
+ 019A 0196              adiw R24,1
+ 019C 90930100          sts _send_data_cur+1,R25
+ 01A0 80930000          sts _send_data_cur,R24
+ 01A4                   .dbline 76
+ 01A4           ;         UCSR0B |=(1<<UDRIE0); //¿ªÖÐ¶Ï
+ 01A4 559A              sbi 0xa,5
+ 01A6                   .dbline 77
+ 01A6           ;    }else{//Ã»ÓÐÊý¾ÝÀ²£¬Çå¿ÕÓÎ±ê¡£¹ØÖÐ¶Ï
+ 01A6 0AC0              xjmp L25
+ 01A8           L24:
  01A8                   .dbline 77
- 01A8           ;    }else{//Ã»ÓÐÊý¾ÝÀ²£¬Çå¿ÕÓÎ±ê¡£¹ØÖÐ¶Ï
- 01A8 0AC0              xjmp L25
- 01AA           L24:
- 01AA                   .dbline 77
- 01AA                   .dbline 78
- 01AA           ;     send_data_length=0;
- 01AA 2224              clr R2
- 01AC 3324              clr R3
- 01AE 30920100          sts _send_data_length+1,R3
- 01B2 20920000          sts _send_data_length,R2
- 01B6                   .dbline 79
- 01B6           ;     send_data_cur=0;
- 01B6 30920100          sts _send_data_cur+1,R3
- 01BA 20920000          sts _send_data_cur,R2
- 01BE                   .dbline 80
- 01BE           ;    } 
- 01BE           L25:
- 01BE                   .dbline -2
- 01BE           L23:
- 01BE                   .dbline 0 ; func end
- 01BE 1990              ld R1,y+
- 01C0 1FBE              OUT 63,R1
- 01C2 F991              ld R31,y+
- 01C4 E991              ld R30,y+
- 01C6 9991              ld R25,y+
- 01C8 8991              ld R24,y+
- 01CA 5990              ld R5,y+
- 01CC 4990              ld R4,y+
- 01CE 3990              ld R3,y+
- 01D0 2990              ld R2,y+
- 01D2 1990              ld R1,y+
- 01D4 1895              reti
- 01D6                   .dbend
- 01D6                   .dbfunc e puts0 _puts0 fV
- 01D6           ;              s -> R20,R21
+ 01A8                   .dbline 78
+ 01A8           ;     send_data_length=0;
+ 01A8 2224              clr R2
+ 01AA 3324              clr R3
+ 01AC 30920100          sts _send_data_length+1,R3
+ 01B0 20920000          sts _send_data_length,R2
+ 01B4                   .dbline 79
+ 01B4           ;     send_data_cur=0;
+ 01B4 30920100          sts _send_data_cur+1,R3
+ 01B8 20920000          sts _send_data_cur,R2
+ 01BC                   .dbline 80
+ 01BC           ;    } 
+ 01BC           L25:
+ 01BC                   .dbline -2
+ 01BC           L23:
+ 01BC                   .dbline 0 ; func end
+ 01BC 1990              ld R1,y+
+ 01BE 1FBE              OUT 63,R1
+ 01C0 F991              ld R31,y+
+ 01C2 E991              ld R30,y+
+ 01C4 9991              ld R25,y+
+ 01C6 8991              ld R24,y+
+ 01C8 5990              ld R5,y+
+ 01CA 4990              ld R4,y+
+ 01CC 3990              ld R3,y+
+ 01CE 2990              ld R2,y+
+ 01D0 1990              ld R1,y+
+ 01D2 1895              reti
+ 01D4                   .dbend
+ 01D4                   .dbfunc e puts0 _puts0 fV
+ 01D4           ;              s -> R20,R21
                         .even
- 01D6           _puts0::
- 01D6 4A93              st -y,R20
- 01D8 5A93              st -y,R21
- 01DA A801              movw R20,R16
- 01DC                   .dbline -1
- 01DC                   .dbline 85
- 01DC           ;   
- 01DC           ; }
- 01DC           ; 
- 01DC           ; void puts0(char *s)
- 01DC           ; {
- 01DC 05C0              xjmp L28
- 01DE           L27:
- 01DE                   .dbline 87
- 01DE           ;   while (*s)
- 01DE           ;   {
- 01DE                   .dbline 88
- 01DE           ;     putchar0(*s);
- 01DE FA01              movw R30,R20
- 01E0 0081              ldd R16,z+0
- 01E2 1CDF              xcall _putchar0
- 01E4                   .dbline 89
- 01E4           ;     s++;
- 01E4 4F5F              subi R20,255  ; offset = 1
- 01E6 5F4F              sbci R21,255
- 01E8                   .dbline 90
- 01E8           ;   }
- 01E8           L28:
- 01E8                   .dbline 86
- 01E8 FA01              movw R30,R20
- 01EA 2080              ldd R2,z+0
- 01EC 2220              tst R2
- 01EE B9F7              brne L27
- 01F0           X14:
- 01F0                   .dbline 91
- 01F0           ;   putchar0(0x0a);//»Ø³µ»»ÐÐ
- 01F0 0AE0              ldi R16,10
- 01F2 14DF              xcall _putchar0
- 01F4                   .dbline -2
- 01F4           L26:
- 01F4                   .dbline 0 ; func end
- 01F4 5991              ld R21,y+
- 01F6 4991              ld R20,y+
- 01F8 0895              ret
- 01FA                   .dbsym r s 20 pc
- 01FA                   .dbend
- 01FA                   .dbfunc e cmd_oper _cmd_oper fV
- 01FA           ;              t -> R10,R11
+ 01D4           _puts0::
+ 01D4 4A93              st -y,R20
+ 01D6 5A93              st -y,R21
+ 01D8 A801              movw R20,R16
+ 01DA                   .dbline -1
+ 01DA                   .dbline 85
+ 01DA           ;   
+ 01DA           ; }
+ 01DA           ; 
+ 01DA           ; void puts0(char *s)
+ 01DA           ; {
+ 01DA 05C0              xjmp L28
+ 01DC           L27:
+ 01DC                   .dbline 87
+ 01DC           ;   while (*s)
+ 01DC           ;   {
+ 01DC                   .dbline 88
+ 01DC           ;     putchar0(*s);
+ 01DC FA01              movw R30,R20
+ 01DE 0081              ldd R16,z+0
+ 01E0 1DDF              xcall _putchar0
+ 01E2                   .dbline 89
+ 01E2           ;     s++;
+ 01E2 4F5F              subi R20,255  ; offset = 1
+ 01E4 5F4F              sbci R21,255
+ 01E6                   .dbline 90
+ 01E6           ;   }
+ 01E6           L28:
+ 01E6                   .dbline 86
+ 01E6 FA01              movw R30,R20
+ 01E8 2080              ldd R2,z+0
+ 01EA 2220              tst R2
+ 01EC B9F7              brne L27
+ 01EE           X14:
+ 01EE                   .dbline 91
+ 01EE           ;   putchar0(0x0a);//»Ø³µ»»ÐÐ
+ 01EE 0AE0              ldi R16,10
+ 01F0 15DF              xcall _putchar0
+ 01F2                   .dbline -2
+ 01F2           L26:
+ 01F2                   .dbline 0 ; func end
+ 01F2 5991              ld R21,y+
+ 01F4 4991              ld R20,y+
+ 01F6 0895              ret
+ 01F8                   .dbsym r s 20 pc
+ 01F8                   .dbend
+ 01F8                   .dbfunc e cmd_oper _cmd_oper fV
+ 01F8           ;              t -> R10,R11
                         .even
- 01FA           _cmd_oper::
- 01FA 0E940000          xcall push_xgset300C
- 01FE 5801              movw R10,R16
- 0200                   .dbline -1
- 0200                   .dbline 94
- 0200           ; //putchar0(0x0d);
- 0200           ; }
- 0200           ; void cmd_oper(uint t){
- 0200                   .dbline 95
- 0200           ;    switch(read_data_cache[0]){
- 0200 40910000          lds R20,_read_data_cache
- 0204 50910100          lds R21,_read_data_cache+1
- 0208 4030              cpi R20,0
- 020A 4507              cpc R20,R21
- 020C 69F0              breq L34
- 020E           X15:
- 020E 4130              cpi R20,1
- 0210 E0E0              ldi R30,0
- 0212 5E07              cpc R21,R30
- 0214 69F0              breq L35
- 0216           X16:
- 0216 4230              cpi R20,2
- 0218 E0E0              ldi R30,0
- 021A 5E07              cpc R21,R30
- 021C 69F0              breq L36
- 021E           X17:
- 021E 4330              cpi R20,3
- 0220 E0E0              ldi R30,0
- 0222 5E07              cpc R21,R30
- 0224 61F0              breq L37
- 0226           X18:
- 0226 0EC0              xjmp L31
- 0228           L34:
- 0228                   .dbline 97
- 0228           ;         case 0://¿ªÊ¼
- 0228           ;           set_start(t);
- 0228 8501              movw R16,R10
- 022A 0E940000          xcall _set_start
- 022E                   .dbline 98
- 022E           ;           break;
- 022E 0AC0              xjmp L32
- 0230           L35:
- 0230                   .dbline 100
- 0230           ;         case 1://Í£Ö¹
- 0230           ;           set_stop(t);
- 0230 8501              movw R16,R10
- 0232 0E940000          xcall _set_stop
- 0236                   .dbline 101
- 0236           ;           break;
- 0236 06C0              xjmp L32
- 0238           L36:
- 0238                   .dbline 103
- 0238           ;         case 2://ÖØÖÃ
- 0238           ;           reset_temp_data(t);
- 0238 8501              movw R16,R10
- 023A 0E940000          xcall _reset_temp_data
- 023E           L37:
- 023E                   .dbline 105
- 023E           ;         case 3://·¢ËÍÎÂ¶È²ÎÊýµ½´®¿Ú
- 023E           ;           send_temp_data(t);
- 023E 8501              movw R16,R10
- 0240 0E940000          xcall _send_temp_data
- 0244                   .dbline 106
- 0244           ;           break;
- 0244           L31:
- 0244           L32:
- 0244                   .dbline -2
- 0244           L30:
- 0244                   .dbline 0 ; func end
- 0244 0C940000          xjmp pop_xgset300C
- 0248                   .dbsym r t 10 i
- 0248                   .dbend
- 0248                   .dbfunc e read_cmd _read_cmd fV
+ 01F8           _cmd_oper::
+ 01F8 0E940000          xcall push_xgset300C
+ 01FC 5801              movw R10,R16
+ 01FE                   .dbline -1
+ 01FE                   .dbline 94
+ 01FE           ; //putchar0(0x0d);
+ 01FE           ; }
+ 01FE           ; void cmd_oper(uint t){
+ 01FE                   .dbline 95
+ 01FE           ;    switch(read_data_cache[0]){
+ 01FE 40910000          lds R20,_read_data_cache
+ 0202 50910100          lds R21,_read_data_cache+1
+ 0206 4030              cpi R20,0
+ 0208 4507              cpc R20,R21
+ 020A 69F0              breq L34
+ 020C           X15:
+ 020C 4130              cpi R20,1
+ 020E E0E0              ldi R30,0
+ 0210 5E07              cpc R21,R30
+ 0212 69F0              breq L35
+ 0214           X16:
+ 0214 4230              cpi R20,2
+ 0216 E0E0              ldi R30,0
+ 0218 5E07              cpc R21,R30
+ 021A 69F0              breq L36
+ 021C           X17:
+ 021C 4330              cpi R20,3
+ 021E E0E0              ldi R30,0
+ 0220 5E07              cpc R21,R30
+ 0222 61F0              breq L37
+ 0224           X18:
+ 0224 0EC0              xjmp L31
+ 0226           L34:
+ 0226                   .dbline 97
+ 0226           ;         case 0://¿ªÊ¼
+ 0226           ;           set_start(t);
+ 0226 8501              movw R16,R10
+ 0228 0E940000          xcall _set_start
+ 022C                   .dbline 98
+ 022C           ;           break;
+ 022C 0AC0              xjmp L32
+ 022E           L35:
+ 022E                   .dbline 100
+ 022E           ;         case 1://Í£Ö¹
+ 022E           ;           set_stop(t);
+ 022E 8501              movw R16,R10
+ 0230 0E940000          xcall _set_stop
+ 0234                   .dbline 101
+ 0234           ;           break;
+ 0234 06C0              xjmp L32
+ 0236           L36:
+ 0236                   .dbline 103
+ 0236           ;         case 2://ÖØÖÃ
+ 0236           ;           reset_temp_data(t);
+ 0236 8501              movw R16,R10
+ 0238 0E940000          xcall _reset_temp_data
+ 023C           L37:
+ 023C                   .dbline 105
+ 023C           ;         case 3://·¢ËÍÎÂ¶È²ÎÊýµ½´®¿Ú
+ 023C           ;           send_temp_data(t);
+ 023C 8501              movw R16,R10
+ 023E 0E940000          xcall _send_temp_data
+ 0242                   .dbline 106
+ 0242           ;           break;
+ 0242           L31:
+ 0242           L32:
+ 0242                   .dbline -2
+ 0242           L30:
+ 0242                   .dbline 0 ; func end
+ 0242 0C940000          xjmp pop_xgset300C
+ 0246                   .dbsym r t 10 i
+ 0246                   .dbend
+ 0246                   .dbfunc e read_cmd _read_cmd fV
                         .even
- 0248           _read_cmd::
- 0248 4A93              st -y,R20
- 024A 5A93              st -y,R21
- 024C                   .dbline -1
- 024C                   .dbline 110
- 024C           ;       }
- 024C           ;       
- 024C           ; }
- 024C           ; void read_cmd(void){
- 024C                   .dbline 111
- 024C           ;     PORTE=~PORTE;
- 024C 23B0              in R2,0x3
- 024E 2094              com R2
- 0250 23B8              out 0x3,R2
- 0252                   .dbline 112
- 0252           ;     switch(read_data_cmd){
- 0252 40910000          lds R20,_read_data_cmd
- 0256 5527              clr R21
- 0258 4136              cpi R20,97
+ 0246           _read_cmd::
+ 0246 4A93              st -y,R20
+ 0248 5A93              st -y,R21
+ 024A                   .dbline -1
+ 024A                   .dbline 110
+ 024A           ;       }
+ 024A           ;       
+ 024A           ; }
+ 024A           ; void read_cmd(void){
+ 024A                   .dbline 112
+ 024A           ;    
+ 024A           ;     switch(read_data_cmd){
+ 024A 40910000          lds R20,_read_data_cmd
+ 024E 5527              clr R21
+ 0250 4136              cpi R20,97
+ 0252 E0E0              ldi R30,0
+ 0254 5E07              cpc R21,R30
+ 0256 09F1              breq L42
+ 0258           X19:
+ 0258 4236              cpi R20,98
  025A E0E0              ldi R30,0
  025C 5E07              cpc R21,R30
- 025E 09F1              breq L42
- 0260           X19:
- 0260 4236              cpi R20,98
+ 025E 09F1              breq L43
+ 0260           X20:
+ 0260 4336              cpi R20,99
  0262 E0E0              ldi R30,0
  0264 5E07              cpc R21,R30
- 0266 09F1              breq L43
- 0268           X20:
- 0268 4336              cpi R20,99
+ 0266 09F1              breq L44
+ 0268           X21:
+ 0268 4436              cpi R20,100
  026A E0E0              ldi R30,0
  026C 5E07              cpc R21,R30
- 026E 09F1              breq L44
- 0270           X21:
- 0270 4436              cpi R20,100
+ 026E 09F1              breq L45
+ 0270           X22:
+ 0270 4536              cpi R20,101
  0272 E0E0              ldi R30,0
  0274 5E07              cpc R21,R30
- 0276 09F1              breq L45
- 0278           X22:
- 0278 4536              cpi R20,101
+ 0276 09F1              breq L46
+ 0278           X23:
+ 0278 4636              cpi R20,102
  027A E0E0              ldi R30,0
  027C 5E07              cpc R21,R30
- 027E 09F1              breq L46
- 0280           X23:
- 0280 4636              cpi R20,102
+ 027E 21F1              breq L47
+ 0280           X24:
+ 0280 4736              cpi R20,103
  0282 E0E0              ldi R30,0
  0284 5E07              cpc R21,R30
- 0286 21F1              breq L47
- 0288           X24:
- 0288 4736              cpi R20,103
+ 0286 39F1              breq L48
+ 0288           X25:
+ 0288 4836              cpi R20,104
  028A E0E0              ldi R30,0
  028C 5E07              cpc R21,R30
- 028E 39F1              breq L48
- 0290           X25:
- 0290 4836              cpi R20,104
+ 028E 51F1              breq L49
+ 0290           X26:
+ 0290 4936              cpi R20,105
  0292 E0E0              ldi R30,0
  0294 5E07              cpc R21,R30
- 0296 51F1              breq L49
- 0298           X26:
- 0298 4936              cpi R20,105
- 029A E0E0              ldi R30,0
- 029C 5E07              cpc R21,R30
- 029E 69F1              breq L50
- 02A0           X27:
- 02A0 52C0              xjmp L40
- 02A2           L42:
- 02A2                   .dbline 114
- 02A2           ;         case 'a':
- 02A2           ;           cmd_oper(0);
- 02A2 0027              clr R16
- 02A4 1127              clr R17
- 02A6 A9DF              xcall _cmd_oper
- 02A8                   .dbline 115
+ 0296 69F1              breq L50
+ 0298           X27:
+ 0298 52C0              xjmp L40
+ 029A           L42:
+ 029A                   .dbline 114
+ 029A           ;         case 'a':
+ 029A           ;           cmd_oper(0);
+ 029A 0027              clr R16
+ 029C 1127              clr R17
+ 029E ACDF              xcall _cmd_oper
+ 02A0                   .dbline 115
+ 02A0           ;           break;
+ 02A0 4EC0              xjmp L40
+ 02A2           L43:
+ 02A2                   .dbline 117
+ 02A2           ;         case 'b':
+ 02A2           ;           cmd_oper(1);
+ 02A2 01E0              ldi R16,1
+ 02A4 10E0              ldi R17,0
+ 02A6 A8DF              xcall _cmd_oper
+ 02A8                   .dbline 118
  02A8           ;           break;
- 02A8 4EC0              xjmp L40
- 02AA           L43:
- 02AA                   .dbline 117
- 02AA           ;         case 'b':
- 02AA           ;           cmd_oper(1);
- 02AA 01E0              ldi R16,1
+ 02A8 4AC0              xjmp L40
+ 02AA           L44:
+ 02AA                   .dbline 120
+ 02AA           ;        case 'c':
+ 02AA           ;           cmd_oper(2);
+ 02AA 02E0              ldi R16,2
  02AC 10E0              ldi R17,0
- 02AE A5DF              xcall _cmd_oper
- 02B0                   .dbline 118
+ 02AE A4DF              xcall _cmd_oper
+ 02B0                   .dbline 121
  02B0           ;           break;
- 02B0 4AC0              xjmp L40
- 02B2           L44:
- 02B2                   .dbline 120
- 02B2           ;        case 'c':
- 02B2           ;           cmd_oper(2);
- 02B2 02E0              ldi R16,2
+ 02B0 46C0              xjmp L40
+ 02B2           L45:
+ 02B2                   .dbline 123
+ 02B2           ;        case 'd':
+ 02B2           ;           cmd_oper(3);
+ 02B2 03E0              ldi R16,3
  02B4 10E0              ldi R17,0
- 02B6 A1DF              xcall _cmd_oper
- 02B8                   .dbline 121
+ 02B6 A0DF              xcall _cmd_oper
+ 02B8                   .dbline 124
  02B8           ;           break;
- 02B8 46C0              xjmp L40
- 02BA           L45:
- 02BA                   .dbline 123
- 02BA           ;        case 'd':
- 02BA           ;           cmd_oper(3);
- 02BA 03E0              ldi R16,3
- 02BC 10E0              ldi R17,0
- 02BE 9DDF              xcall _cmd_oper
- 02C0                   .dbline 124
- 02C0           ;           break;
- 02C0 42C0              xjmp L40
- 02C2           L46:
- 02C2                   .dbline 126
- 02C2           ;      case 'e':
- 02C2           ;           set_temp_data(0,read_data_cache);
- 02C2 20E0              ldi R18,<_read_data_cache
- 02C4 30E0              ldi R19,>_read_data_cache
- 02C6 0027              clr R16
- 02C8 1127              clr R17
- 02CA 0E940000          xcall _set_temp_data
- 02CE                   .dbline 127
- 02CE           ;           break;
- 02CE 3BC0              xjmp L40
- 02D0           L47:
- 02D0                   .dbline 129
- 02D0           ;        case 'f':
- 02D0           ;           set_temp_data(1,read_data_cache);
- 02D0 20E0              ldi R18,<_read_data_cache
- 02D2 30E0              ldi R19,>_read_data_cache
- 02D4 01E0              ldi R16,1
- 02D6 10E0              ldi R17,0
- 02D8 0E940000          xcall _set_temp_data
- 02DC                   .dbline 130
- 02DC           ;           break;
- 02DC 34C0              xjmp L40
- 02DE           L48:
- 02DE                   .dbline 132
- 02DE           ;        case 'g':
- 02DE           ;           set_temp_data(2,read_data_cache);
- 02DE 20E0              ldi R18,<_read_data_cache
- 02E0 30E0              ldi R19,>_read_data_cache
- 02E2 02E0              ldi R16,2
- 02E4 10E0              ldi R17,0
- 02E6 0E940000          xcall _set_temp_data
- 02EA                   .dbline 133
- 02EA           ;           break;
- 02EA 2DC0              xjmp L40
- 02EC           L49:
- 02EC                   .dbline 135
- 02EC           ;        case 'h':
- 02EC           ;           set_temp_data(3,read_data_cache);
- 02EC 20E0              ldi R18,<_read_data_cache
- 02EE 30E0              ldi R19,>_read_data_cache
- 02F0 03E0              ldi R16,3
- 02F2 10E0              ldi R17,0
- 02F4 0E940000          xcall _set_temp_data
- 02F8                   .dbline 136
- 02F8           ;           break;
- 02F8 26C0              xjmp L40
- 02FA           L50:
- 02FA                   .dbline 138
- 02FA           ;        case 'i':
- 02FA           ;        switch(read_data_cache[0]){
- 02FA 40910000          lds R20,_read_data_cache
- 02FE 50910100          lds R21,_read_data_cache+1
- 0302 4030              cpi R20,0
- 0304 4507              cpc R20,R21
- 0306 49F0              breq L54
- 0308           X28:
- 0308 4130              cpi R20,1
+ 02B8 42C0              xjmp L40
+ 02BA           L46:
+ 02BA                   .dbline 126
+ 02BA           ;      case 'e':
+ 02BA           ;           set_temp_data(0,read_data_cache);
+ 02BA 20E0              ldi R18,<_read_data_cache
+ 02BC 30E0              ldi R19,>_read_data_cache
+ 02BE 0027              clr R16
+ 02C0 1127              clr R17
+ 02C2 0E940000          xcall _set_temp_data
+ 02C6                   .dbline 127
+ 02C6           ;           break;
+ 02C6 3BC0              xjmp L40
+ 02C8           L47:
+ 02C8                   .dbline 129
+ 02C8           ;        case 'f':
+ 02C8           ;           set_temp_data(1,read_data_cache);
+ 02C8 20E0              ldi R18,<_read_data_cache
+ 02CA 30E0              ldi R19,>_read_data_cache
+ 02CC 01E0              ldi R16,1
+ 02CE 10E0              ldi R17,0
+ 02D0 0E940000          xcall _set_temp_data
+ 02D4                   .dbline 130
+ 02D4           ;           break;
+ 02D4 34C0              xjmp L40
+ 02D6           L48:
+ 02D6                   .dbline 132
+ 02D6           ;        case 'g':
+ 02D6           ;           set_temp_data(2,read_data_cache);
+ 02D6 20E0              ldi R18,<_read_data_cache
+ 02D8 30E0              ldi R19,>_read_data_cache
+ 02DA 02E0              ldi R16,2
+ 02DC 10E0              ldi R17,0
+ 02DE 0E940000          xcall _set_temp_data
+ 02E2                   .dbline 133
+ 02E2           ;           break;
+ 02E2 2DC0              xjmp L40
+ 02E4           L49:
+ 02E4                   .dbline 135
+ 02E4           ;        case 'h':
+ 02E4           ;           set_temp_data(3,read_data_cache);
+ 02E4 20E0              ldi R18,<_read_data_cache
+ 02E6 30E0              ldi R19,>_read_data_cache
+ 02E8 03E0              ldi R16,3
+ 02EA 10E0              ldi R17,0
+ 02EC 0E940000          xcall _set_temp_data
+ 02F0                   .dbline 136
+ 02F0           ;           break;
+ 02F0 26C0              xjmp L40
+ 02F2           L50:
+ 02F2                   .dbline 138
+ 02F2           ;        case 'i':
+ 02F2           ;        switch(read_data_cache[0]){
+ 02F2 40910000          lds R20,_read_data_cache
+ 02F6 50910100          lds R21,_read_data_cache+1
+ 02FA 4030              cpi R20,0
+ 02FC 4507              cpc R20,R21
+ 02FE 49F0              breq L54
+ 0300           X28:
+ 0300 4130              cpi R20,1
+ 0302 E0E0              ldi R30,0
+ 0304 5E07              cpc R21,R30
+ 0306 41F0              breq L55
+ 0308           X29:
+ 0308 4230              cpi R20,2
  030A E0E0              ldi R30,0
  030C 5E07              cpc R21,R30
- 030E 41F0              breq L55
- 0310           X29:
- 0310 4230              cpi R20,2
- 0312 E0E0              ldi R30,0
- 0314 5E07              cpc R21,R30
- 0316 39F0              breq L56
- 0318           X30:
- 0318 16C0              xjmp L40
- 031A           L54:
- 031A                   .dbline 140
- 031A           ;         case 0://È«²¿¿ªÊ¼
- 031A           ;            set_all_start();
- 031A 0E940000          xcall _set_all_start
- 031E                   .dbline 141
- 031E           ;            break;
- 031E 13C0              xjmp L40
- 0320           L55:
- 0320                   .dbline 143
- 0320           ;          case 1://È«²¿Í£Ö¹
- 0320           ;            set_all_stop();
- 0320 0E940000          xcall _set_all_stop
- 0324                   .dbline 144
- 0324           ;            break;
- 0324 10C0              xjmp L40
- 0326           L56:
- 0326                   .dbline 146
- 0326           ;          case 2://È«²¿ÖØÖÃ
- 0326           ;            reset_temp_data(0);
- 0326 0027              clr R16
- 0328 1127              clr R17
+ 030E 39F0              breq L56
+ 0310           X30:
+ 0310 16C0              xjmp L40
+ 0312           L54:
+ 0312                   .dbline 140
+ 0312           ;         case 0://È«²¿¿ªÊ¼
+ 0312           ;            set_all_start();
+ 0312 0E940000          xcall _set_all_start
+ 0316                   .dbline 141
+ 0316           ;            break;
+ 0316 13C0              xjmp L40
+ 0318           L55:
+ 0318                   .dbline 143
+ 0318           ;          case 1://È«²¿Í£Ö¹
+ 0318           ;            set_all_stop();
+ 0318 0E940000          xcall _set_all_stop
+ 031C                   .dbline 144
+ 031C           ;            break;
+ 031C 10C0              xjmp L40
+ 031E           L56:
+ 031E                   .dbline 146
+ 031E           ;          case 2://È«²¿ÖØÖÃ
+ 031E           ;            reset_temp_data(0);
+ 031E 0027              clr R16
+ 0320 1127              clr R17
+ 0322 0E940000          xcall _reset_temp_data
+ 0326                   .dbline 147
+ 0326           ;                reset_temp_data(1);
+ 0326 01E0              ldi R16,1
+ 0328 10E0              ldi R17,0
  032A 0E940000          xcall _reset_temp_data
- 032E                   .dbline 147
- 032E           ;                reset_temp_data(1);
- 032E 01E0              ldi R16,1
+ 032E                   .dbline 148
+ 032E           ;                reset_temp_data(2);
+ 032E 02E0              ldi R16,2
  0330 10E0              ldi R17,0
  0332 0E940000          xcall _reset_temp_data
- 0336                   .dbline 148
- 0336           ;                reset_temp_data(2);
- 0336 02E0              ldi R16,2
+ 0336                   .dbline 149
+ 0336           ;                reset_temp_data(3);
+ 0336 03E0              ldi R16,3
  0338 10E0              ldi R17,0
  033A 0E940000          xcall _reset_temp_data
- 033E                   .dbline 149
- 033E           ;                reset_temp_data(3);
- 033E 03E0              ldi R16,3
- 0340 10E0              ldi R17,0
- 0342 0E940000          xcall _reset_temp_data
- 0346                   .dbline 150
- 0346           ;            break;
- 0346                   .dbline 152
- 0346           ;         }
- 0346           ;           break;
- 0346                   .dbline 154
- 0346           ;        default :
- 0346           ;         break;
- 0346           L40:
- 0346                   .dbline -2
- 0346           L38:
- 0346                   .dbline 0 ; func end
- 0346 5991              ld R21,y+
- 0348 4991              ld R20,y+
- 034A 0895              ret
- 034C                   .dbend
- 034C           ;       }
- 034C           ; }
- 034C           ; 
+ 033E                   .dbline 150
+ 033E           ;            break;
+ 033E                   .dbline 152
+ 033E           ;         }
+ 033E           ;           break;
+ 033E                   .dbline 154
+ 033E           ;        default :
+ 033E           ;         break;
+ 033E           L40:
+ 033E                   .dbline -2
+ 033E           L38:
+ 033E                   .dbline 0 ; func end
+ 033E 5991              ld R21,y+
+ 0340 4991              ld R20,y+
+ 0342 0895              ret
+ 0344                   .dbend
+ 0344           ;       }
+ 0344           ; }
+ 0344           ; 

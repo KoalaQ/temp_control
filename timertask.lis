@@ -573,402 +573,337 @@
  0270                   .dbfunc e int_timer3 _int_timer3 fV
                         .even
  0270           _int_timer3::
- 0270 0A92              st -y,R0
- 0272 1A92              st -y,R1
- 0274 2A92              st -y,R2
- 0276 3A92              st -y,R3
- 0278 8A92              st -y,R8
- 027A 9A92              st -y,R9
- 027C 0A93              st -y,R16
- 027E 1A93              st -y,R17
- 0280 2A93              st -y,R18
- 0282 3A93              st -y,R19
- 0284 8A93              st -y,R24
- 0286 9A93              st -y,R25
- 0288 AA93              st -y,R26
- 028A BA93              st -y,R27
- 028C 0FB6              IN R0,63
- 028E 0A92              st -y,R0
- 0290 AA92              st -y,R10
- 0292 BA92              st -y,R11
- 0294                   .dbline -1
- 0294                   .dbline 128
- 0294           ; }
- 0294           ; //16位定时器，定时器3溢出中断。
- 0294           ; #pragma interrupt_handler int_timer3:30
- 0294           ; void int_timer3(void){
- 0294                   .dbline 129
- 0294           ;      TCCR3B=0x00;
- 0294 2224              clr R2
- 0296 20928A00          sts 138,R2
- 029A                   .dbline 131
- 029A           ;        
- 029A           ;      send_data_cache[0]=0x65;//e
- 029A 85E6              ldi R24,101
- 029C 90E0              ldi R25,0
- 029E 90930100          sts _send_data_cache+1,R25
- 02A2 80930000          sts _send_data_cache,R24
- 02A6                   .dbline 132
- 02A6           ;        send_data_cache[1]=temps[0].flag;//标志位
- 02A6 20900000          lds R2,_temps
- 02AA 30900100          lds R3,_temps+1
- 02AE 30920300          sts _send_data_cache+2+1,R3
- 02B2 20920200          sts _send_data_cache+2,R2
- 02B6                   .dbline 133
- 02B6           ;        send_data_cache[2]=temps[0].status;//状态
- 02B6 20900A01          lds R2,_temps+266
- 02BA 30900B01          lds R3,_temps+266+1
- 02BE 30920500          sts _send_data_cache+4+1,R3
- 02C2 20920400          sts _send_data_cache+4,R2
- 02C6                   .dbline 134
- 02C6           ;        send_data_cache[3]=((int)temps[0].actualtemp)>>8;//温度
- 02C6 20912601          lds R18,_temps+292+2
- 02CA 30912701          lds R19,_temps+292+2+1
- 02CE 00912401          lds R16,_temps+292
- 02D2 10912501          lds R17,_temps+292+1
- 02D6 0E940000          xcall fpint
- 02DA 1801              movw R2,R16
- 02DC 232C              mov R2,R3
- 02DE 3324              clr R3
- 02E0 27FC              sbrc R2,7
- 02E2 3094              com R3
- 02E4 30920700          sts _send_data_cache+6+1,R3
- 02E8 20920600          sts _send_data_cache+6,R2
- 02EC                   .dbline 135
- 02EC           ;        send_data_cache[4]=((int)temps[0].actualtemp)&0xFF;
- 02EC 20912601          lds R18,_temps+292+2
- 02F0 30912701          lds R19,_temps+292+2+1
- 02F4 00912401          lds R16,_temps+292
- 02F8 10912501          lds R17,_temps+292+1
- 02FC 0E940000          xcall fpint
- 0300 C801              movw R24,R16
- 0302 9070              andi R25,0
- 0304 90930900          sts _send_data_cache+8+1,R25
- 0308 80930800          sts _send_data_cache+8,R24
- 030C                   .dbline 136
- 030C           ;        send_data_cache[5]=temps[0].needtime>>8;//需要时间
- 030C 20900C01          lds R2,_temps+268
- 0310 30900D01          lds R3,_temps+268+1
- 0314 232C              mov R2,R3
- 0316 3324              clr R3
- 0318 30920B00          sts _send_data_cache+10+1,R3
- 031C 20920A00          sts _send_data_cache+10,R2
- 0320                   .dbline 137
- 0320           ;        send_data_cache[6]=temps[0].needtime&8;
- 0320 80910C01          lds R24,_temps+268
- 0324 90910D01          lds R25,_temps+268+1
- 0328 8870              andi R24,8
- 032A 9070              andi R25,0
- 032C 90930D00          sts _send_data_cache+12+1,R25
- 0330 80930C00          sts _send_data_cache+12,R24
- 0334                   .dbline 138
- 0334           ;        send_data_cache[7]=temps[0].nowtime>>8;//已运行时间
- 0334 20900E01          lds R2,_temps+270
- 0338 30900F01          lds R3,_temps+270+1
- 033C 232C              mov R2,R3
- 033E 3324              clr R3
- 0340 30920F00          sts _send_data_cache+14+1,R3
- 0344 20920E00          sts _send_data_cache+14,R2
- 0348                   .dbline 139
- 0348           ;        send_data_cache[8]=temps[0].nowtime&0xFF;
- 0348 80910E01          lds R24,_temps+270
- 034C 90910F01          lds R25,_temps+270+1
- 0350 9070              andi R25,0
- 0352 90931100          sts _send_data_cache+16+1,R25
- 0356 80931000          sts _send_data_cache+16,R24
- 035A                   .dbline 140
- 035A           ;        send_data_cache[9]=0x65;//e
- 035A 85E6              ldi R24,101
- 035C 90E0              ldi R25,0
- 035E 90931300          sts _send_data_cache+18+1,R25
- 0362 80931200          sts _send_data_cache+18,R24
- 0366                   .dbline 142
- 0366           ;        
- 0366           ;        send_data_cache[10]=0x66;//f
- 0366 86E6              ldi R24,102
- 0368 90931500          sts _send_data_cache+20+1,R25
- 036C 80931400          sts _send_data_cache+20,R24
- 0370                   .dbline 143
- 0370           ;        send_data_cache[11]=temps[1].flag;//标志位
- 0370 20904401          lds R2,_temps+324
- 0374 30904501          lds R3,_temps+324+1
- 0378 30921700          sts _send_data_cache+22+1,R3
- 037C 20921600          sts _send_data_cache+22,R2
- 0380                   .dbline 144
- 0380           ;        send_data_cache[12]=temps[1].status ;//状态
- 0380 20904E02          lds R2,_temps+324+266
- 0384 30904F02          lds R3,_temps+324+266+1
- 0388 30921900          sts _send_data_cache+24+1,R3
- 038C 20921800          sts _send_data_cache+24,R2
- 0390                   .dbline 145
- 0390           ;        send_data_cache[13]=((int)temps[1].actualtemp)>>8;//温度
- 0390 20916A02          lds R18,_temps+324+292+2
- 0394 30916B02          lds R19,_temps+324+292+2+1
- 0398 00916802          lds R16,_temps+324+292
- 039C 10916902          lds R17,_temps+324+292+1
- 03A0 0E940000          xcall fpint
- 03A4 1801              movw R2,R16
- 03A6 232C              mov R2,R3
- 03A8 3324              clr R3
- 03AA 27FC              sbrc R2,7
- 03AC 3094              com R3
- 03AE 30921B00          sts _send_data_cache+26+1,R3
- 03B2 20921A00          sts _send_data_cache+26,R2
- 03B6                   .dbline 146
- 03B6           ;        send_data_cache[14]=((int)temps[1].actualtemp)&0xFF;
- 03B6 20916A02          lds R18,_temps+324+292+2
- 03BA 30916B02          lds R19,_temps+324+292+2+1
- 03BE 00916802          lds R16,_temps+324+292
- 03C2 10916902          lds R17,_temps+324+292+1
- 03C6 0E940000          xcall fpint
- 03CA C801              movw R24,R16
- 03CC 9070              andi R25,0
- 03CE 90931D00          sts _send_data_cache+28+1,R25
- 03D2 80931C00          sts _send_data_cache+28,R24
- 03D6                   .dbline 147
- 03D6           ;        send_data_cache[15]=temps[0].needtime>>8;//需要时间
- 03D6 20900C01          lds R2,_temps+268
- 03DA 30900D01          lds R3,_temps+268+1
- 03DE 232C              mov R2,R3
- 03E0 3324              clr R3
- 03E2 30921F00          sts _send_data_cache+30+1,R3
- 03E6 20921E00          sts _send_data_cache+30,R2
- 03EA                   .dbline 148
- 03EA           ;        send_data_cache[16]=temps[0].needtime&8;
- 03EA 80910C01          lds R24,_temps+268
- 03EE 90910D01          lds R25,_temps+268+1
- 03F2 8870              andi R24,8
- 03F4 9070              andi R25,0
- 03F6 90932100          sts _send_data_cache+32+1,R25
- 03FA 80932000          sts _send_data_cache+32,R24
- 03FE                   .dbline 149
- 03FE           ;        send_data_cache[17]=temps[1].nowtime>>8;//已运行时间
- 03FE 20905202          lds R2,_temps+324+270
- 0402 30905302          lds R3,_temps+324+270+1
- 0406 232C              mov R2,R3
- 0408 3324              clr R3
- 040A 30922300          sts _send_data_cache+34+1,R3
- 040E 20922200          sts _send_data_cache+34,R2
- 0412                   .dbline 150
- 0412           ;        send_data_cache[18]=temps[1].nowtime&0xFF;
- 0412 80915202          lds R24,_temps+324+270
- 0416 90915302          lds R25,_temps+324+270+1
- 041A 9070              andi R25,0
- 041C 90932500          sts _send_data_cache+36+1,R25
- 0420 80932400          sts _send_data_cache+36,R24
- 0424                   .dbline 151
- 0424           ;        send_data_cache[19]=0x66;//f
- 0424 86E6              ldi R24,102
- 0426 90E0              ldi R25,0
- 0428 90932700          sts _send_data_cache+38+1,R25
- 042C 80932600          sts _send_data_cache+38,R24
- 0430                   .dbline 153
- 0430           ;        
- 0430           ;        send_data_cache[20]=0x67;//g
- 0430 87E6              ldi R24,103
- 0432 90932900          sts _send_data_cache+40+1,R25
- 0436 80932800          sts _send_data_cache+40,R24
- 043A                   .dbline 154
- 043A           ;        send_data_cache[21]=temps[2].flag;//标志位
- 043A 20908802          lds R2,_temps+648
- 043E 30908902          lds R3,_temps+648+1
- 0442 30922B00          sts _send_data_cache+42+1,R3
- 0446 20922A00          sts _send_data_cache+42,R2
- 044A                   .dbline 155
- 044A           ;        send_data_cache[22]=temps[2].status;//状态
- 044A 20909203          lds R2,_temps+648+266
- 044E 30909303          lds R3,_temps+648+266+1
- 0452 30922D00          sts _send_data_cache+44+1,R3
- 0456 20922C00          sts _send_data_cache+44,R2
- 045A                   .dbline 156
- 045A           ;        send_data_cache[23]=((int)temps[2].actualtemp)>>8;//温度
- 045A 2091AE03          lds R18,_temps+648+292+2
- 045E 3091AF03          lds R19,_temps+648+292+2+1
- 0462 0091AC03          lds R16,_temps+648+292
- 0466 1091AD03          lds R17,_temps+648+292+1
- 046A 0E940000          xcall fpint
- 046E 1801              movw R2,R16
+ 0270 2A92              st -y,R2
+ 0272 3A92              st -y,R3
+ 0274 8A93              st -y,R24
+ 0276 9A93              st -y,R25
+ 0278 2FB6              IN R2,63
+ 027A 2A92              st -y,R2
+ 027C                   .dbline -1
+ 027C                   .dbline 128
+ 027C           ; }
+ 027C           ; //16位定时器，定时器3溢出中断。
+ 027C           ; #pragma interrupt_handler int_timer3:30
+ 027C           ; void int_timer3(void){
+ 027C                   .dbline 129
+ 027C           ;      TCCR3B=0x00;
+ 027C 2224              clr R2
+ 027E 20928A00          sts 138,R2
+ 0282                   .dbline 130
+ 0282           ;        send_data_cache[0]=0x00;
+ 0282 3324              clr R3
+ 0284 30920100          sts _send_data_cache+1,R3
+ 0288 20920000          sts _send_data_cache,R2
+ 028C                   .dbline 131
+ 028C           ;      send_data_cache[1]=0xFF;//A
+ 028C 8FEF              ldi R24,255
+ 028E 90E0              ldi R25,0
+ 0290 90930300          sts _send_data_cache+2+1,R25
+ 0294 80930200          sts _send_data_cache+2,R24
+ 0298                   .dbline 132
+ 0298           ;        send_data_cache[2]=0xFF;//A
+ 0298 90930500          sts _send_data_cache+4+1,R25
+ 029C 80930400          sts _send_data_cache+4,R24
+ 02A0                   .dbline 134
+ 02A0           ;        
+ 02A0           ;        send_data_cache[3]=((int)temps[0].actualtemp)>>8;//温度
+ 02A0 20902201          lds R2,_temps+290
+ 02A4 30902301          lds R3,_temps+290+1
+ 02A8 232C              mov R2,R3
+ 02AA 3324              clr R3
+ 02AC 27FC              sbrc R2,7
+ 02AE 3094              com R3
+ 02B0 30920700          sts _send_data_cache+6+1,R3
+ 02B4 20920600          sts _send_data_cache+6,R2
+ 02B8                   .dbline 135
+ 02B8           ;        send_data_cache[4]=((int)temps[0].actualtemp)&0xFF;
+ 02B8 80912201          lds R24,_temps+290
+ 02BC 90912301          lds R25,_temps+290+1
+ 02C0 9070              andi R25,0
+ 02C2 90930900          sts _send_data_cache+8+1,R25
+ 02C6 80930800          sts _send_data_cache+8,R24
+ 02CA                   .dbline 136
+ 02CA           ;        send_data_cache[5]=temps[0].flag;//标志位
+ 02CA 20900000          lds R2,_temps
+ 02CE 30900100          lds R3,_temps+1
+ 02D2 30920B00          sts _send_data_cache+10+1,R3
+ 02D6 20920A00          sts _send_data_cache+10,R2
+ 02DA                   .dbline 137
+ 02DA           ;        send_data_cache[6]=temps[0].needtime>>8;//需要时间
+ 02DA 20900C01          lds R2,_temps+268
+ 02DE 30900D01          lds R3,_temps+268+1
+ 02E2 232C              mov R2,R3
+ 02E4 3324              clr R3
+ 02E6 30920D00          sts _send_data_cache+12+1,R3
+ 02EA 20920C00          sts _send_data_cache+12,R2
+ 02EE                   .dbline 138
+ 02EE           ;        send_data_cache[7]=temps[0].needtime&8;
+ 02EE 80910C01          lds R24,_temps+268
+ 02F2 90910D01          lds R25,_temps+268+1
+ 02F6 8870              andi R24,8
+ 02F8 9070              andi R25,0
+ 02FA 90930F00          sts _send_data_cache+14+1,R25
+ 02FE 80930E00          sts _send_data_cache+14,R24
+ 0302                   .dbline 139
+ 0302           ;        send_data_cache[8]=temps[0].status;//状态
+ 0302 20900A01          lds R2,_temps+266
+ 0306 30900B01          lds R3,_temps+266+1
+ 030A 30921100          sts _send_data_cache+16+1,R3
+ 030E 20921000          sts _send_data_cache+16,R2
+ 0312                   .dbline 140
+ 0312           ;        send_data_cache[9]=temps[0].nowtime>>8;//已运行时间
+ 0312 20900E01          lds R2,_temps+270
+ 0316 30900F01          lds R3,_temps+270+1
+ 031A 232C              mov R2,R3
+ 031C 3324              clr R3
+ 031E 30921300          sts _send_data_cache+18+1,R3
+ 0322 20921200          sts _send_data_cache+18,R2
+ 0326                   .dbline 141
+ 0326           ;        send_data_cache[10]=temps[0].nowtime&0xFF;      
+ 0326 80910E01          lds R24,_temps+270
+ 032A 90910F01          lds R25,_temps+270+1
+ 032E 9070              andi R25,0
+ 0330 90931500          sts _send_data_cache+20+1,R25
+ 0334 80931400          sts _send_data_cache+20,R24
+ 0338                   .dbline 144
+ 0338           ;      
+ 0338           ;        
+ 0338           ;        send_data_cache[11]=((int)temps[1].actualtemp)>>8;//温度
+ 0338 20905402          lds R2,_temps+306+290
+ 033C 30905502          lds R3,_temps+306+290+1
+ 0340 232C              mov R2,R3
+ 0342 3324              clr R3
+ 0344 27FC              sbrc R2,7
+ 0346 3094              com R3
+ 0348 30921700          sts _send_data_cache+22+1,R3
+ 034C 20921600          sts _send_data_cache+22,R2
+ 0350                   .dbline 145
+ 0350           ;        send_data_cache[12]=((int)temps[1].actualtemp)&0xFF;
+ 0350 80915402          lds R24,_temps+306+290
+ 0354 90915502          lds R25,_temps+306+290+1
+ 0358 9070              andi R25,0
+ 035A 90931900          sts _send_data_cache+24+1,R25
+ 035E 80931800          sts _send_data_cache+24,R24
+ 0362                   .dbline 146
+ 0362           ;        send_data_cache[13]=temps[1].flag;//标志位
+ 0362 20903201          lds R2,_temps+306
+ 0366 30903301          lds R3,_temps+306+1
+ 036A 30921B00          sts _send_data_cache+26+1,R3
+ 036E 20921A00          sts _send_data_cache+26,R2
+ 0372                   .dbline 147
+ 0372           ;        send_data_cache[14]=temps[1].needtime>>8;//需要时间
+ 0372 20903E02          lds R2,_temps+306+268
+ 0376 30903F02          lds R3,_temps+306+268+1
+ 037A 232C              mov R2,R3
+ 037C 3324              clr R3
+ 037E 30921D00          sts _send_data_cache+28+1,R3
+ 0382 20921C00          sts _send_data_cache+28,R2
+ 0386                   .dbline 148
+ 0386           ;        send_data_cache[15]=temps[1].needtime&8;
+ 0386 80913E02          lds R24,_temps+306+268
+ 038A 90913F02          lds R25,_temps+306+268+1
+ 038E 8870              andi R24,8
+ 0390 9070              andi R25,0
+ 0392 90931F00          sts _send_data_cache+30+1,R25
+ 0396 80931E00          sts _send_data_cache+30,R24
+ 039A                   .dbline 149
+ 039A           ;        send_data_cache[16]=temps[1].status;//状态
+ 039A 20903C02          lds R2,_temps+306+266
+ 039E 30903D02          lds R3,_temps+306+266+1
+ 03A2 30922100          sts _send_data_cache+32+1,R3
+ 03A6 20922000          sts _send_data_cache+32,R2
+ 03AA                   .dbline 150
+ 03AA           ;        send_data_cache[17]=temps[1].nowtime>>8;//已运行时间
+ 03AA 20904002          lds R2,_temps+306+270
+ 03AE 30904102          lds R3,_temps+306+270+1
+ 03B2 232C              mov R2,R3
+ 03B4 3324              clr R3
+ 03B6 30922300          sts _send_data_cache+34+1,R3
+ 03BA 20922200          sts _send_data_cache+34,R2
+ 03BE                   .dbline 151
+ 03BE           ;        send_data_cache[18]=temps[1].nowtime&0xFF;      
+ 03BE 80914002          lds R24,_temps+306+270
+ 03C2 90914102          lds R25,_temps+306+270+1
+ 03C6 9070              andi R25,0
+ 03C8 90932500          sts _send_data_cache+36+1,R25
+ 03CC 80932400          sts _send_data_cache+36,R24
+ 03D0                   .dbline 154
+ 03D0           ;      
+ 03D0           ; 
+ 03D0           ;        send_data_cache[19]=((int)temps[2].actualtemp)>>8;//温度
+ 03D0 20908603          lds R2,_temps+612+290
+ 03D4 30908703          lds R3,_temps+612+290+1
+ 03D8 232C              mov R2,R3
+ 03DA 3324              clr R3
+ 03DC 27FC              sbrc R2,7
+ 03DE 3094              com R3
+ 03E0 30922700          sts _send_data_cache+38+1,R3
+ 03E4 20922600          sts _send_data_cache+38,R2
+ 03E8                   .dbline 155
+ 03E8           ;        send_data_cache[20]=((int)temps[2].actualtemp)&0xFF;
+ 03E8 80918603          lds R24,_temps+612+290
+ 03EC 90918703          lds R25,_temps+612+290+1
+ 03F0 9070              andi R25,0
+ 03F2 90932900          sts _send_data_cache+40+1,R25
+ 03F6 80932800          sts _send_data_cache+40,R24
+ 03FA                   .dbline 156
+ 03FA           ;        send_data_cache[21]=temps[2].flag;//标志位
+ 03FA 20906402          lds R2,_temps+612
+ 03FE 30906502          lds R3,_temps+612+1
+ 0402 30922B00          sts _send_data_cache+42+1,R3
+ 0406 20922A00          sts _send_data_cache+42,R2
+ 040A                   .dbline 157
+ 040A           ;        send_data_cache[22]=temps[2].needtime>>8;//需要时间
+ 040A 20907003          lds R2,_temps+612+268
+ 040E 30907103          lds R3,_temps+612+268+1
+ 0412 232C              mov R2,R3
+ 0414 3324              clr R3
+ 0416 30922D00          sts _send_data_cache+44+1,R3
+ 041A 20922C00          sts _send_data_cache+44,R2
+ 041E                   .dbline 158
+ 041E           ;        send_data_cache[23]=temps[2].needtime&8;
+ 041E 80917003          lds R24,_temps+612+268
+ 0422 90917103          lds R25,_temps+612+268+1
+ 0426 8870              andi R24,8
+ 0428 9070              andi R25,0
+ 042A 90932F00          sts _send_data_cache+46+1,R25
+ 042E 80932E00          sts _send_data_cache+46,R24
+ 0432                   .dbline 159
+ 0432           ;        send_data_cache[24]=temps[2].status;//状态
+ 0432 20906E03          lds R2,_temps+612+266
+ 0436 30906F03          lds R3,_temps+612+266+1
+ 043A 30923100          sts _send_data_cache+48+1,R3
+ 043E 20923000          sts _send_data_cache+48,R2
+ 0442                   .dbline 160
+ 0442           ;        send_data_cache[25]=temps[2].nowtime>>8;//已运行时间
+ 0442 20907203          lds R2,_temps+612+270
+ 0446 30907303          lds R3,_temps+612+270+1
+ 044A 232C              mov R2,R3
+ 044C 3324              clr R3
+ 044E 30923300          sts _send_data_cache+50+1,R3
+ 0452 20923200          sts _send_data_cache+50,R2
+ 0456                   .dbline 161
+ 0456           ;        send_data_cache[26]=temps[2].nowtime&0xFF;      
+ 0456 80917203          lds R24,_temps+612+270
+ 045A 90917303          lds R25,_temps+612+270+1
+ 045E 9070              andi R25,0
+ 0460 90933500          sts _send_data_cache+52+1,R25
+ 0464 80933400          sts _send_data_cache+52,R24
+ 0468                   .dbline 164
+ 0468           ;      
+ 0468           ;       
+ 0468           ;        send_data_cache[27]=((int)temps[3].actualtemp)>>8;//温度
+ 0468 2090B804          lds R2,_temps+918+290
+ 046C 3090B904          lds R3,_temps+918+290+1
  0470 232C              mov R2,R3
  0472 3324              clr R3
  0474 27FC              sbrc R2,7
  0476 3094              com R3
- 0478 30922F00          sts _send_data_cache+46+1,R3
- 047C 20922E00          sts _send_data_cache+46,R2
- 0480                   .dbline 157
- 0480           ;        send_data_cache[24]=((int)temps[2].actualtemp)&0xFF;
- 0480 2091AE03          lds R18,_temps+648+292+2
- 0484 3091AF03          lds R19,_temps+648+292+2+1
- 0488 0091AC03          lds R16,_temps+648+292
- 048C 1091AD03          lds R17,_temps+648+292+1
- 0490 0E940000          xcall fpint
- 0494 C801              movw R24,R16
- 0496 9070              andi R25,0
- 0498 90933100          sts _send_data_cache+48+1,R25
- 049C 80933000          sts _send_data_cache+48,R24
- 04A0                   .dbline 158
- 04A0           ;        send_data_cache[25]=temps[0].needtime>>8;//需要时间
- 04A0 20900C01          lds R2,_temps+268
- 04A4 30900D01          lds R3,_temps+268+1
- 04A8 232C              mov R2,R3
- 04AA 3324              clr R3
- 04AC 30923300          sts _send_data_cache+50+1,R3
- 04B0 20923200          sts _send_data_cache+50,R2
- 04B4                   .dbline 159
- 04B4           ;        send_data_cache[26]=temps[0].needtime&8;
- 04B4 80910C01          lds R24,_temps+268
- 04B8 90910D01          lds R25,_temps+268+1
- 04BC 8870              andi R24,8
- 04BE 9070              andi R25,0
- 04C0 90933500          sts _send_data_cache+52+1,R25
- 04C4 80933400          sts _send_data_cache+52,R24
- 04C8                   .dbline 160
- 04C8           ;        send_data_cache[27]=temps[2].nowtime>>8;//已运行时间
- 04C8 20909603          lds R2,_temps+648+270
- 04CC 30909703          lds R3,_temps+648+270+1
- 04D0 232C              mov R2,R3
- 04D2 3324              clr R3
- 04D4 30923700          sts _send_data_cache+54+1,R3
- 04D8 20923600          sts _send_data_cache+54,R2
- 04DC                   .dbline 161
- 04DC           ;        send_data_cache[28]=temps[2].nowtime&0xFF;
- 04DC 80919603          lds R24,_temps+648+270
- 04E0 90919703          lds R25,_temps+648+270+1
- 04E4 9070              andi R25,0
- 04E6 90933900          sts _send_data_cache+56+1,R25
- 04EA 80933800          sts _send_data_cache+56,R24
- 04EE                   .dbline 162
- 04EE           ;        send_data_cache[29]=0x67;//g
- 04EE 87E6              ldi R24,103
- 04F0 90E0              ldi R25,0
- 04F2 90933B00          sts _send_data_cache+58+1,R25
- 04F6 80933A00          sts _send_data_cache+58,R24
- 04FA                   .dbline 164
- 04FA           ;        
- 04FA           ;        send_data_cache[30]=0x68;//h
- 04FA 88E6              ldi R24,104
- 04FC 90933D00          sts _send_data_cache+60+1,R25
- 0500 80933C00          sts _send_data_cache+60,R24
- 0504                   .dbline 165
- 0504           ;        send_data_cache[31]=temps[3].flag ;//标志位
- 0504 2090CC03          lds R2,_temps+972
- 0508 3090CD03          lds R3,_temps+972+1
- 050C 30923F00          sts _send_data_cache+62+1,R3
- 0510 20923E00          sts _send_data_cache+62,R2
- 0514                   .dbline 166
- 0514           ;        send_data_cache[32]=temps[3].status ;//状态
- 0514 2090D604          lds R2,_temps+972+266
- 0518 3090D704          lds R3,_temps+972+266+1
- 051C 30924100          sts _send_data_cache+64+1,R3
- 0520 20924000          sts _send_data_cache+64,R2
- 0524                   .dbline 167
- 0524           ;        send_data_cache[33]=((int)temps[3].actualtemp)>>8;//温度
- 0524 2091F204          lds R18,_temps+972+292+2
- 0528 3091F304          lds R19,_temps+972+292+2+1
- 052C 0091F004          lds R16,_temps+972+292
- 0530 1091F104          lds R17,_temps+972+292+1
- 0534 0E940000          xcall fpint
- 0538 1801              movw R2,R16
- 053A 232C              mov R2,R3
- 053C 3324              clr R3
- 053E 27FC              sbrc R2,7
- 0540 3094              com R3
- 0542 30924300          sts _send_data_cache+66+1,R3
- 0546 20924200          sts _send_data_cache+66,R2
- 054A                   .dbline 168
- 054A           ;        send_data_cache[34]=((int)temps[3].actualtemp)&0xFF;
- 054A 2091F204          lds R18,_temps+972+292+2
- 054E 3091F304          lds R19,_temps+972+292+2+1
- 0552 0091F004          lds R16,_temps+972+292
- 0556 1091F104          lds R17,_temps+972+292+1
- 055A 0E940000          xcall fpint
- 055E C801              movw R24,R16
- 0560 9070              andi R25,0
- 0562 90934500          sts _send_data_cache+68+1,R25
- 0566 80934400          sts _send_data_cache+68,R24
- 056A                   .dbline 169
- 056A           ;        send_data_cache[35]=temps[0].needtime>>8;//需要时间
- 056A 20900C01          lds R2,_temps+268
- 056E 30900D01          lds R3,_temps+268+1
- 0572 232C              mov R2,R3
- 0574 3324              clr R3
- 0576 30924700          sts _send_data_cache+70+1,R3
- 057A 20924600          sts _send_data_cache+70,R2
- 057E                   .dbline 170
- 057E           ;        send_data_cache[36]=temps[0].needtime&8;
- 057E 80910C01          lds R24,_temps+268
- 0582 90910D01          lds R25,_temps+268+1
- 0586 8870              andi R24,8
- 0588 9070              andi R25,0
- 058A 90934900          sts _send_data_cache+72+1,R25
- 058E 80934800          sts _send_data_cache+72,R24
- 0592                   .dbline 171
- 0592           ;        send_data_cache[37]=temps[3].nowtime>>8;//已运行时间
- 0592 2090DA04          lds R2,_temps+972+270
- 0596 3090DB04          lds R3,_temps+972+270+1
- 059A 232C              mov R2,R3
- 059C 3324              clr R3
- 059E 30924B00          sts _send_data_cache+74+1,R3
- 05A2 20924A00          sts _send_data_cache+74,R2
- 05A6                   .dbline 172
- 05A6           ;        send_data_cache[38]=temps[3].nowtime&0xFF;
- 05A6 8091DA04          lds R24,_temps+972+270
- 05AA 9091DB04          lds R25,_temps+972+270+1
- 05AE 9070              andi R25,0
- 05B0 90934D00          sts _send_data_cache+76+1,R25
- 05B4 80934C00          sts _send_data_cache+76,R24
- 05B8                   .dbline 173
- 05B8           ;        send_data_cache[39]=0x68;//h
- 05B8 88E6              ldi R24,104
- 05BA 90E0              ldi R25,0
- 05BC 90934F00          sts _send_data_cache+78+1,R25
- 05C0 80934E00          sts _send_data_cache+78,R24
- 05C4                   .dbline 176
- 05C4           ;        
- 05C4           ;        
- 05C4           ;        send_data_length=40;
- 05C4 88E2              ldi R24,40
- 05C6 90930100          sts _send_data_length+1,R25
- 05CA 80930000          sts _send_data_length,R24
- 05CE                   .dbline 177
- 05CE           ;        UCSR0B |=(1<<UDRIE0); //发送使能。测试使用
- 05CE 559A              sbi 0xa,5
- 05D0                   .dbline 178
- 05D0           ;         TCNT3H=time_h_3;
- 05D0 20900400          lds R2,_time_h_3
- 05D4 20928900          sts 137,R2
- 05D8                   .dbline 179
- 05D8           ;       TCNT3L=time_l_3;
- 05D8 20900300          lds R2,_time_l_3
- 05DC 20928800          sts 136,R2
- 05E0                   .dbline 180
- 05E0           ;       TCCR3B=0x05;
- 05E0 85E0              ldi R24,5
- 05E2 80938A00          sts 138,R24
- 05E6                   .dbline 181
- 05E6           ;         return;                                
- 05E6                   .dbline -2
- 05E6           L16:
- 05E6                   .dbline 0 ; func end
- 05E6 B990              ld R11,y+
- 05E8 A990              ld R10,y+
- 05EA 0990              ld R0,y+
- 05EC 0FBE              OUT 63,R0
- 05EE B991              ld R27,y+
- 05F0 A991              ld R26,y+
- 05F2 9991              ld R25,y+
- 05F4 8991              ld R24,y+
- 05F6 3991              ld R19,y+
- 05F8 2991              ld R18,y+
- 05FA 1991              ld R17,y+
- 05FC 0991              ld R16,y+
- 05FE 9990              ld R9,y+
- 0600 8990              ld R8,y+
- 0602 3990              ld R3,y+
- 0604 2990              ld R2,y+
- 0606 1990              ld R1,y+
- 0608 0990              ld R0,y+
- 060A 1895              reti
- 060C                   .dbend
+ 0478 30923700          sts _send_data_cache+54+1,R3
+ 047C 20923600          sts _send_data_cache+54,R2
+ 0480                   .dbline 165
+ 0480           ;        send_data_cache[28]=((int)temps[3].actualtemp)&0xFF;
+ 0480 8091B804          lds R24,_temps+918+290
+ 0484 9091B904          lds R25,_temps+918+290+1
+ 0488 9070              andi R25,0
+ 048A 90933900          sts _send_data_cache+56+1,R25
+ 048E 80933800          sts _send_data_cache+56,R24
+ 0492                   .dbline 166
+ 0492           ;        send_data_cache[29]=temps[3].flag;//标志位
+ 0492 20909603          lds R2,_temps+918
+ 0496 30909703          lds R3,_temps+918+1
+ 049A 30923B00          sts _send_data_cache+58+1,R3
+ 049E 20923A00          sts _send_data_cache+58,R2
+ 04A2                   .dbline 167
+ 04A2           ;        send_data_cache[30]=temps[3].needtime>>8;//需要时间
+ 04A2 2090A204          lds R2,_temps+918+268
+ 04A6 3090A304          lds R3,_temps+918+268+1
+ 04AA 232C              mov R2,R3
+ 04AC 3324              clr R3
+ 04AE 30923D00          sts _send_data_cache+60+1,R3
+ 04B2 20923C00          sts _send_data_cache+60,R2
+ 04B6                   .dbline 168
+ 04B6           ;        send_data_cache[31]=temps[3].needtime&8;
+ 04B6 8091A204          lds R24,_temps+918+268
+ 04BA 9091A304          lds R25,_temps+918+268+1
+ 04BE 8870              andi R24,8
+ 04C0 9070              andi R25,0
+ 04C2 90933F00          sts _send_data_cache+62+1,R25
+ 04C6 80933E00          sts _send_data_cache+62,R24
+ 04CA                   .dbline 169
+ 04CA           ;        send_data_cache[32]=temps[3].status;//状态
+ 04CA 2090A004          lds R2,_temps+918+266
+ 04CE 3090A104          lds R3,_temps+918+266+1
+ 04D2 30924100          sts _send_data_cache+64+1,R3
+ 04D6 20924000          sts _send_data_cache+64,R2
+ 04DA                   .dbline 170
+ 04DA           ;        send_data_cache[33]=temps[3].nowtime>>8;//已运行时间
+ 04DA 2090A404          lds R2,_temps+918+270
+ 04DE 3090A504          lds R3,_temps+918+270+1
+ 04E2 232C              mov R2,R3
+ 04E4 3324              clr R3
+ 04E6 30924300          sts _send_data_cache+66+1,R3
+ 04EA 20924200          sts _send_data_cache+66,R2
+ 04EE                   .dbline 171
+ 04EE           ;        send_data_cache[34]=temps[3].nowtime&0xFF;      
+ 04EE 8091A404          lds R24,_temps+918+270
+ 04F2 9091A504          lds R25,_temps+918+270+1
+ 04F6 9070              andi R25,0
+ 04F8 90934500          sts _send_data_cache+68+1,R25
+ 04FC 80934400          sts _send_data_cache+68,R24
+ 0500                   .dbline 173
+ 0500           ;      
+ 0500           ;        send_data_cache[35]=0x00;//状态
+ 0500 2224              clr R2
+ 0502 3324              clr R3
+ 0504 30924700          sts _send_data_cache+70+1,R3
+ 0508 20924600          sts _send_data_cache+70,R2
+ 050C                   .dbline 175
+ 050C           ;       
+ 050C           ;        send_data_cache[36]=0xFE;//A
+ 050C 8EEF              ldi R24,254
+ 050E 90E0              ldi R25,0
+ 0510 90934900          sts _send_data_cache+72+1,R25
+ 0514 80934800          sts _send_data_cache+72,R24
+ 0518                   .dbline 176
+ 0518           ;        send_data_cache[37]=0xFE;//A
+ 0518 90934B00          sts _send_data_cache+74+1,R25
+ 051C 80934A00          sts _send_data_cache+74,R24
+ 0520                   .dbline 179
+ 0520           ;        
+ 0520           ;        
+ 0520           ;        send_data_length=38;
+ 0520 86E2              ldi R24,38
+ 0522 90930100          sts _send_data_length+1,R25
+ 0526 80930000          sts _send_data_length,R24
+ 052A                   .dbline 180
+ 052A           ;        UCSR0B |=(1<<UDRIE0); //发送使能。测试使用
+ 052A 559A              sbi 0xa,5
+ 052C                   .dbline 181
+ 052C           ;         TCNT3H=time_h_3;
+ 052C 20900400          lds R2,_time_h_3
+ 0530 20928900          sts 137,R2
+ 0534                   .dbline 182
+ 0534           ;       TCNT3L=time_l_3;
+ 0534 20900300          lds R2,_time_l_3
+ 0538 20928800          sts 136,R2
+ 053C                   .dbline 183
+ 053C           ;       TCCR3B=0x05;
+ 053C 85E0              ldi R24,5
+ 053E 80938A00          sts 138,R24
+ 0542                   .dbline 184
+ 0542           ;         return;                                
+ 0542                   .dbline -2
+ 0542           L16:
+ 0542                   .dbline 0 ; func end
+ 0542 2990              ld R2,y+
+ 0544 2FBE              OUT 63,R2
+ 0546 9991              ld R25,y+
+ 0548 8991              ld R24,y+
+ 054A 3990              ld R3,y+
+ 054C 2990              ld R2,y+
+ 054E 1895              reti
+ 0550                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\timertask.c
  0000           _i::

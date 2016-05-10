@@ -47,8 +47,8 @@ void int_ruart0(void){
 	    read_cmd();//Ö´ĞĞ»ñµÃÊı¾İµÄ·½·¨
 		read_data_cur=0;
 	   read_data_cmd='z';
-	 }else if(data>='0' && data<='9'){//Êı×Ö²ÎÊı£¬½ÓÊÕ¡£Ê¹ÓÃ´®¿Ú¹¤¾ß£¬·¢ËÍµÄÊÇasciiÂÂë
-	    read_data_cache[read_data_cur]=data-0x30;
+	 }else if(data>=0 && data<=9){//Êı×Ö²ÎÊı£¬½ÓÊÕ¡£Ê¹ÓÃ´®¿Ú¹¤¾ß£¬
+	    read_data_cache[read_data_cur]=data;
 		read_data_cur++;
 		if(read_data_cur>131){//·¢ËÍÊı¾İ»º´æÒç³ö¡£ÉÏÎ»»ú·¢ËÍÊı¾İ²»¶Ô¡£¶ªÆúËùÓĞ
 		  read_data_cur=0;
@@ -108,7 +108,7 @@ void cmd_oper(uint t){
 	
 }
 void read_cmd(void){
-    PORTE=~PORTE;
+   
     switch(read_data_cmd){
 	  case 'a':
 	    cmd_oper(0);

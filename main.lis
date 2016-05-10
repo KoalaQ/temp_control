@@ -42,7 +42,7 @@
  010B 3000              .word 48
                         .area data(ram, con, rel)
  010D                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 010D                   .blkb 268
+ 010D                   .blkb 276
                         .area idata
  010D 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
  0149 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -50,146 +50,139 @@
  01C1 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
  01FD 00000000000000000000      .word 0,0,0,0,0
  0207 00000000000000000000      .word 0,0,0,0,0
- 0211 0000000000000000  .byte 0,0,0,0,0,0,0,0
-                        .area data(ram, con, rel)
- 0219                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0219                   .dbsym e send_data_cache _send_data_cache A[270:135]i
- 0219           _send_data_length::
- 0219                   .blkb 2
-                        .area idata
- 0219 0000              .word 0
-                        .area data(ram, con, rel)
- 021B                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 021B                   .dbsym e send_data_length _send_data_length i
- 021B           _send_data_cur::
- 021B                   .blkb 2
-                        .area idata
- 021B 0000              .word 0
-                        .area data(ram, con, rel)
- 021D                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 021D                   .dbsym e send_data_cur _send_data_cur i
- 021D           _t0_flag::
- 021D                   .blkb 2
-                        .area idata
- 021D 0000              .word 0
-                        .area data(ram, con, rel)
- 021F                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 021F                   .dbsym e t0_flag _t0_flag i
- 021F           _waitflag::
- 021F                   .blkb 2
-                        .area idata
- 021F E803              .word 1000
+ 0211 00000000000000000000      .word 0,0,0,0,0
+ 021B 000000000000      .byte 0,0,0,0,0,0
                         .area data(ram, con, rel)
  0221                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0221                   .dbsym e waitflag _waitflag i
- 0221           _temp_h::
+ 0221                   .dbsym e send_data_cache _send_data_cache A[278:139]i
+ 0221           _send_data_length::
  0221                   .blkb 2
                         .area idata
  0221 0000              .word 0
                         .area data(ram, con, rel)
  0223                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0223                   .dbsym e temp_h _temp_h i
- 0223           _temp_l::
+ 0223                   .dbsym e send_data_length _send_data_length i
+ 0223           _send_data_cur::
  0223                   .blkb 2
                         .area idata
  0223 0000              .word 0
                         .area data(ram, con, rel)
  0225                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0225                   .dbsym e temp_l _temp_l i
- 0225           _temps::
+ 0225                   .dbsym e send_data_cur _send_data_cur i
+ 0225           _t0_flag::
  0225                   .blkb 2
                         .area idata
  0225 0000              .word 0
                         .area data(ram, con, rel)
  0227                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0227                   .blkb 322
+ 0227                   .dbsym e t0_flag _t0_flag i
+ 0227           _waitflag::
+ 0227                   .blkb 2
                         .area idata
- 0227 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0263 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 029F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 02DB 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0317 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0353 00000000000000000000      .word 0,0,0,0,0
- 035D 00000000000000000000      .word 0,0,0,0,0
- 0367 0000              .byte 0,0
+ 0227 E803              .word 1000
                         .area data(ram, con, rel)
- 0369                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0369                   .blkb 2
+ 0229                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0229                   .dbsym e waitflag _waitflag i
+ 0229           _temp_h::
+ 0229                   .blkb 2
                         .area idata
- 0369 0000              .word 0
+ 0229 0000              .word 0
                         .area data(ram, con, rel)
- 036B                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 036B                   .blkb 322
+ 022B                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 022B                   .dbsym e temp_h _temp_h i
+ 022B           _temp_l::
+ 022B                   .blkb 2
                         .area idata
- 036B 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 03A7 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 03E3 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 041F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 045B 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0497 00000000000000000000      .word 0,0,0,0,0
- 04A1 00000000000000000000      .word 0,0,0,0,0
- 04AB 0000              .byte 0,0
+ 022B 0000              .word 0
                         .area data(ram, con, rel)
- 04AD                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 04AD                   .blkb 2
+ 022D                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 022D                   .dbsym e temp_l _temp_l i
+ 022D           _temps::
+ 022D                   .blkb 2
                         .area idata
- 04AD 0000              .word 0
+ 022D 0000              .word 0
                         .area data(ram, con, rel)
- 04AF                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 04AF                   .blkb 322
+ 022F                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 022F                   .blkb 304
                         .area idata
- 04AF 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 04EB 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0527 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 0563 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 059F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 05DB 00000000000000000000      .word 0,0,0,0,0
- 05E5 00000000000000000000      .word 0,0,0,0,0
- 05EF 0000              .byte 0,0
+ 022F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 026B 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 02A7 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 02E3 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 031F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 035B 00000000          .byte 0,0,0,0
                         .area data(ram, con, rel)
- 05F1                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 05F1                   .blkb 2
+ 035F                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 035F                   .blkb 2
                         .area idata
- 05F1 0000              .word 0
+ 035F 0000              .word 0
                         .area data(ram, con, rel)
- 05F3                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 05F3                   .blkb 322
+ 0361                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0361                   .blkb 304
                         .area idata
- 05F3 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 062F 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 066B 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 06A7 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 06E3 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
- 071F 00000000000000000000      .word 0,0,0,0,0
- 0729 00000000000000000000      .word 0,0,0,0,0
- 0733 0000              .byte 0,0
+ 0361 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 039D 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 03D9 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0415 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0451 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 048D 00000000          .byte 0,0,0,0
                         .area data(ram, con, rel)
- 0735                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
- 0735                   .dbstruct 0 324 temp
- 0735                   .dbfield 0 flag i
- 0735                   .dbfield 2 temp_data A[264:132]i
- 0735                   .dbfield 266 status i
- 0735                   .dbfield 268 needtime i
- 0735                   .dbfield 270 nowtime i
- 0735                   .dbfield 272 pertime i
- 0735                   .dbfield 274 pertimecnt i
- 0735                   .dbfield 276 statusflag i
- 0735                   .dbfield 278 p_settemp i
- 0735                   .dbfield 280 p_err_next i
- 0735                   .dbfield 282 p_Kp i
- 0735                   .dbfield 284 p_Ki i
- 0735                   .dbfield 286 p_err_last i
- 0735                   .dbfield 288 settemp D
- 0735                   .dbfield 292 actualtemp D
- 0735                   .dbfield 296 err D
- 0735                   .dbfield 300 err_last D
- 0735                   .dbfield 304 err_next D
- 0735                   .dbfield 308 Kp D
- 0735                   .dbfield 312 Ki D
- 0735                   .dbfield 316 Kd D
- 0735                   .dbfield 320 incrementtemp D
- 0735                   .dbend
- 0735                   .dbsym e temps _temps A[1296:4]S[temp]
+ 0491                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0491                   .blkb 2
+                        .area idata
+ 0491 0000              .word 0
+                        .area data(ram, con, rel)
+ 0493                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 0493                   .blkb 304
+                        .area idata
+ 0493 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 04CF 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 050B 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0547 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0583 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 05BF 00000000          .byte 0,0,0,0
+                        .area data(ram, con, rel)
+ 05C3                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 05C3                   .blkb 2
+                        .area idata
+ 05C3 0000              .word 0
+                        .area data(ram, con, rel)
+ 05C5                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 05C5                   .blkb 304
+                        .area idata
+ 05C5 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0601 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 063D 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 0679 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 06B5 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 06F1 00000000          .byte 0,0,0,0
+                        .area data(ram, con, rel)
+ 06F5                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
+ 06F5                   .dbstruct 0 306 temp
+ 06F5                   .dbfield 0 flag i
+ 06F5                   .dbfield 2 temp_data A[264:132]i
+ 06F5                   .dbfield 266 status i
+ 06F5                   .dbfield 268 needtime i
+ 06F5                   .dbfield 270 nowtime i
+ 06F5                   .dbfield 272 pertime i
+ 06F5                   .dbfield 274 pertimecnt i
+ 06F5                   .dbfield 276 statusflag i
+ 06F5                   .dbfield 278 p_settemp i
+ 06F5                   .dbfield 280 p_err_next i
+ 06F5                   .dbfield 282 p_Kp i
+ 06F5                   .dbfield 284 p_Ki i
+ 06F5                   .dbfield 286 p_err_last i
+ 06F5                   .dbfield 288 settemp I
+ 06F5                   .dbfield 290 actualtemp I
+ 06F5                   .dbfield 292 err I
+ 06F5                   .dbfield 294 err_last I
+ 06F5                   .dbfield 296 err_next I
+ 06F5                   .dbfield 298 Kp I
+ 06F5                   .dbfield 300 Ki I
+ 06F5                   .dbfield 302 Kd I
+ 06F5                   .dbfield 304 incrementtemp I
+ 06F5                   .dbend
+ 06F5                   .dbsym e temps _temps A[1224:4]S[temp]
                         .area text(rom, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
  0000                   .dbfunc e main _main fV
@@ -214,7 +207,7 @@
  0002           ; unsigned int read_data_cur=0;
  0002           ; unsigned char read_data_cmd='z';//字母表示。如果是z表示空指令
  0002           ; //串口发送数据需要
- 0002           ; unsigned int send_data_cache[135]={0x30};
+ 0002           ; unsigned int send_data_cache[139]={0x30};
  0002           ; unsigned int send_data_length=0;//数据长度
  0002           ; unsigned int send_data_cur=0;//当前发送到游标
  0002           ; //定时器0复用参数。t0_fla0=0，开机等待；t0_fla0=1，温度计时
@@ -238,165 +231,126 @@
  0002           ; //*************************************************************************
  0002           ; void main(void)
  0002           ; { 
- 0002                   .dbline 41
- 0002           ;   send_data_cache[0]=0x30;
- 0002 80E3              ldi R24,48
- 0004 90E0              ldi R25,0
- 0006 90930C01          sts _send_data_cache+1,R25
- 000A 80930B01          sts _send_data_cache,R24
- 000E                   .dbline 42
- 000E           ;   send_data_cache[1]=0x31;
- 000E 81E3              ldi R24,49
- 0010 90930E01          sts _send_data_cache+2+1,R25
- 0014 80930D01          sts _send_data_cache+2,R24
- 0018                   .dbline 43
- 0018           ;   send_data_cache[2]=0x32;
- 0018 82E3              ldi R24,50
- 001A 90931001          sts _send_data_cache+4+1,R25
- 001E 80930F01          sts _send_data_cache+4,R24
- 0022                   .dbline 44
- 0022           ;   send_data_cache[3]=0x33;
- 0022 83E3              ldi R24,51
- 0024 90931201          sts _send_data_cache+6+1,R25
- 0028 80931101          sts _send_data_cache+6,R24
- 002C                   .dbline 45
- 002C           ;   send_data_cache[4]=0x34;
- 002C 84E3              ldi R24,52
- 002E 90931401          sts _send_data_cache+8+1,R25
- 0032 80931301          sts _send_data_cache+8,R24
- 0036                   .dbline 46
- 0036           ;   send_data_cache[5]=0x35;
- 0036 85E3              ldi R24,53
- 0038 90931601          sts _send_data_cache+10+1,R25
- 003C 80931501          sts _send_data_cache+10,R24
- 0040                   .dbline 47
- 0040           ;   send_data_cache[6]=0x36;
- 0040 86E3              ldi R24,54
- 0042 90931801          sts _send_data_cache+12+1,R25
- 0046 80931701          sts _send_data_cache+12,R24
- 004A                   .dbline 48
- 004A           ;   send_data_cache[7]=0x37;
- 004A 87E3              ldi R24,55
- 004C 90931A01          sts _send_data_cache+14+1,R25
- 0050 80931901          sts _send_data_cache+14,R24
- 0054                   .dbline 49
- 0054           ;   send_data_cache[8]=0x38;
- 0054 88E3              ldi R24,56
- 0056 90931C01          sts _send_data_cache+16+1,R25
- 005A 80931B01          sts _send_data_cache+16,R24
- 005E                   .dbline 50
- 005E           ;   send_data_cache[9]=0x39;
- 005E 89E3              ldi R24,57
- 0060 90931E01          sts _send_data_cache+18+1,R25
- 0064 80931D01          sts _send_data_cache+18,R24
- 0068                   .dbline 51
- 0068           ;   DDRE=0xFF;
- 0068 8FEF              ldi R24,255
- 006A 82B9              out 0x2,R24
- 006C                   .dbline 52
- 006C           ;   PORTE=~0xaa;
- 006C 85E5              ldi R24,85
- 006E 83B9              out 0x3,R24
- 0070                   .dbline 53
- 0070           ;   SREG|=0x80;//开中断
- 0070 7894              bset 7
- 0072                   .dbline 54
- 0072           ;   lcd_init();
- 0072 0E940000          xcall _lcd_init
- 0076                   .dbline 55
- 0076           ;   lcd_clear();
- 0076 0E940000          xcall _lcd_clear
- 007A                   .dbline 59
- 007A           ;    //画欢迎界面
- 007A           ;   //Draw_Pic( 0, 0, nihao);
- 007A           ;    //delay_ms(1000);
- 007A           ;      pageNum=2;
- 007A 82E0              ldi R24,2
- 007C 90E0              ldi R25,0
- 007E 90930D00          sts _pageNum+1,R25
- 0082 80930C00          sts _pageNum,R24
- 0086                   .dbline 60
- 0086           ;      Set_White_off(1,0,12);
- 0086 8CE0              ldi R24,12
- 0088 8883              std y+0,R24
- 008A 2227              clr R18
- 008C 01E0              ldi R16,1
- 008E 0E940000          xcall _Set_White_off
- 0092                   .dbline 61
- 0092           ;        Set_White_off(1,1,12);
- 0092 8CE0              ldi R24,12
- 0094 8883              std y+0,R24
- 0096 21E0              ldi R18,1
- 0098 01E0              ldi R16,1
- 009A 0E940000          xcall _Set_White_off
- 009E                   .dbline 62
- 009E           ;        Set_White_off(1,2,12);
- 009E 8CE0              ldi R24,12
- 00A0 8883              std y+0,R24
- 00A2 22E0              ldi R18,2
- 00A4 01E0              ldi R16,1
- 00A6 0E940000          xcall _Set_White_off
- 00AA                   .dbline 63
- 00AA           ;        Set_White_off(1,3,12);
- 00AA 8CE0              ldi R24,12
- 00AC 8883              std y+0,R24
- 00AE 23E0              ldi R18,3
- 00B0 01E0              ldi R16,1
- 00B2 0E940000          xcall _Set_White_off
- 00B6                   .dbline 65
- 00B6           ;        //测试使用
- 00B6           ;          temp_l=0x50;
- 00B6 80E5              ldi R24,80
- 00B8 90E0              ldi R25,0
- 00BA 90932402          sts _temp_l+1,R25
- 00BE 80932302          sts _temp_l,R24
- 00C2                   .dbline 66
- 00C2           ;       temp_h=0x12;
- 00C2 82E1              ldi R24,18
- 00C4 90932202          sts _temp_h+1,R25
- 00C8 80932102          sts _temp_h,R24
- 00CC                   .dbline 67
- 00CC           ;         tempdata_init();//数据初始化，清空
- 00CC 0E940000          xcall _tempdata_init
- 00D0                   .dbline 68
- 00D0           ;       Initial_time(); //初始化时间的
- 00D0 0E940000          xcall _Initial_time
- 00D4                   .dbline 69
- 00D4           ;         Timerinit_3(0xc0,0x00);//使用16位的定时器3。发送串口数据，刚开始为初始化的时候可能数据都为空
- 00D4 2227              clr R18
- 00D6 00EC              ldi R16,192
- 00D8 0E940000          xcall _Timerinit_3
- 00DC                   .dbline 70
- 00DC           ;         Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
- 00DC 28EB              ldi R18,184
- 00DE 0EEF              ldi R16,254
- 00E0 0E940000          xcall _Timerinit_1
- 00E4                   .dbline 71
- 00E4           ;         Timerinit_2(0x00);//1s计时模块
- 00E4 0027              clr R16
- 00E6 0E940000          xcall _Timerinit_2
- 00EA                   .dbline 72
- 00EA           ;         uart0_init( );//初始化串口
- 00EA 0E940000          xcall _uart0_init
- 00EE 02C0              xjmp L12
- 00F0           L11:
- 00F0                   .dbline 73
- 00F0           ;        while(1){
- 00F0                   .dbline 74
- 00F0           ;      dispatchPages();
- 00F0 0E940000          xcall _dispatchPages
- 00F4                   .dbline 75
- 00F4           ;   }
- 00F4           L12:
- 00F4                   .dbline 73
- 00F4 FDCF              xjmp L11
- 00F6           X0:
- 00F6                   .dbline -2
- 00F6           L1:
- 00F6                   .dbline 0 ; func end
- 00F6 2196              adiw R28,1
- 00F8 0895              ret
- 00FA                   .dbend
+ 0002                   .dbline 43
+ 0002           ;   //DDRE=0xFF;
+ 0002           ;   //PORTE=~0xaa;
+ 0002           ;   DDRC=0xFF;//输出端口
+ 0002 8FEF              ldi R24,255
+ 0004 84BB              out 0x14,R24
+ 0006                   .dbline 44
+ 0006           ;   PORTC=0x00;
+ 0006 2224              clr R2
+ 0008 25BA              out 0x15,R2
+ 000A                   .dbline 45
+ 000A           ;   DDRE=0xDA;//读取温度端口初始化和端口定义
+ 000A 8AED              ldi R24,218
+ 000C 82B9              out 0x2,R24
+ 000E                   .dbline 46
+ 000E           ;   DDRF=0xF6;
+ 000E 86EF              ldi R24,246
+ 0010 80936100          sts 97,R24
+ 0014                   .dbline 47
+ 0014           ;   PORTE |=0xFC;
+ 0014 83B1              in R24,0x3
+ 0016 8C6F              ori R24,252
+ 0018 83B9              out 0x3,R24
+ 001A                   .dbline 48
+ 001A           ;   PORTF |= 0xFF;
+ 001A 80916200          lds R24,98
+ 001E 8F6F              ori R24,255
+ 0020 80936200          sts 98,R24
+ 0024                   .dbline 50
+ 0024           ;   
+ 0024           ;   SREG|=0x80;//开中断
+ 0024 7894              bset 7
+ 0026                   .dbline 51
+ 0026           ;   lcd_init();
+ 0026 0E940000          xcall _lcd_init
+ 002A                   .dbline 52
+ 002A           ;   lcd_clear();
+ 002A 0E940000          xcall _lcd_clear
+ 002E                   .dbline 56
+ 002E           ;    //画欢迎界面
+ 002E           ;   //Draw_Pic( 0, 0, nihao);
+ 002E           ;    //delay_ms(1000);
+ 002E           ;      pageNum=2;
+ 002E 82E0              ldi R24,2
+ 0030 90E0              ldi R25,0
+ 0032 90930D00          sts _pageNum+1,R25
+ 0036 80930C00          sts _pageNum,R24
+ 003A                   .dbline 57
+ 003A           ;      Set_White_off(1,0,12);
+ 003A 8CE0              ldi R24,12
+ 003C 8883              std y+0,R24
+ 003E 2227              clr R18
+ 0040 01E0              ldi R16,1
+ 0042 0E940000          xcall _Set_White_off
+ 0046                   .dbline 58
+ 0046           ;        Set_White_off(1,1,12);
+ 0046 8CE0              ldi R24,12
+ 0048 8883              std y+0,R24
+ 004A 21E0              ldi R18,1
+ 004C 01E0              ldi R16,1
+ 004E 0E940000          xcall _Set_White_off
+ 0052                   .dbline 59
+ 0052           ;        Set_White_off(1,2,12);
+ 0052 8CE0              ldi R24,12
+ 0054 8883              std y+0,R24
+ 0056 22E0              ldi R18,2
+ 0058 01E0              ldi R16,1
+ 005A 0E940000          xcall _Set_White_off
+ 005E                   .dbline 60
+ 005E           ;        Set_White_off(1,3,12);
+ 005E 8CE0              ldi R24,12
+ 0060 8883              std y+0,R24
+ 0062 23E0              ldi R18,3
+ 0064 01E0              ldi R16,1
+ 0066 0E940000          xcall _Set_White_off
+ 006A                   .dbline 64
+ 006A           ;        //测试使用
+ 006A           ;         //temp_l=0x50;
+ 006A           ;       //temp_h=0x12;
+ 006A           ;         tempdata_init();//数据初始化，清空
+ 006A 0E940000          xcall _tempdata_init
+ 006E                   .dbline 65
+ 006E           ;       Initial_time(); //初始化时间的
+ 006E 0E940000          xcall _Initial_time
+ 0072                   .dbline 66
+ 0072           ;         uart0_init();//初始化串口
+ 0072 0E940000          xcall _uart0_init
+ 0076                   .dbline 67
+ 0076           ;         Timerinit_3(0xc0,0x00);//使用16位的定时器3。发送串口数据，刚开始为初始化的时候可能数据都为空
+ 0076 2227              clr R18
+ 0078 00EC              ldi R16,192
+ 007A 0E940000          xcall _Timerinit_3
+ 007E                   .dbline 68
+ 007E           ;         Timerinit_1(0xFe,0xb8);//使用16位的定时器1来输出
+ 007E 28EB              ldi R18,184
+ 0080 0EEF              ldi R16,254
+ 0082 0E940000          xcall _Timerinit_1
+ 0086                   .dbline 69
+ 0086           ;         Timerinit_2(0x00);//1s计时模块
+ 0086 0027              clr R16
+ 0088 0E940000          xcall _Timerinit_2
+ 008C 02C0              xjmp L3
+ 008E           L2:
+ 008E                   .dbline 70
+ 008E           ;        while(1){
+ 008E                   .dbline 71
+ 008E           ;      dispatchPages();
+ 008E 0E940000          xcall _dispatchPages
+ 0092                   .dbline 72
+ 0092           ;   }
+ 0092           L3:
+ 0092                   .dbline 70
+ 0092 FDCF              xjmp L2
+ 0094           X0:
+ 0094                   .dbline -2
+ 0094           L1:
+ 0094                   .dbline 0 ; func end
+ 0094 2196              adiw R28,1
+ 0096 0895              ret
+ 0098                   .dbend
                         .area bss(ram, con, rel)
  0000                   .dbfile E:\ICCDemo\Temp_Control\temp_control\main.c
  0000           _prePageNum::

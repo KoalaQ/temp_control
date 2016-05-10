@@ -14,39 +14,39 @@ void out_port(void){
    }
    if(temps[0].flag==1){
 	  if(temps[0].incrementtemp>=hz){
-	    PORTE |=0x01;
+	    PORTC |=0x01;
 	  }else {
-	    PORTE &=0xFE;
+	    PORTC &=0xFE;
 	  }
    }else{
-      PORTE &=0xFE;
+      PORTC &=0xFE;
    }
     if(temps[1].flag==1){
 	  if(temps[0].incrementtemp>=hz){
-	      PORTE |=0x02;
+	      PORTC |=0x02;
 	    }else {
-	      PORTE &=0xFD;
+	      PORTC &=0xFD;
 	    }
    }else{
-      PORTE &=0xFD;
+      PORTC &=0xFD;
    }
     if(temps[2].flag==1){
 	  if(temps[0].incrementtemp>=hz){
-	      PORTE |=0x04;
+	      PORTC |=0x04;
 	    }else {
-	      PORTE &=0xFB;
+	      PORTC &=0xFB;
 	    }
    }else{
-      PORTE &=0xFB;
+      PORTC &=0xFB;
    }
     if(temps[3].flag==1){
 	  if(temps[0].incrementtemp>=hz){
-	      PORTE |=0x08;
+	      PORTC |=0x08;
 	    }else {
-	      PORTE &=0xF7;
+	      PORTC &=0xF7;
 	    }
    }else{
-     PORTE &=0xF7;
+     PORTC &=0xF7;
    }
     hz++;
 }

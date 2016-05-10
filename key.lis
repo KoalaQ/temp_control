@@ -19,40 +19,43 @@
  0000 4A93              st -y,R20
  0002 5A93              st -y,R21
  0004                   .dbline -1
- 0004                   .dbline 6
+ 0004                   .dbline 9
  0004           ; #include<iom128v.h>
  0004           ; #include "delay.h"
  0004           ; #include "lcd.h"
+ 0004           ; /*
+ 0004           ;   按键未正确修改。但是应该不影响正常使用
+ 0004           ; */
  0004           ; uchar key_value='n';
  0004           ; 
  0004           ; uchar KeyScan(void){
- 0004                   .dbline 8
+ 0004                   .dbline 11
  0004           ;   //初始化端口
  0004           ;    DDRC=0xE0;
  0004 80EE              ldi R24,224
  0006 84BB              out 0x14,R24
- 0008                   .dbline 9
+ 0008                   .dbline 12
  0008           ;    DDRG|=0x10;
  0008 80916400          lds R24,100
  000C 8061              ori R24,16
  000E 80936400          sts 100,R24
- 0012                   .dbline 12
+ 0012                   .dbline 15
  0012           ;    
  0012           ;    //第一次扫描
  0012           ;    PORTC=0xDF;
  0012 8FED              ldi R24,223
  0014 85BB              out 0x15,R24
- 0016                   .dbline 13
+ 0016                   .dbline 16
  0016           ;    PORTG|=0x10;
  0016 80916500          lds R24,101
  001A 8061              ori R24,16
  001C 80936500          sts 101,R24
- 0020                   .dbline 14
+ 0020                   .dbline 17
  0020           ;    delay_us(1);
  0020 01E0              ldi R16,1
  0022 10E0              ldi R17,0
  0024 0E940000          xcall _delay_us
- 0028                   .dbline 15
+ 0028                   .dbline 18
  0028           ;    switch(PINC)
  0028 43B3              in R20,0x13
  002A 5527              clr R21
@@ -89,50 +92,50 @@
  005C           X5:
  005C 0AC0              xjmp L3
  005E           L5:
- 005E                   .dbline 17
+ 005E                   .dbline 20
  005E           ;    {
  005E           ;               case 0xDE:return  'e';//'esc';
  005E 05E6              ldi R16,101
  0060 99C0              xjmp L1
  0062           L6:
- 0062                   .dbline 18
+ 0062                   .dbline 21
  0062           ;               case 0xdd:return  'a';//'alm';
  0062 01E6              ldi R16,97
  0064 97C0              xjmp L1
  0066           L7:
- 0066                   .dbline 19
+ 0066                   .dbline 22
  0066           ;               case 0xdb:return  'd';//'down';  
  0066 04E6              ldi R16,100
  0068 95C0              xjmp L1
  006A           L8:
- 006A                   .dbline 20
+ 006A                   .dbline 23
  006A           ;               case 0xd7:return  'u';//'up';
  006A 05E7              ldi R16,117
  006C 93C0              xjmp L1
  006E           L9:
- 006E                   .dbline 21
+ 006E                   .dbline 24
  006E           ;               case 0xcf:return  'l';//'left';
  006E 0CE6              ldi R16,108
  0070 91C0              xjmp L1
  0072           L3:
- 0072                   .dbline 25
+ 0072                   .dbline 28
  0072           ;               default:break;     
  0072           ;    } 
  0072           ;     //第二次扫描
  0072           ;    PORTC=0xBF;
  0072 8FEB              ldi R24,191
  0074 85BB              out 0x15,R24
- 0076                   .dbline 26
+ 0076                   .dbline 29
  0076           ;    PORTG|=0x10;
  0076 80916500          lds R24,101
  007A 8061              ori R24,16
  007C 80936500          sts 101,R24
- 0080                   .dbline 27
+ 0080                   .dbline 30
  0080           ;    delay_us(1);
  0080 01E0              ldi R16,1
  0082 10E0              ldi R17,0
  0084 0E940000          xcall _delay_us
- 0088                   .dbline 28
+ 0088                   .dbline 31
  0088           ;    switch(PINC)
  0088 43B3              in R20,0x13
  008A 5527              clr R21
@@ -169,50 +172,50 @@
  00BC           X11:
  00BC 0AC0              xjmp L12
  00BE           L14:
- 00BE                   .dbline 30
+ 00BE                   .dbline 33
  00BE           ;    {
  00BE           ;               case 0xbE:return 's';//'set';
  00BE 03E7              ldi R16,115
  00C0 69C0              xjmp L1
  00C2           L15:
- 00C2                   .dbline 31
+ 00C2                   .dbline 34
  00C2           ;               case 0xbd:return 'r';//'right';
  00C2 02E7              ldi R16,114
  00C4 67C0              xjmp L1
  00C6           L16:
- 00C6                   .dbline 32
+ 00C6                   .dbline 35
  00C6           ;               case 0xbb:return 't';//'ent';  
  00C6 04E7              ldi R16,116
  00C8 65C0              xjmp L1
  00CA           L17:
- 00CA                   .dbline 33
+ 00CA                   .dbline 36
  00CA           ;               case 0xb7:return 'c';//'clr';
  00CA 03E6              ldi R16,99
  00CC 63C0              xjmp L1
  00CE           L18:
- 00CE                   .dbline 34
+ 00CE                   .dbline 37
  00CE           ;               case 0xaf:return '+';//'+/-';
  00CE 0BE2              ldi R16,43
  00D0 61C0              xjmp L1
  00D2           L12:
- 00D2                   .dbline 38
+ 00D2                   .dbline 41
  00D2           ;               default:break;     
  00D2           ;    } 
  00D2           ;     //第三次扫描
  00D2           ;    PORTC=0x7F;
  00D2 8FE7              ldi R24,127
  00D4 85BB              out 0x15,R24
- 00D6                   .dbline 39
+ 00D6                   .dbline 42
  00D6           ;    PORTG|=0x10;
  00D6 80916500          lds R24,101
  00DA 8061              ori R24,16
  00DC 80936500          sts 101,R24
- 00E0                   .dbline 40
+ 00E0                   .dbline 43
  00E0           ;    delay_us(1);
  00E0 01E0              ldi R16,1
  00E2 10E0              ldi R17,0
  00E4 0E940000          xcall _delay_us
- 00E8                   .dbline 41
+ 00E8                   .dbline 44
  00E8           ;    switch(PINC)
  00E8 43B3              in R20,0x13
  00EA 5527              clr R21
@@ -249,50 +252,50 @@
  011C           X17:
  011C 0AC0              xjmp L21
  011E           L23:
- 011E                   .dbline 43
+ 011E                   .dbline 46
  011E           ;    {
  011E           ;               case 0x7E:return '0';
  011E 00E3              ldi R16,48
  0120 39C0              xjmp L1
  0122           L24:
- 0122                   .dbline 44
+ 0122                   .dbline 47
  0122           ;               case 0x7d:return '3';
  0122 03E3              ldi R16,51
  0124 37C0              xjmp L1
  0126           L25:
- 0126                   .dbline 45
+ 0126                   .dbline 48
  0126           ;               case 0x7b:return '2';  
  0126 02E3              ldi R16,50
  0128 35C0              xjmp L1
  012A           L26:
- 012A                   .dbline 46
+ 012A                   .dbline 49
  012A           ;               case 0x77:return '1';
  012A 01E3              ldi R16,49
  012C 33C0              xjmp L1
  012E           L27:
- 012E                   .dbline 47
+ 012E                   .dbline 50
  012E           ;               case 0x6f:return '6';
  012E 06E3              ldi R16,54
  0130 31C0              xjmp L1
  0132           L21:
- 0132                   .dbline 51
+ 0132                   .dbline 54
  0132           ;               default:break;     
  0132           ;    } 
  0132           ;       //第四次扫描
  0132           ;    PORTC=0xFF;
  0132 8FEF              ldi R24,255
  0134 85BB              out 0x15,R24
- 0136                   .dbline 52
+ 0136                   .dbline 55
  0136           ;    PORTG&=0x0F;
  0136 80916500          lds R24,101
  013A 8F70              andi R24,15
  013C 80936500          sts 101,R24
- 0140                   .dbline 53
+ 0140                   .dbline 56
  0140           ;    delay_us(1);
  0140 01E0              ldi R16,1
  0142 10E0              ldi R17,0
  0144 0E940000          xcall _delay_us
- 0148                   .dbline 54
+ 0148                   .dbline 57
  0148           ;    switch(PINC)
  0148 43B3              in R20,0x13
  014A 5527              clr R21
@@ -329,33 +332,33 @@
  017C           X23:
  017C 0AC0              xjmp L30
  017E           L32:
- 017E                   .dbline 56
+ 017E                   .dbline 59
  017E           ;    {
  017E           ;               case 0xFE:return '7';
  017E 07E3              ldi R16,55
  0180 09C0              xjmp L1
  0182           L33:
- 0182                   .dbline 57
+ 0182                   .dbline 60
  0182           ;               case 0xFd:return '8';
  0182 08E3              ldi R16,56
  0184 07C0              xjmp L1
  0186           L34:
- 0186                   .dbline 58
+ 0186                   .dbline 61
  0186           ;               case 0xFb:return '9';  
  0186 09E3              ldi R16,57
  0188 05C0              xjmp L1
  018A           L35:
- 018A                   .dbline 59
+ 018A                   .dbline 62
  018A           ;               case 0xF7:return '4';
  018A 04E3              ldi R16,52
  018C 03C0              xjmp L1
  018E           L36:
- 018E                   .dbline 60
+ 018E                   .dbline 63
  018E           ;               case 0xEf:return '5';
  018E 05E3              ldi R16,53
  0190 01C0              xjmp L1
  0192           L30:
- 0192                   .dbline 63
+ 0192                   .dbline 66
  0192           ;               default:break;     
  0192           ;    }
  0192           ;  return 'n';
@@ -375,28 +378,28 @@
  019A AA92              st -y,R10
  019C 4A93              st -y,R20
  019E                   .dbline -1
- 019E                   .dbline 69
+ 019E                   .dbline 72
  019E           ;    
  019E           ; }
  019E           ; //********************************
  019E           ; //            加上延时抖动的读取，一次读取一个
  019E           ; //********************************
  019E           ; uchar KeyScan_once(void){
- 019E                   .dbline 71
+ 019E                   .dbline 74
  019E           ;         uchar keyValue,keyValue2;
  019E           ;         keyValue=KeyScan();
  019E 30DF              xcall _KeyScan
  01A0 402F              mov R20,R16
- 01A2                   .dbline 72
+ 01A2                   .dbline 75
  01A2           ;         delay_ms(2);
  01A2 02E0              ldi R16,2
  01A4 10E0              ldi R17,0
  01A6 0E940000          xcall _delay_ms
- 01AA                   .dbline 73
+ 01AA                   .dbline 76
  01AA           ;         keyValue2=KeyScan();
  01AA 2ADF              xcall _KeyScan
  01AC A02E              mov R10,R16
- 01AE                   .dbline 74
+ 01AE                   .dbline 77
  01AE           ;        if(keyValue==keyValue2 && keyValue!='n'){//两次扫描，消除抖动
  01AE 4017              cp R20,R16
  01B0 61F4              brne L39
@@ -404,37 +407,37 @@
  01B2 4E36              cpi R20,110
  01B4 51F0              breq L39
  01B6           X25:
- 01B6                   .dbline 74
- 01B6                   .dbline 75
+ 01B6                   .dbline 77
+ 01B6                   .dbline 78
  01B6           ;               if(key_value==keyValue){//如果还是上一次保存的值则代表一直按着，返回‘n’
  01B6 20900000          lds R2,_key_value
  01BA 2416              cp R2,R20
  01BC 11F4              brne L41
  01BE           X26:
- 01BE                   .dbline 75
- 01BE                   .dbline 76
+ 01BE                   .dbline 78
+ 01BE                   .dbline 79
  01BE           ;                   return 'n';  
  01BE 0EE6              ldi R16,110
  01C0 08C0              xjmp L38
  01C2           L41:
- 01C2                   .dbline 77
+ 01C2                   .dbline 80
  01C2           ;           }else{                  //松开后第一次按下，返回该键的值
- 01C2                   .dbline 78
+ 01C2                   .dbline 81
  01C2           ;                key_value=keyValue;
  01C2 40930000          sts _key_value,R20
- 01C6                   .dbline 79
+ 01C6                   .dbline 82
  01C6           ;                 return keyValue;
  01C6 042F              mov R16,R20
  01C8 04C0              xjmp L38
  01CA           L39:
- 01CA                   .dbline 81
+ 01CA                   .dbline 84
  01CA           ;               }
  01CA           ;        }else{                     //因为读取键盘的值会多次刷新，所以在松开按键时key_value重置
- 01CA                   .dbline 82
+ 01CA                   .dbline 85
  01CA           ;          key_value='n';
  01CA 8EE6              ldi R24,110
  01CC 80930000          sts _key_value,R24
- 01D0                   .dbline 83
+ 01D0                   .dbline 86
  01D0           ;          return 'n';
  01D0 0EE6              ldi R16,110
  01D2                   .dbline -2

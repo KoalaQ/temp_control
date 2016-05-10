@@ -151,10 +151,6 @@ void readTemp_4(void){
 }
 //传入的int：0、1、2、3对应温度的读取
 void readTemp(uint n){
-  DDRE=0xDA;
-  DDRF=0xF6;
-  PORTE |=0xFC;
-  PORTF |= 0xFF;
    switch(n){
     case 0:
 	  readTemp_1();

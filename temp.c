@@ -7,6 +7,7 @@
 #include "delay.h"
 uint second;
 void PID_realize(uint temp_n);
+void PI_realize(uint temp_n);
 void set_start_real(uint t);
 
 //中断1s进入，使用int2。可以使用，但是买的这个DS1307，硬件电路问题不可以使用
@@ -292,29 +293,27 @@ void int_int2(void){//做温度数据时间增加操作。不能做耗时的操作.中断优先级较高
  //在这里发送串口数据，上位机读取。和读取温度同步
 void tempcontrol(void){
    uint i,j;
-      temp_l=0x00;
-      temp_h=0x12;
    for(i=0;i<4;i++){
-         //readTemp(i);//读取温度，一次验证有效性
+         readTemp(i);//读取温度，一次验证有效性
 	 if(temp_l&0x04){//当前故障，下面就不用再运行啦
 		     temps[i].flag=2;
 	 }else{
-	      //temps[i].actualtemp=0x55<<2;
+	      temps[i].actualtemp=0x55<<2;
 		  temps[i].actualtemp=(temp_h&0x3F)<<4|(temp_l&0xF0)>>4;
          if(temps[i].flag==1)//运行中的
 	      {   
 		      for(j=0;j<9;j++){
-			    //readTemp(i);//读取温度，需要读取10次左右
+			    readTemp(i);//读取温度，需要读取10次左右
 			    temps[i].actualtemp+=(temp_h&0x3F)<<4|(temp_l&0xF0)>>4;
 			  }
 			    temps[i].actualtemp/=10;
 		        if(temps[i].status & 0x01){//恒温阶段，使用pid算法。temps[i].status & 0x01如果是1代表是奇数，0代表是偶数
-				   //PID_realize(i);//启用pid算法
+				   PID_realize(i);//启用pid算法
                 }else if(temps[i].settemp-temps[i].actualtemp<10){
 		           //升温或阶段，如果温度接近某个温度则开始使用PID算法。这个值要重新考虑
-				   //PID_realize(i);//启用pid算法
+				   PID_realize(i);//启用pid算法
 		         }else {//升温使用pi算法
-		            //PI_realize(i);//启用pi算法
+		            PI_realize(i);//启用pi算法
 		         }
 	      }else if(temps[i].flag==5){//初始化参数
 	             temps[i].flag=1;
@@ -353,10 +352,10 @@ void tempdata_init(void){
 	temps[i].err=0;
 	 temps[i].err_last=0;
 	 temps[i].err_next=0;
-	 temps[i].Kp=0.0;
-	 temps[i].Ki=0.0;
-	 temps[i].Kd=0.0;
-	 temps[i].incrementtemp=25.0;
+	 temps[i].Kp=5;
+	 temps[i].Ki=1;
+	 temps[i].Kd=1;
+	 temps[i].incrementtemp=0;
  } 
 }
 void data_recover(void){
@@ -386,56 +385,44 @@ void data_recover(void){
 void set_temp_data(uint t,uint* dataCach){
     uint j;
 	uint  head;
-	TCCR3B=0x00;//关闭计时器
 	UCSR0B &=~(1<<UDRIE0);//关中断
-	send_data_length=134;
-	send_data_cur=0;
-	if(t==0){
-	  head=0x61;//a
-	}else if(t==1){
-	  head=0x62;//b
-	}else if(t==2){
-	  head=0x63;//c
-	}else if(t==3){
-	  head=0x64;//d 
-	}
-	send_data_cache[0]=head;
 	temps[t].flag=6;
 	EEPROM_write(t+1,0,0x01);
 	EEPROM_write(t+1,133,6);
     for(j=0;j<132;j++){
 	   temps[t].temp_data[j]=*(dataCach+j);
-	   send_data_cache[j+1]=temps[t].temp_data[j];
 	   EEPROM_write(t+1,j+1,temps[t].temp_data[j]);//这里要保存的
 	}
-	send_data_cache[133]=head;
-	UCSR0B |=(1<<UDRIE0); //发送使中断能。
-	delay_us(10);
-	TCCR3B=0x05;//打开计时器
 	return;
 }
 //发送指定温度参数到串口。由上位机请求发送
 void send_temp_data(uint t){
-    uint j;
+   uint j;
 	uint  head;
 	TCCR3B=0x00;//关闭计时器
 	UCSR0B &=~(1<<UDRIE0);//关中断
-	send_data_length=134;
+	send_data_length=139;
 	send_data_cur=0;
 	if(t==0){
-	  head=0x61;//a
+	  head=0x45;//E
 	}else if(t==1){
-	  head=0x62;//b
+	  head=0x46;//F
 	}else if(t==2){
-	  head=0x63;//c
+	  head=0x47;//G
 	}else if(t==3){
-	  head=0x64;//d 
+	  head=0x48;//H 
 	}
-	send_data_cache[0]=head;
+	send_data_cache[0]=0x00;
+	send_data_cache[1]=0xFE;
+	send_data_cache[2]=0xFF;
+	send_data_cache[3]=head;
     for(j=0;j<132;j++){
-	   send_data_cache[j+1]= temps[t].temp_data[j];
+	   send_data_cache[j+4]=temps[t].temp_data[j];
 	}
-	send_data_cache[133]=head;
+	send_data_cache[136]=head;
+	send_data_cache[137]=0xFF;
+	send_data_cache[138]=0xFE;
+	
 	UCSR0B |=(1<<UDRIE0); //发送使中断能。
 	delay_us(10);
 	TCCR3B=0x05;//打开计时器
